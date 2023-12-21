@@ -1,0 +1,71 @@
+% 下载方正 GBK 字体(含简体和繁体中文)
+% https://www.foundertype.com/index.php/FindFont/index
+% https://chinesefonts.org/fonts/
+% https://www.fonts.net.cn/
+% https://lets.fontworks.co.jp/
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{fontset}[2023/01/01 v1.0 a latex template]
+
+% 中文排版, 可以直接使用 ctexart, ctexbook
+% \RequirePackage[UTF8]{ctex}   
+
+% [Deprecated] texlive 自带 Fandol 楷体, 该字库的"仓"误为"仑", 故不用.
+% \setCJKmainfont[
+%   BoldFont=FandolHei-Regular.otf,
+%   ItalicFont=FandolSong-Regular.otf,
+%   BoldItalicFont=FandolFang-Regular.otf
+% ]{FandolKai-Regular.otf}  
+
+% 中文默认字体 rffamily
+\setCJKmainfont[
+  Extension      = .otf,
+  UprightFont    = *-Regular,
+  BoldFont       = NotoSansSC-Regular,
+  ItalicFont     = 方正楷体_GBK.TTF,
+  BoldItalicFont = 方正圆体_GBK-Regular.TTF
+]{NotoSerifSC}
+
+% 中文无衬线字体 sffamily
+\setCJKsansfont[
+  Extension      = .otf,
+  UprightFont    = *-Regular,
+  BoldFont       = *-Bold,
+  ItalicFont     = *-Light,
+  BoldItalicFont = *-Medium
+]{NotoSansSC}
+
+% 中文等宽字体 ttfamily
+\setCJKmonofont[
+  UprightFont    = 方正仿宋_GBK.TTF,
+  BoldFont       = 方正圆体_GBK-Bold.TTF,
+  ItalicFont     = 方正圆体_GBK-Light.TTF,
+  BoldItalicFont = 方正圆体_GBK-Regular.TTF
+]{方正仿宋_GBK.TTF}
+
+\setCJKfamilyfont{圆体}{方正圆体_GBK-Regular.TTF}
+\setCJKfamilyfont{仿宋}{方正仿宋_GBK.TTF}
+\setCJKfamilyfont{楷体}{方正楷体_GBK.TTF}
+\setCJKfamilyfont{隶书}{方正隶书_GBK.TTF}
+\setCJKfamilyfont{隶变}{方正隶变_GBK.TTF}
+\setCJKfamilyfont{魏碑}{方正魏碑_GBK.TTF}
+\setCJKfamilyfont{行楷}{方正行楷_GBK.TTF}
+%\setCJKfamilyfont{彩云}{方正彩云_GBK.TTF}
+%\setCJKfamilyfont{琥珀}{方正琥珀_GBK.TTF}
+%\setCJKfamilyfont{瘦金体}{方正瘦金书_GBK.TTF}
+\setCJKfamilyfont{北魏楷书}{方正北魏楷书_GBK.TTF}
+\setCJKfamilyfont{硬笔楷书}{方正硬笔楷书_GBK.TTF}
+%\setCJKfamilyfont{硬笔行书}{方正硬笔行书_GBK.TTF}
+\setCJKfamilyfont{NotoSansSC}{NotoSansSC-Regular.otf}
+\newcommand{\notosanssc}{\CJKfamily{NotoSansSC}}
+\setCJKfamilyfont{NotoSerifSC}{NotoSerifSC-Regular.otf}
+\newcommand{\notoserifsc}{\CJKfamily{NotoSerifSC}}
+
+\AtBeginDocument{
+  % setmainfont, setsansfont, setmonofont等
+  % 需要在 document 环境前定义
+  \RequirePackage{fontspec}
+  %\setmainfont{Noto Sans} % texlive 2022 没有预装字体
+}
+
+\RequirePackage{CJKfntef}  

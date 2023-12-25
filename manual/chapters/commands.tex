@@ -25,6 +25,27 @@
 \showcode{snippets/commands/affine.tex}
 
 % ---------------------------------
+\section{中点 Midpoint}
+
+\emph{调用方式}
+
+\begin{tcolorbox}{}
+\mint{latex}{midpoint={A,B}}
+\end{tcolorbox}
+
+\emph{参数说明}
+
+\begin{description}
+  \item[A, B] 两点坐标
+\end{description}
+
+返回点 $A, B$ 的中点坐标.
+
+\emph{示例}
+
+\showcode{snippets/commands/midpoint.tex}
+
+% ---------------------------------
 \section{平移 Translate}
 
 \emph{调用方式}
@@ -65,6 +86,27 @@
 \emph{示例}
 
 \showcode{snippets/commands/reflect.tex}
+
+% ---------------------------------
+\section{投影 Project}
+
+\emph{调用方式}
+
+\begin{tcolorbox}{}
+\mint{latex}{project={A,B,C}}
+\end{tcolorbox}
+
+\emph{参数说明}
+
+\begin{description}
+  \item[A,B,C] 三点坐标
+\end{description}
+
+返回 $C$ 在直线 $AB$ 的投影的坐标.
+
+\emph{示例}
+
+\showcode{snippets/commands/project.tex}
 
 % ---------------------------------
 \section{反演 Inverse}
@@ -129,14 +171,6 @@
 \showcode{snippets/commands/revolve3.tex}
 
 % ---------------------------------
-\section{角平分线 Angle Bisector}
-
-可以由 resovle 来获取角平分线上的一点.
-
-\emph{示例}
-
-\showcode{snippets/commands/angle-bisector.tex}
-
 \section{构造角 Angle}
 
 可以由 resovle 来构造一个角.
@@ -144,6 +178,81 @@
 \emph{示例}
 
 \showcode{snippets/commands/angle.tex}
+
+% ---------------------------------
+\section{角平分线 Angle Bisector}
+
+\emph{调用方式}
+
+\begin{tcolorbox}{}
+\mint{latex}{angle bisector={A,B,C}}
+\end{tcolorbox}
+
+\emph{参数说明}
+
+\begin{description}
+  \item[A,B,C] 三点坐标, $A$为顶点(apex), $B$为起点, $C$为终点
+\end{description}
+
+返回 $\angle{BAC}$ 角平分线上的一点.实际上, 该操作等价于:
+
+\begin{minted}{latex}
+revolve/angle={A,B,C}, revolve/scale=.5, revolve={A,B}
+\end{minted}
+
+\emph{示例}
+
+\showcode{snippets/commands/angle-bisector.tex}
+
+% ---------------------------------
+\section{等边三角形 Equilateral Triangle}
+
+\emph{调用方式}
+
+\begin{tcolorbox}{}
+\mint{latex}{equilateral={A,B}}
+\end{tcolorbox}
+
+\emph{参数说明}
+
+\begin{description}
+  \item[A,B] 两点坐标
+\end{description}
+
+返回 以 $AB$ 为边长的等边三角形的第 3 点 (位于向量 $AB$ 的左侧).实际上, 该操作等价于:
+
+\begin{minted}{latex}
+revolve/angle=60, revolve={A,B}
+\end{minted}
+
+\emph{示例}
+
+\showcode{snippets/commands/equilateral.tex}
+
+% ---------------------------------
+\section{旋转 $90^\circ$ Erect}
+
+\emph{调用方式}
+
+\begin{tcolorbox}{}
+\mint{latex}{erect={A,B}}
+\end{tcolorbox}
+
+\emph{参数说明}
+
+\begin{description}
+  \item[A,B] 两点坐标
+\end{description}
+
+返回$B$绕 $A$ 旋转 $90^\circ$ 的坐标.实际上, 该操作等价于:
+
+\begin{minted}{latex}
+revolve/angle=90, revolve={A,B}
+\end{minted}
+
+\emph{示例}
+
+\showcode{snippets/commands/erect.tex}
 
 % ---------------------------------
 \section{截取 Intercept}

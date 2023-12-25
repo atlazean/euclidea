@@ -2,13 +2,18 @@
 
 ## Introduction
 
-Euclidea is a tikz library designed for echancing tikz in Euclidean geometry drawings and provides the following interfaces:
+Euclidea is a tikz library designed for enchancing tikz in Euclidean geometry drawings and provides the following interfaces:
 
 * `affine={A,B,k}`: returns affine combination of two points, i.e. A + k * ( B - A ).
+* `midpoint={A,B}`: returns midpoint of AB.
 * `translate={A,B,C}`: returns translation of point C by the vector AB, i.e. C + ( B - A ).
 * `reflect={A,B,C}`: reflects point C across line AB.
+* `project={A,B,C}`: projects point C onto line AB.
 * `inverse={O,A,P}`: returns the inverse point of point C with respect to circle(O,A).
 * `revolve={A,B}`: rotates point B by the angle around point A.
+* `angle bisector={A,B,C}`: alias for `[revolve/angle={A,B,C},revolve/scale=.5,revolve={A,B}]`.
+* `erect={A,B}`: alias for `[revolve/angle=90,revolve={A,B}]`.
+* `equilateral={A,B}`: alias for `[revolve/angle=60,revolve={A,B}]`.
 * `intercept={A,B}`: intercepts a line segment (starting from point A) of a certain length on line AB.
 * `intersect={A,B,C,D}`: returns the intersection of line AB and line CD. 
 * `perpendicular bisector={A,B}`: creates the perpendicular bisector of segment AB.
@@ -27,7 +32,7 @@ Euclidea is a tikz library designed for echancing tikz in Euclidean geometry dra
 
 ## Example
 
-Here is a TikZ code for drawing Simson line.
+Here is TikZ code for drawing Simson line.
 
 ```
 \documentclass{standalone}

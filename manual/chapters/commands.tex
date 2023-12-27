@@ -397,6 +397,29 @@ revolve/angle=90, revolve={A,B}
 \showcode{snippets/commands/parallel-line2.tex}
 
 % ---------------------------------
+\section{延长线 Extend}
+
+\emph{调用方式}
+
+\begin{tcolorbox}{}
+\mint{latex}{extend={A,B}}
+\end{tcolorbox}
+
+\emph{参数说明}
+
+作线段 $AB$ 延长线,
+可以对起始点进行调整, 见\ref{sec:modifiers}.
+实际上, 该操作等价于:
+
+\begin{minted}{latex}
+parallel={A,B,A}
+\end{minted}
+
+\emph{示例}
+
+\showcode{snippets/commands/extend.tex}
+
+% ---------------------------------
 \section{圆 Circle}
 
 \emph{调用方式}

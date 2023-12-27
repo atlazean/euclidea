@@ -19,6 +19,7 @@ Euclidea is a tikz library designed for enchancing tikz in Euclidean geometry dr
 * `perpendicular bisector={A,B}`: creates the perpendicular bisector of segment AB.
 * `perpendicular={A,B,C}`: creates a line through point C perpendicular to line AB.
 * `parallel={A,B,C}`: creates a line through point C parallel to line AB.
+* `extend={A,B}`: alias for `[parallel={A,B,A}]`.
 * `circumcenter={A,B,C}`: returns the circumcenter of a triangle.
 * `orthocenter={A,B,C}`: returns the orthocenter of a triangle.
 * `incenter={A,B,C}`: returns the incenter of a triangle.

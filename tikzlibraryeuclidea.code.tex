@@ -472,6 +472,10 @@
       in (\p{s}) -- (\p{e})
     }
   },
+  % alias for parallel={A,B,A}
+  extend/.style args = {#1,#2} {
+    parallel={#1,#2,#1}
+  },
 }
 
 % Utilities for implementation of 'revolve'

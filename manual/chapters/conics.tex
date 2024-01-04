@@ -1,0 +1,84 @@
+\chapter{圆锥曲线 Conics}
+
+本章包含了一些自定义命令和 tikz 内置命令。
+
+% ---------------------------------
+\section{椭圆 Ellipse}
+
+\emph{调用方式}
+
+\begin{tcolorbox}{}
+\mint{latex}{(center) ellipse ( a and b)}
+\end{tcolorbox}
+
+或
+
+\begin{tcolorbox}{}
+\mint{latex}{(center) ellipse [x radius = a, y radius = b]}
+\end{tcolorbox}
+
+\begin{remark*}
+上面 \verbum{ellipse} 也可以替换为 \verbum{circle}.
+\end{remark*}
+
+\emph{参数说明}
+
+\begin{description}
+  \item[a, b] 半长轴长和半短轴长, 需要指定单位, 如 4cm and 3cm
+\end{description}
+
+返回椭圆曲线.
+
+\emph{示例}
+
+\showcode{snippets/conics/ellipse1.tex}
+
+\showcode{snippets/conics/ellipse2.tex}
+
+% ---------------------------------
+\section{双曲线 Hyperbola 与渐近线 Asymptote}
+
+\emph{调用方式}
+
+\begin{tcolorbox}{}
+\mint{latex}{\hyperbola [path options] (a,b);}
+\end{tcolorbox}
+
+或
+
+\begin{tcolorbox}{}
+\mint{latex}{\asymptote [path options] (a,b);}
+\end{tcolorbox}
+
+\emph{参数说明}
+
+\begin{description}
+  \item[a, b] 半长轴长和半短轴长
+\end{description}
+
+返回双曲线及其渐进线.
+
+\emph{示例}
+
+\showcode{snippets/conics/hyperbola1.tex}
+
+\begin{remark*}
+当指定绘制双曲线 (hyperbola) 的 \verbum{domain} (default: \verbum{domain=-1.5:1.5})时, \verbum{domain} 是下列双曲线参数方程中 $t$ 的取值范围:
+\begin{align*}
+  \begin{cases}
+  x = \cosh t,\\y = \sinh t
+  \end{cases}
+\end{align*}
+
+$t$ 的几何意义: 射线出原点交单位双曲线 $x^2-y^2=1$ 于 $(\cosh t, y = \sinh t)$,
+$t$ 是射线,双曲线和 $x$ 轴围成的面积的二倍. 对于双曲线上位于 $x$ 轴下方的点, 这个面积被认为是负值.
+
+当指定绘制渐进线 (asymptote) 的 \verbum{domain} (default: \verbum{domain=-2:2})时, \verbum{domain} 是下列直线方程中 $x$ 的取值范围:
+\begin{align*}
+  y = \pm \dfrac{b}{a} x
+\end{align*}
+\end{remark*}
+
+\emph{示例}
+
+\showcode{snippets/conics/hyperbola2.tex}

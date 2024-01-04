@@ -30,6 +30,8 @@ Euclidea is a tikz library designed for enchancing tikz in Euclidean geometry dr
 * `external center={O1,A1,O2,A2}`: returns the external homothetic center of two circles.
 * `internal center={O1,A1,O2,A2}`: returns the internal homothetic center of two circles.
 * `radical axis={O1,A1,O2,A2}`: creates the radical axis of two non-concentric circles.
+* `\hyperbola [path options] (a,b);`: creates a hyperbola with major/minor semi axis (a,b).
+* `\asymptote [path options] (a,b);`: creates the asymptote of above hypterbola.
 
 ## Example
 
@@ -61,14 +63,14 @@ Here is TikZ code for drawing Simson line.
   \draw[teal,perpendicular={A,B,P}];
   \draw[thick,magenta,
     start modifier=-.5,end modifier=1.25,
-    parallel={A',C',A'}];%simson line
+    extend={A',C'}];%simson line
   \draw (0,4) node (L) {Simson Line};
   \draw[->,>=latex] (L) to[out=-90,in=45] ($(A')!-.25!(C')$);
   
   \pic[draw,red,angle radius=2mm]{right angle= P--A'--C};
   \pic[draw,red,angle radius=2mm]{right angle= P--B'--C};
   \pic[draw,red,angle radius=2mm]{right angle= P--C'--A};
-  \draw[dashed,end modifier=.5,parallel={B,A,A}];
+  \draw[dashed,extend={A,C'}];
 
   \foreach \p/\placement in {A/below right, B/above right,
   C/left, A'/above, B'/above, C'/above right, P/below}{

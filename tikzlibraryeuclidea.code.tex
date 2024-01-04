@@ -1,6 +1,6 @@
-\ProvidesFile{tikzlibraryeuclidea.code.tex}[2023/12/21 v1.2.1 A tikz library for plane geometry]
+\ProvidesFile{tikzlibraryeuclidea.code.tex}[2023/12/21 v1.2.2 A tikz library for plane geometry]
 
-\usetikzlibrary{math,calc}
+\usetikzlibrary{math,calc,quotes}
 
 % https://tex.stackexchange.com/questions/455991/pgfmath-function-for-strings-and-numbers
 % Solving the error:
@@ -535,6 +535,26 @@
   % \showthe\euclidea@bx
   % \showthe\euclidea@by
   \pgfmathveclen{\euclidea@ax-\euclidea@bx}{\euclidea@ay-\euclidea@by}
+}
+
+% Syntax of hyperbola:
+%   \hyperbola [path options] (a,b); 
+% wherein, a,b are major/minor semi axis.
+\newcommand\hyperbola{} % just for safety
+\def\hyperbola[#1]#2(#3,#4){
+  \path[samples=100,domain=-1.5:1.5,#1,variable=\euclidea@temp]
+    plot({-(#3)*cosh(\euclidea@temp)},{(#4)*sinh(\euclidea@temp)})  % right arm
+    plot({ (#3)*cosh(\euclidea@temp)},{(#4)*sinh(\euclidea@temp)}); % left arm
+}
+
+% Syntax of asymptote:
+%   \asymptote [path options] (a,b); 
+% wherein, a,b are major/minor semi axis.
+\newcommand\asymptote{} % just for safety
+\def\asymptote[#1]#2(#3,#4){
+  \path[domain=-2:2,#1,variable=\euclidea@temp,]
+    plot({\euclidea@temp},{ (#4)/(#3)*(\euclidea@temp)})  
+    plot({\euclidea@temp},{-(#4)/(#3)*(\euclidea@temp)}); 
 }
 
 \makeatother

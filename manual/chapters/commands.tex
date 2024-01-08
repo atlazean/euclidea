@@ -545,3 +545,20 @@ parallel={A,B,A}
   \item[end modifier] (default: 1), 长度或系数, 如: 1cm 或 .75
 \end{description}
 
+% ---------------------------------
+\section{坐标变换 Coordinates Transformations}
+
+\emph{调用方式}
+
+\begin{tcolorbox}{}
+\mint{latex}{transform={angle:(xshift,yshift)}}
+\end{tcolorbox}
+
+\emph{参数说明}
+
+绕原点旋转 angle, 然后水平方向和竖直方向分别平移 xshift和 yshift
+
+\emph{示例}
+
+\showcode{snippets/commands/transform.tex}
+

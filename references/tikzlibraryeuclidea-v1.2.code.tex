@@ -1,4 +1,4 @@
-\ProvidesFile{tikzlibraryeuclidea.code.tex}[2024/01/09 v1.3.0 A tikz library for plane geometry]
+\ProvidesFile{tikzlibraryeuclidea.code.tex}[2023/12/21 v1.2.2 A tikz library for plane geometry]
 
 \usetikzlibrary{math,calc,quotes}
 
@@ -100,7 +100,7 @@
   },
   revolve/scale/.initial = 1,% angle scale
   revolve/@angle/.initial = 90,
-  revolve/@argn/.initial = 0,% arguments count
+  revolve/@argn/.initial = 1,% arguments count
   % set revolve/@angle with certain degrees or angle of a vector
   revolve/@set angle 1/.code args = {#1}{
     \pgfmathanglebetweenpoints
@@ -152,23 +152,8 @@
     \ifnum \F < 3%number
       \pgfmathparse{#1}
     \else
-      % Compute the Number of Arguments
-      \pgfutil@for\arg:=#1\do{
-        \pgfmathparse{int(add(\pgfkeysvalueof{/tikz/revolve/@argn},1))}
-        \pgfkeysalso{/tikz/revolve/@argn = \pgfmathresult}
-      }
-      \ifnum \pgfkeysvalueof{/tikz/revolve/@argn} = 1
-        \tikzset{revolve/@set angle 1 = {#1}}
-      \else\ifnum \pgfkeysvalueof{/tikz/revolve/@argn} = 2
-        \tikzset{revolve/@set angle 2 = {#1}}
-      \else\ifnum \pgfkeysvalueof{/tikz/revolve/@argn} = 3
-        \tikzset{revolve/@set angle 3 = {#1}}
-      \else\ifnum \pgfkeysvalueof{/tikz/revolve/@argn} = 4
-        \tikzset{revolve/@set angle 4 = {#1}}
-      \else
-        \pgferror{"Incorrect number of arguments!"}
-      \fi\fi\fi
-      \fi
+      \euclidea@ParseArguments#1\euclidea@stop
+      \euclidea@ComputeAngle#1\euclidea@stop
     \fi 
     \pgfkeysalso{/tikz/revolve/@angle = \pgfmathresult}
   },
@@ -491,13 +476,48 @@
   extend/.style args = {#1,#2} {
     parallel={#1,#2,#1}
   },
-  % rotate around the origin by `angle` and then shift by (`xshift`,`yshift`)
-  % tansform = {angle:(xshift,yshift)}
-  transform/.style args = {#1:(#2,#3)} {
-    cm={cos(#1), sin(#1), -sin(#1), cos(#1), (#2,#3)}
-  },
 }
 
+% Utilities for implementation of 'revolve'
+% parse comma separated arguments recursively
+% store arguments number in /tikz/revolve/@argn
+\def\euclidea@ParseArguments#1\euclidea@stop{%
+  \pgfutil@in@{,}{#1}
+  \ifpgfutil@in@%comma separated arguments
+    \euclidea@ParseSeparatedArguments#1\euclidea@stop
+  \fi
+}
+
+\def\euclidea@ParseSeparatedArguments#1,#2\euclidea@stop{%
+  \pgfmathparse{int(add(\pgfkeysvalueof{/tikz/revolve/@argn},1))}
+  \pgfkeysalso{/tikz/revolve/@argn = \pgfmathresult}
+  
+  \pgfutil@in@{,}{#2}
+  \ifpgfutil@in@%comma separated arguments
+    \euclidea@ParseSeparatedArguments#2\euclidea@stop
+  \fi
+}
+
+% compute angle
+\def\euclidea@ComputeAngle#1\euclidea@stop{
+  \ifnum \pgfkeysvalueof{/tikz/revolve/@argn} = 1
+    \tikzset{revolve/@set angle 1 = {#1}}
+  \else
+    \ifnum \pgfkeysvalueof{/tikz/revolve/@argn} = 2
+      \tikzset{revolve/@set angle 2 = {#1}}
+    \else
+      \ifnum \pgfkeysvalueof{/tikz/revolve/@argn} = 3
+        \tikzset{revolve/@set angle 3 = {#1}}
+      \else
+        \ifnum \pgfkeysvalueof{/tikz/revolve/@argn} = 4
+          \tikzset{revolve/@set angle 4 = {#1}}
+        \else
+          \pgferror{"Incorrect number of arguments!"}
+        \fi
+      \fi
+    \fi
+  \fi
+}
 
 % Utilities for implementation of 'intercept'
 \def\euclidea@ComputeLength#1,#2\euclidea@stop{

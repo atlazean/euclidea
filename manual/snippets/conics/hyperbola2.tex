@@ -14,7 +14,7 @@
 
   \draw[thick,red] (A) -- (O) -- (B);
 
-  \foreach \p/\placement in {O/below, A/above, B/below}{
+  \foreach \p/\placement in {O/below, A/above left, B/right}{
     \fill[red] (\p) circle (2pt);
     \draw (\p) node[\placement] {$\p$};
   }

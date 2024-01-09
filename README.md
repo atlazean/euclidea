@@ -30,8 +30,8 @@ Euclidea is a tikz library designed for enchancing tikz in Euclidean geometry dr
 * `external center={O1,A1,O2,A2}`: returns the external homothetic center of two circles.
 * `internal center={O1,A1,O2,A2}`: returns the internal homothetic center of two circles.
 * `radical axis={O1,A1,O2,A2}`: creates the radical axis of two non-concentric circles.
-* `\hyperbola [path options] (a,b);`: creates a hyperbola with major/minor semi axis (a,b).
-* `\asymptote [path options] (a,b);`: creates the asymptote of above hypterbola.
+* `\hyperbola [options] (a,b);`: creates a hyperbola with major/minor semi axis (a,b).
+* `\asymptote [options] (a,b);`: creates the asymptote of above hypterbola.
 * `tansform = {angle:(xshift,yshift)}`: rotates around the origin by `angle` and then shifts by (`xshift`,`yshift`).
 
 ## Example

@@ -1,6 +1,7 @@
 \chapter{圆锥曲线 Conics}
 
-本章包含了一些自定义命令和 tikz 内置命令。
+尽管 tikz 内置的 \verbum{ellipse} 和 \verbum{parabola} 绘制椭圆和抛物线,
+这里定义了 \mintinline{latex}|\ellipse| 和 \mintinline{latex}|\parabola|.
 
 % ---------------------------------
 \section{椭圆 Ellipse}
@@ -8,32 +9,73 @@
 \emph{调用方式}
 
 \begin{tcolorbox}{}
-\mint{latex}{(center) ellipse ( a and b)}
+\mint{latex}{\ellipse [options] (a,b)}
 \end{tcolorbox}
-
-或
-
-\begin{tcolorbox}{}
-\mint{latex}{(center) ellipse [x radius = a, y radius = b]}
-\end{tcolorbox}
-
-\begin{remark*}
-上面 \verbum{ellipse} 也可以替换为 \verbum{circle}.
-\end{remark*}
 
 \emph{参数说明}
 
 \begin{description}
-  \item[a, b] 半长轴长和半短轴长, 需要指定单位, 如 4cm and 3cm
+  \item[a, b] 半长轴长 (semi-major axis) 和半短轴长 (semi-minor axis), 默认单位为 cm, 可指定单位, 如 \verbum{(4cm, 3cm)}
 \end{description}
 
-返回椭圆曲线.
+返回中心为原点的椭圆曲线: $\dfrac{x^2}{a^2}+\dfrac{y^2}{b^2}=1$.
+
+\begin{remark*}
+当指定椭圆曲线 (ellipse) 的 \verbum{domain} (default: \verbum{domain=-180:180})时, \verbum{domain} 是下列参数方程中 $t$ 的取值范围:
+\begin{align*}
+  \begin{cases}
+  x = a \cos t,\\y = b \sin t
+  \end{cases}
+\end{align*}
+\end{remark*}
 
 \emph{示例}
 
+使用 tikz 内置曲线:
+
 \showcode{snippets/conics/ellipse1.tex}
 
+使用 \mintinline{latex}|\ellipse| 命令:
+
 \showcode{snippets/conics/ellipse2.tex}
+
+% ---------------------------------
+\section{抛物线 Parabola}
+
+\emph{调用方式}
+
+\begin{tcolorbox}{}
+\mint{latex}{\parabola [options] (p)}
+\end{tcolorbox}
+
+\emph{参数说明}
+
+\begin{description}
+  \item[p] 半正焦弦或半通径 (semi-latus rectum), 默认单位为 cm, 可指定单位, 如 \verbum{1cm}
+\end{description}
+
+返回中心为原点的抛物线: $x^2 = 2py$.
+
+\begin{remark*}
+抛物线的焦点到顶点的距离为$\dfrac{p}{2}$, 抛物线的准线到顶点的距离也是$\dfrac{p}{2}$, 因此抛物线的焦准距也为 $p$(参考附录\ref{ch:latus-rectum}).
+
+当指定绘制抛物线 (parabola) 的 \verbum{domain} (default: \verbum{domain=-2:2})时, \verbum{domain} 是下列参数方程中 $t$ 的取值范围:
+\begin{align*}
+  \begin{cases}
+  x = 2pt,\\y = 2pt^2
+  \end{cases}
+\end{align*}
+\end{remark*}
+
+\emph{示例}
+
+使用 tikz 内置曲线:
+
+\showcode{snippets/conics/parabola1.tex}
+
+使用 \mintinline{latex}|\parabola| 命令:
+
+\showcode{snippets/conics/parabola2.tex}
 
 % ---------------------------------
 \section{双曲线 Hyperbola 与渐近线 Asymptote}
@@ -53,10 +95,10 @@
 \emph{参数说明}
 
 \begin{description}
-  \item[a, b] 半长轴长和半短轴长
+  \item[a, b] 半实轴长 (semi-major axis) 和半虚轴长 (semi-minor axis), 默认单位为 cm, 可指定单位, 如 \verbum{(4cm, 3cm)}
 \end{description}
 
-返回双曲线及其渐进线.
+分别返回中心在原点的双曲线: $\dfrac{x^2}{a^2}-\dfrac{y^2}{b^2}=1$ 和渐近线: $y = \pm \dfrac{b}{a}x$.
 
 \emph{示例}
 

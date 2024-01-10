@@ -4,6 +4,16 @@
 
 Euclidea is a tikz library designed for enchancing tikz in Euclidean geometry drawings and provides the following interfaces:
 
+### Commands
+
+* `\axes (xmin:xmax, ymin:ymax);`: creates axes with the range from (xmin,ymin) to (xmax, ymax).
+* `\ellipse [options] (a,b);`: creates a ellipse with major/minor semi axis (a,b).
+* `\hyperbola [options] (a,b);`: creates a hyperbola with major/minor semi axis (a,b).
+* `\asymptote [options] (a,b);`: creates the asymptote of above hypterbola.
+* `\parabola [options] (p);`: creates a parabola with semi-latus rectum `p`, i.e. x^2 = 2p*y.
+
+### Path Operations
+
 * `affine={A,B,k}`: returns affine combination of two points, i.e. A + k * ( B - A ).
 * `midpoint={A,B}`: returns midpoint of AB.
 * `translate={A,B,C}`: returns translation of point C by the vector AB, i.e. C + ( B - A ).
@@ -30,8 +40,6 @@ Euclidea is a tikz library designed for enchancing tikz in Euclidean geometry dr
 * `external center={O1,A1,O2,A2}`: returns the external homothetic center of two circles.
 * `internal center={O1,A1,O2,A2}`: returns the internal homothetic center of two circles.
 * `radical axis={O1,A1,O2,A2}`: creates the radical axis of two non-concentric circles.
-* `\hyperbola [options] (a,b);`: creates a hyperbola with major/minor semi axis (a,b).
-* `\asymptote [options] (a,b);`: creates the asymptote of above hypterbola.
 * `tansform = {angle:(xshift,yshift)}`: rotates around the origin by `angle` and then shifts by (`xshift`,`yshift`).
 
 ## Example

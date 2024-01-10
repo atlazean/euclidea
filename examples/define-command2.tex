@@ -1,0 +1,58 @@
+% https://tex.stackexchange.com/questions/34973/how-to-extend-tikz-drawing-commands
+
+\documentclass{article}
+%\url{http://tex.stackexchange.com/q/34973/86}
+
+\usepackage{tikz}
+
+\makeatletter
+\def\tikz@@@carcfinal#1#2#3{%
+  \pgf@process{#2}%
+  \advance\pgf@x by \tikz@lastx
+  \advance\pgf@y by \tikz@lasty
+  \pgfpathmoveto{\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
+  #1%
+  \pgfpathmoveto{\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}%
+  \let\tikz@@@arcfinal=\carc@orig@@@arcfinal
+}
+
+\def\tikz@carcfinal{%
+  \tikz@lastxsaved=\tikz@lastx%
+  \tikz@lastysaved=\tikz@lasty%
+  \let\tikz@arcfinal=\carc@orig@arcfinal
+  \tikz@scan@next@command%
+}
+
+\let\carc@orig@@@arcfinal=\tikz@@@arcfinal
+\let\carc@orig@arcfinal=\tikz@arcfinal
+
+\def\tikz@cchar{% If keyword starts with "c..."
+  \pgfutil@ifnextchar i %... starts with "ci..."
+    {\tikz@circle}%
+    {\pgfutil@ifnextchar h% ... starts with "ch..."
+      {\tikz@children}
+      {\pgfutil@ifnextchar a % ... starts with "ca..."
+        {\carc@call}
+        \tikz@cochar
+      }
+    }
+}%
+
+\def\carc@call{\tikzset{centred arc}\tikz@scan@next@command}
+
+\tikzset{
+  centred arc/.code={%
+    \let\tikz@@@arcfinal=\tikz@@@carcfinal
+    \let\tikz@arcfinal=\tikz@carcfinal
+  },
+}
+\makeatother
+
+\begin{document}
+  \begin{tikzpicture}
+    \draw (0,0) grid (4,4);
+    \draw (1,1) carc[start angle=30,end angle=90,radius=1] carc (30:90:2) carc(30:90:3);
+    \draw [red] (1,0) circle (1);
+    \draw[blue] (3,1) [centred arc] arc  (0:90:2);
+  \end{tikzpicture}
+\end{document}

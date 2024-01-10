@@ -1,6 +1,43 @@
 \chapter{基本作图命令}
 
-这里的命令都是通过 /tikz/insert path\cite{PATH} 在当前路径上插入新的路径.
+这里的命令都是通过 /tikz/insert path\cite{PATH} 在当前路径上插入新的路径, 或者是通过 \verbum{def} 组合一些 tikz 命令.
+
+% ---------------------------------
+\section{坐标轴 Axes}
+
+\emph{调用方式}
+
+\begin{tcolorbox}{}
+\mint{latex}{\axes (xmin:xmain,ymin:ymax);}
+\end{tcolorbox}
+
+\emph{参数说明}
+
+\begin{description}
+  \item[xmin,xmax] $x$范围
+  \item[ymin,ymax] $y$范围
+\end{description}
+
+\emph{示例}
+
+见\ref{sec:transform}.
+
+% ---------------------------------
+\section{坐标变换 Coordinates Transformations}\label{sec:transform}
+
+\emph{调用方式}
+
+\begin{tcolorbox}{}
+\mint{latex}{transform={angle:(xshift,yshift)}}
+\end{tcolorbox}
+
+\emph{参数说明}
+
+绕原点旋转 angle, 然后水平方向和竖直方向分别平移 xshift和 yshift
+
+\emph{示例}
+
+\showcode{snippets/commands/transform.tex}
 
 % ---------------------------------
 \section{仿射组合 Affine Combination}
@@ -536,7 +573,7 @@ parallel={A,B,A}
 \showcode{snippets/commands/radical-axis3.tex}
 
 % ---------------------------------
-\section{Partway Modifiers and Distance Modifiers}\label{sec:modifiers}
+\section{Partway Modifiers and Distance Modifiers}%\label{sec:modifiers}
 
 \verbum{perpendicular bisector,perpendicular,parallel,radical axis}等线段图形可以对起始点进行调整, 调整参数如下\cite{CALC}:
 
@@ -544,21 +581,3 @@ parallel={A,B,A}
   \item[start modifier] (default: 0), 长度或系数, 如: 1cm 或 .75
   \item[end modifier] (default: 1), 长度或系数, 如: 1cm 或 .75
 \end{description}
-
-% ---------------------------------
-\section{坐标变换 Coordinates Transformations}
-
-\emph{调用方式}
-
-\begin{tcolorbox}{}
-\mint{latex}{transform={angle:(xshift,yshift)}}
-\end{tcolorbox}
-
-\emph{参数说明}
-
-绕原点旋转 angle, 然后水平方向和竖直方向分别平移 xshift和 yshift
-
-\emph{示例}
-
-\showcode{snippets/commands/transform.tex}
-

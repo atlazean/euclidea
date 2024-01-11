@@ -7,10 +7,10 @@ Euclidea is a tikz library designed for enchancing tikz in Euclidean geometry dr
 ### Commands
 
 * `\axes (xmin:xmax, ymin:ymax);`: creates axes with the range from (xmin,ymin) to (xmax, ymax).
-* `\ellipse [options] (a,b);`: creates a ellipse with major/minor semi axis (a,b).
-* `\hyperbola [options] (a,b);`: creates a hyperbola with major/minor semi axis (a,b).
+* `\ellipse [options] (a,b);`: creates an ellipse with semi-major/minor axes (a,b).
+* `\hyperbola [options] (a,b);`: creates a hyperbola with semi-major/minor axes (a,b).
 * `\asymptote [options] (a,b);`: creates the asymptote of above hypterbola.
-* `\parabola [options] (p);`: creates a parabola with semi-latus rectum `p`, i.e. x^2 = 2p*y.
+* `\parabola [options] (p);`: creates a parabola with the focal parameter `p`, i.e. x^2 = 2p*y.
 
 ### Path Operations
 
@@ -40,7 +40,7 @@ Euclidea is a tikz library designed for enchancing tikz in Euclidean geometry dr
 * `external center={O1,A1,O2,A2}`: returns the external homothetic center of two circles.
 * `internal center={O1,A1,O2,A2}`: returns the internal homothetic center of two circles.
 * `radical axis={O1,A1,O2,A2}`: creates the radical axis of two non-concentric circles.
-* `tansform = {angle:(xshift,yshift)}`: rotates around the origin by `angle` and then shifts by (`xshift`,`yshift`).
+* `transform = {angle:(xshift,yshift)}`: rotates around the origin by `angle` and then shifts by (`xshift`,`yshift`).
 
 ## Example
 

@@ -1,8 +1,10 @@
-\begin{tikzpicture}[radius=1cm]
-  \draw (0,0)  arc[start angle=180, end angle=90]
-     -- (2,.5) arc[start angle=90,  delta angle=-90];
-  \draw (4,0) -- +(30:1cm)
-              arc [start angle=30,  delta angle=30] -- cycle;
-  \draw (8,0) arc [start angle=0,   end angle=270,
-                   x radius=1cm, y radius=5mm] -- cycle;
+\begin{tikzpicture}
+  % Arc operation
+  \draw (2,0) arc
+    [
+      start angle=0,
+      end angle=300,
+      x radius=2cm,
+      y radius =1cm
+    ];
 \end{tikzpicture}

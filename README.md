@@ -8,7 +8,6 @@ Euclidea is a tikz library designed for enchancing tikz in Euclidean geometry dr
 
 * `\axes (xmin:xmax, ymin:ymax);`: creates axes with the range from (xmin,ymin) to (xmax, ymax).
 * `\ellipse [options] (a,b);`: creates an ellipse with semi-major/minor axes (a,b).
-* `\arc [options] (a,b);`: creates an ellipse arc with semi-major/minor axes (a,b), the default start and end angles are 0 and 180 degrees.
 * `\hyperbola [options] (a,b);`: creates a hyperbola with semi-major/minor axes (a,b).
 * `\asymptote [options] (a,b);`: creates the asymptote of above hypterbola.
 * `\parabola [options] (a,b,c);`: creates a parabola: y = a*x*x + b*x + c.

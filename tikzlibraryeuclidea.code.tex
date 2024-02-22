@@ -533,15 +533,6 @@
   \path[#1] (0,0) ellipse ({#3} and {#4})
 }
 
-% Syntax of arc:
-%   \arc [options] (a,b); 
-% wherein, a,b are major/minor semi axis.
-\newcommand\arc{} % just for safety
-\def\arc[#1]#2(#3,#4){
-  \path[smooth,domain=0:180,#1,variable=\euclidea@var] 
-    plot({(#3)*cos(\euclidea@var)},{(#4)*sin(\euclidea@var)})
-}
-
 % Syntax of hyperbola:
 %   \hyperbola [options] (a,b); 
 % wherein, a,b are major/minor semi axis.

@@ -42,31 +42,37 @@
 % ---------------------------------
 \section{椭圆弧 Arc}
 
-\emph{调用方式}
+\emph{基本用法}
 
-\begin{tcolorbox}{}
-\mint{latex}{\arc [options] (a,b)}
-\end{tcolorbox}
-
-\emph{参数说明}
-
-\begin{description}
-  \item[a, b] 半长轴长 (semi-major axis) 和半短轴长 (semi-minor axis), 默认单位为 cm, 可指定单位, 如 \verbum{(4cm, 3cm)}
-\end{description}
-
-返回中心为原点的椭圆弧: $\dfrac{x^2}{a^2}+\dfrac{y^2}{b^2}=1$.
-
-默认的起始角度和终止角度为 $0^\circ$ 和 $180^\circ$.
-
-\emph{示例}
-
-使用 tikz 内置曲线:
+在 TikZ 中绘制圆弧可以通过 arc 操作 来实现, 将椭圆的一部分添加到当前路径中.
 
 \showcode{snippets/conics/arc1.tex}
 
-使用 \mintinline{latex}|\arc| 命令:
+圆弧从点 (2,0) 开始, 以 0 度（由起始角度指定）结束, 以 300 度（由结束角度指定）结束.
+
+为了绘制圆的一部分, 我们使用与前一个相同的语法, 并且不提供参数 x radius 和 y radius, 而是仅提供参数radius.
 
 \showcode{snippets/conics/arc2.tex}
+
+\begin{itemize}
+
+\item 黄色扇区是通过 arc 操作绘制的, 为了得到圆的一部分, 我们只定义 radius 而不是  x radius 和 y radius 参数. 
+
+\item 蓝色扇区的绘制方式与黄色扇区相同, 但在本例中我们指定了 delta angle 而不是 end angle, 后者等于start angle + delta angle.
+
+\end{itemize}
+
+\emph{简短语法}
+
+上图中的弯曲箭头是使用 arc 操作的较短语法绘制的, 对应于圆的一部分:
+
+arc(start angle:end angle: radius)
+
+对于椭圆, 我们使用以下语法: 
+
+arc(start angle:end angle: x radius and y radius)
+
+然而, 这种语法不直观且难以阅读, 因此一般情况下应首选普通语法(见 PGF 手册).
 
 % ---------------------------------
 \section{抛物线 Parabola}

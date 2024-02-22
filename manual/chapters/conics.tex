@@ -40,32 +40,50 @@
 \showcode{snippets/conics/ellipse2.tex}
 
 % ---------------------------------
-\section{抛物线 Parabola}
+\section{椭圆弧 Arc}
 
 \emph{调用方式}
 
 \begin{tcolorbox}{}
-\mint{latex}{\parabola [options] (p)}
+\mint{latex}{\arc [options] (a,b)}
 \end{tcolorbox}
 
 \emph{参数说明}
 
 \begin{description}
-  \item[p] 焦准距或焦参数 (focal parameter), 默认单位为 cm, 可指定单位, 如 \verbum{1cm}
+  \item[a, b] 半长轴长 (semi-major axis) 和半短轴长 (semi-minor axis), 默认单位为 cm, 可指定单位, 如 \verbum{(4cm, 3cm)}
 \end{description}
 
-返回中心为原点的抛物线: $x^2 = 2py$.
+返回中心为原点的椭圆弧: $\dfrac{x^2}{a^2}+\dfrac{y^2}{b^2}=1$.
 
-\begin{remark*}
-抛物线的焦点到顶点的距离为$\dfrac{p}{2}$, 抛物线的准线到顶点的距离也是$\dfrac{p}{2}$, 抛物线的半正焦弦或半通径 (semi-latus rectum)也为 $p$(参考附录\ref{ch:latus-rectum}).
+默认的起始角度和终止角度为 $0^\circ$ 和 $180^\circ$.
 
-当指定绘制抛物线 (parabola) 的 \verbum{domain} (default: \verbum{domain=-2:2})时, \verbum{domain} 是下列参数方程中 $t$ 的取值范围:
-\begin{align*}
-  \begin{cases}
-  x = 2pt,\\y = 2pt^2
-  \end{cases}
-\end{align*}
-\end{remark*}
+\emph{示例}
+
+使用 tikz 内置曲线:
+
+\showcode{snippets/conics/arc1.tex}
+
+使用 \mintinline{latex}|\arc| 命令:
+
+\showcode{snippets/conics/arc2.tex}
+
+% ---------------------------------
+\section{抛物线 Parabola}
+
+\emph{调用方式}
+
+\begin{tcolorbox}{}
+\mint{latex}{\parabola [options] (a,b,c)}
+\end{tcolorbox}
+
+\emph{参数说明}
+
+\begin{description}
+  \item[a,b,c] 二次函数的系数
+\end{description}
+
+返回抛物线: $y=ax^2+bx+c$.
 
 \emph{示例}
 

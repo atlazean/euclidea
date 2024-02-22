@@ -1,0 +1,16 @@
+\documentclass{article}
+\usepackage{tikz}
+
+\usetikzlibrary{euclidea}
+
+\begin{document}
+
+\begin{tikzpicture}
+  \axes (-4:4, -4:4);
+
+  \arc[draw,red,thick] (4,3);
+  \arc[draw,teal,thick,domain=30:135] (3,3);
+  \arc[draw,purple,thick,domain=-30:-60] (4,4);
+\end{tikzpicture}
+
+\end{document}

@@ -1,4 +1,4 @@
-\ProvidesFile{tikzlibraryeuclidea.code.tex}[2024/01/11 v1.3.1 A tikz library for plane geometry]
+\ProvidesFile{tikzlibraryeuclidea.code.tex}[2024/02/22 v1.3.2 A tikz library for plane geometry]
 
 \usetikzlibrary{math,calc,quotes}
 
@@ -517,14 +517,12 @@
 }
 
 
-% Syntax of parabola: x^2=2py
-%   \parabola [options] (p); 
-% wherein, p is the semi-latus rectum.
-% x = 2pt, y = 2pt^2
+% Syntax of parabola: y = a * x * x + b * x + c
+%   \parabola [options] (a,b,c); 
 \newcommand\parabola{} % just for safety
-\def\parabola[#1]#2(#3){
+\def\parabola[#1]#2(#3,#4,#5){
   \path[smooth,domain=-2:2,#1,variable=\euclidea@var]
-    plot({2*(#3)*\euclidea@var},{2*(#3)*\euclidea@var*\euclidea@var})
+    plot({\euclidea@var},{(#3)*\euclidea@var*\euclidea@var+(#4)*\euclidea@var+(#5)})
 }
 
 % Syntax of ellipse:
@@ -533,6 +531,15 @@
 \newcommand\ellipse{} % just for safety
 \def\ellipse[#1]#2(#3,#4){
   \path[#1] (0,0) ellipse ({#3} and {#4})
+}
+
+% Syntax of arc:
+%   \arc [options] (a,b); 
+% wherein, a,b are major/minor semi axis.
+\newcommand\arc{} % just for safety
+\def\arc[#1]#2(#3,#4){
+  \path[smooth,domain=0:180,#1,variable=\euclidea@var] 
+    plot({(#3)*cos(\euclidea@var)},{(#4)*sin(\euclidea@var)})
 }
 
 % Syntax of hyperbola:

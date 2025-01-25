@@ -1,0 +1,18 @@
+#!/bin/bash
+
+OS=`uname -s`
+
+if [ "$OS" == "Darwin" ]; then
+  # macOS
+  PKGDIR=~/Library/texmf/tex/latex/euclidea
+elif [ "$OS" == "Linux" ]; then
+  # Debian
+  PKGDIR=~/texmf/tex/latex/euclidea
+else
+  echo "This OS is not supported."
+  exit
+fi
+
+rm -rf $PKGDIR
+mkdir -p $PKGDIR
+cp tikzlibraryeuclidea.code.tex $PKGDIR 

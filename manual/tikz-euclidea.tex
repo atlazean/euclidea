@@ -5,7 +5,7 @@
 \usepackage{codeblocks}
 \usepackage{tikzplot}
 
-\usetikzlibrary{euclidea}
+%\usetikzlibrary{euclidea}
 %\input{../tikzlibraryeuclidea.code.tex}
 
 \newcommand{\showcode}[1]{\inputminted[]{latex}{#1}\begin{center}\input{#1}\end{center}}
@@ -32,8 +32,9 @@
 % \AddToHook{cmd/mint/after}{\end{tcolorbox}} % 出现错误
 
 % https://tex.stackexchange.com/questions/112559/box-around-minted-environment/112573#112573
-\xpretocmd{\inputminted}{\begin{tcolorbox}}{}{}%
-\xapptocmd{\inputminted}{\end{tcolorbox}}{}{}%
+% Cannot pass on Debian with LaTeX 2024
+%\xpretocmd{\inputminted}{\begin{tcolorbox}}{}{}%
+%\xapptocmd{\inputminted}{\end{tcolorbox}}{}{}%
 
 %\xpretocmd{\mint}{\begin{tcolorbox}}{}{}% 出现错误
 %\xapptocmd{\mint}{\end{tcolorbox}}{}{}%

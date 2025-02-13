@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-github/latex-essientials
+github/latex-essentials
 
 ## Toubleshooting
 

@@ -15,9 +15,9 @@
 % tcolorbox 和 minted 都设置 bgcolor 时会有冲突, 无法 breakable
 
 \tcbset{
-  %width=.95\textwidth
-  grow to left by=-2mm,%   equivalent to negative mdframed 'leftmargin'
-  grow to right by=0mm,%  equivalent to negative mdframed 'rightmargin'
+  width=.95\textwidth
+  %grow to left by=-2mm,%   equivalent to negative mdframed 'leftmargin'
+  %grow to right by=0mm,%  equivalent to negative mdframed 'rightmargin'
   %enlarge top by=.05in,%     equivalent to mdframed 'skipabove'
   %enlarge bottom by=.05in,%  equivalent to mdframed 'skipbelow'
   %show bounding box,% display the bounding box
@@ -33,8 +33,8 @@
 
 % https://tex.stackexchange.com/questions/112559/box-around-minted-environment/112573#112573
 % Cannot pass on Debian with LaTeX 2024
-%\xpretocmd{\inputminted}{\begin{tcolorbox}}{}{}%
-%\xapptocmd{\inputminted}{\end{tcolorbox}}{}{}%
+\xpretocmd{\inputminted}{\begin{tcolorbox}}{}{}%
+\xapptocmd{\inputminted}{\end{tcolorbox}}{}{}%
 
 %\xpretocmd{\mint}{\begin{tcolorbox}}{}{}% 出现错误
 %\xapptocmd{\mint}{\end{tcolorbox}}{}{}%

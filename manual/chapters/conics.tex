@@ -6,6 +6,8 @@
 % ---------------------------------
 \section{椭圆 Ellipse}
 
+\subsection{已知半长轴长 a 和半短轴长 b 绘图}
+
 \emph{调用方式}
 
 \begin{tcolorbox}{}
@@ -38,6 +40,24 @@
 使用 \mintinline{latex}|\ellipse| 命令:
 
 \showcode{snippets/conics/ellipse2.tex}
+
+% ---------------------------------
+\subsection{由两焦点和一点确定椭圆}
+
+\emph{调用方式}
+
+\begin{minted}{latex}
+  `ellipse/define = {F1,F2,P}`: define an ellipse with two foci and a point.
+  `ellipse`: creates the ellipse path.
+  `ellipse/directrix/scale=k`: set the scale of directrices.
+  `ellipse/directrix`: create the directrices.
+  `ellipse/axis/scale=k`: set the scale of axes
+  `ellipse/axis`: create the axes.
+\end{minted}
+
+\emph{示例}
+
+\showcode{snippets/conics/ellipse3.tex}
 
 % ---------------------------------
 \section{椭圆弧 Arc}
@@ -77,6 +97,8 @@ arc(start angle:end angle: x radius and y radius)
 % ---------------------------------
 \section{抛物线 Parabola}
 
+\subsection{已知方程系数 a, b 和 c 绘图}
+
 \emph{调用方式}
 
 \begin{tcolorbox}{}
@@ -102,7 +124,28 @@ arc(start angle:end angle: x radius and y radius)
 \showcode{snippets/conics/parabola2.tex}
 
 % ---------------------------------
+\subsection{由焦点和顶点确定抛物线}
+
+\emph{调用方式}
+
+\begin{minted}{latex}
+  `parabola/define = {F,P}`: define a parabola with the focus and vertex.
+  `parabola/domain=t1:t2`: set the domain for parametric equation: x = a*t^2, y = 2a*t, where `a` is the distance from the focus to the vertex.
+  `parabola`: creates the parabola path.
+  `parabola/directrix/scale=k`: set the scale of directrices.
+  `parabola/directrix`: create the directrix.
+  `parabola/axis/scale=k`: set the scale of axis.
+  `parabola/axis`: create the axis.
+\end{minted}
+
+\emph{示例}
+
+\showcode{snippets/conics/parabola3.tex}
+
+% ---------------------------------
 \section{双曲线 Hyperbola 与渐近线 Asymptote}
+
+\subsection{已知半实轴长 a 和半虚轴长 b 绘图}
 
 \emph{调用方式}
 
@@ -154,3 +197,22 @@ $t$ 是射线,双曲线和 $x$ 轴围成的面积的二倍. 对于双曲线上�
 \emph{示例}
 
 \showcode{snippets/conics/hyperbola3.tex}
+
+% ---------------------------------
+\subsection{由两焦点和一点确定双曲线}
+
+\emph{调用方式}
+
+\begin{minted}{latex}
+  `hyperbola/define = {F1,F2,P}`: define a hyperbola with two foci and a point.
+  `hyperbola/domain=t1:t2`: set the domain for parametric equation: x = a*cosh(t), y = b*sinh(t).
+  `hyperbola`: creates the hyperbola path.
+  `hyperbola/directrix/scale=k`: set the scale of directrices.
+  `hyperbola/directrix`: create the directrices.
+  `hyperbola/axis/scale=k`: set the scale of axes.
+  `hyperbola/axis`: create the axes.
+\end{minted}
+
+\emph{示例}
+
+\showcode{snippets/conics/hyperbola4.tex}

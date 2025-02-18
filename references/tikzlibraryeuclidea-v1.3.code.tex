@@ -1,4 +1,4 @@
-\ProvidesFile{tikzlibraryeuclidea.code.tex}[2025/02/18 v1.4.0 A tikz library for Euclidean geometry constructions]
+\ProvidesFile{tikzlibraryeuclidea.code.tex}[2024/02/22 v1.3.2 A tikz library for plane geometry]
 
 \usetikzlibrary{math,calc,quotes}
 
@@ -498,352 +498,44 @@
   },
   % ========== Conics Definitions ==========
   % ellipse with foci and a point
-  ellipse/@a/.initial = 0,
-  ellipse/@b/.initial = 0,
-  ellipse/@c/.initial = 0,
-  ellipse/@angle/.initial = 0,
-  ellipse/@xcenter/.initial = 0,
-  ellipse/@ycenter/.initial = 0,
-  ellipse/define/.code args = {#1,#2,#3}{
-    % 提取各点的坐标分量 x-coordinate and y-coordinate
-    % 注意: 根据 LaTeX 的规则, 宏不能含有数字, 提取坐标的 x 和 y 分量的宏不要含有数字
-    \newdimen\xFL
-    \newdimen\yFL
-    \newdimen\xFR
-    \newdimen\yFR
-    \newdimen\xP
-    \newdimen\yP
-    \pgfextractx{\xFL}{\pgfpointanchor{#1}{center}}
-    \pgfextracty{\yFL}{\pgfpointanchor{#1}{center}}
-    \pgfextractx{\xFR}{\pgfpointanchor{#2}{center}}
-    \pgfextracty{\yFR}{\pgfpointanchor{#2}{center}}
-    \pgfextractx{\xP}{\pgfpointanchor{#3}{center}}
-    \pgfextracty{\yP}{\pgfpointanchor{#3}{center}}
-
-    % semimajor axis: a = |PF1 - PF2| / 2
-    \pgfmathsetmacro{\PFLeft}{veclen(\xP-\xFL, \yP-\yFL)} % 计算 PF1
-    \pgfmathsetmacro{\PFRight}{veclen(\xP-\xFR, \yP-\yFR)} % 计算 PF2
-    \pgfmathsetmacro{\a}{abs(\PFLeft + \PFRight)/2cm} % 计算 a 并转换单位
-
-    % the distance from the center to a focus: c = |F1F2| / 2
-    \pgfmathsetmacro{\c}{veclen(\xFL-\xFR, \yFL-\yFR) / 2cm} 
-
-    % semiminor axis: b = sqrt(a^2 - c^2)
-    \pgfmathsetmacro{\b}{sqrt(\a^2 - \c^2)} % 
-
-    % ellipse center
-    \pgfmathsetmacro{\xcenter}{(\xFL + \xFR) / 2cm} 
-    \pgfmathsetmacro{\ycenter}{(\yFL + \yFR) / 2cm} 
-
-    % angle of rotation
-    \pgfmathsetmacro{\angle}{atan2(\yFR-\yFL, \xFR-\xFL)} 
-
-    \pgfkeysalso{/tikz/ellipse/@a = \a}
-    \pgfkeysalso{/tikz/ellipse/@b = \b}
-    \pgfkeysalso{/tikz/ellipse/@c = \c}
-    \pgfkeysalso{/tikz/ellipse/@xcenter = \xcenter}
-    \pgfkeysalso{/tikz/ellipse/@ycenter = \ycenter}
-    \pgfkeysalso{/tikz/ellipse/@angle = \angle}
-    \typeout{=========================}
-    \typeout{
-      ellipse:{
-        a:\pgfkeysvalueof{/tikz/ellipse/@a}, 
-        b:\pgfkeysvalueof{/tikz/ellipse/@b}, 
-        c:\pgfkeysvalueof{/tikz/ellipse/@c}, 
-        angle:\pgfkeysvalueof{/tikz/ellipse/@angle}, 
-        center:(\pgfkeysvalueof{/tikz/ellipse/@xcenter},\pgfkeysvalueof{/tikz/ellipse/@ycenter})
-      }
-    }
-    \typeout{=========================}
-  },
-  ellipse/.style = {
+  ellipse/.style args = {#1,#2,#3}{
     insert path = {
       let
-        \n{a} = {\pgfkeysvalueof{/tikz/ellipse/@a}},
-        \n{b} = {\pgfkeysvalueof{/tikz/ellipse/@b}},
-        \n{angle} = {\pgfkeysvalueof{/tikz/ellipse/@angle}},
-        \n{xcenter} = {\pgfkeysvalueof{/tikz/ellipse/@xcenter}},
-        \n{ycenter} = {\pgfkeysvalueof{/tikz/ellipse/@ycenter}},
-      in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
+        \p{F1F2} = ($(#2) - (#1)$),
+        \p{PF1} = ($(#3) - (#1)$),
+        \p{PF2} = ($(#3) - (#2)$),
+        \p{O} = ($(#1)!.5!(#2)$),
+        \n{a} = {abs(veclen(\p{PF2}) + veclen(\p{PF1}))/2},
+        \n{c} = {veclen(\p{F1F2})/2},
+        \n{b} = {sqrt(\n{a}^2-\n{c}^2)},
+        \n{angle} = {atan2(\y{F1F2}, \x{F1F2})},
+      in [transform={\n{angle}:(\x{O},\y{O})}]
         (0,0) ellipse [x radius=\n{a},y radius=\n{b}]
     }
   },
-  % ellipse directrices: k = 1.25
-  %   (-a^2/c, -k*b) -- (-a^2/c, k*b)
-  %   ( a^2/c, -k*b) -- ( a^2/c, k*b)
-  ellipse/directrix/@scale/.initial = 1.25,
-  ellipse/directrix/scale/.code args= {#1}{
-    \pgfkeysalso{/tikz/ellipse/directrix/@scale = #1}
-  },
-  ellipse/directrix/.style = {
-    insert path = {
-      let
-        \n{a} = {\pgfkeysvalueof{/tikz/ellipse/@a}},
-        \n{b} = {\pgfkeysvalueof{/tikz/ellipse/@b}},
-        \n{c} = {\pgfkeysvalueof{/tikz/ellipse/@c}},
-        \n{d} = {\n{a}^2/\n{c}},
-        \n{scale} = {\pgfkeysvalueof{/tikz/ellipse/directrix/@scale}},
-        \n{angle} = {\pgfkeysvalueof{/tikz/ellipse/@angle}},
-        \n{xcenter} = {\pgfkeysvalueof{/tikz/ellipse/@xcenter}},
-        \n{ycenter} = {\pgfkeysvalueof{/tikz/ellipse/@ycenter}},
-      in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
-        (-\n{d}, -\n{b}*\n{scale}) -- (-\n{d}, \n{b}*\n{scale})
-        ( \n{d}, -\n{b}*\n{scale}) -- ( \n{d}, \n{b}*\n{scale})
-    }
-  },
-  % ellipse axes: k = 1.5
-  %   (-k*a, 0) -- (k*a, 0)
-  %   (0, -k*b) -- (0, k*b)
-  ellipse/axis/@scale/.initial = 1.5,
-  ellipse/axis/scale/.code args= {#1}{
-    \pgfkeysalso{/tikz/ellipse/axis/@scale = #1}
-  },
-  ellipse/axis/.style = {
-    insert path = {
-      let
-        \n{a} = {\pgfkeysvalueof{/tikz/ellipse/@a}},
-        \n{b} = {\pgfkeysvalueof{/tikz/ellipse/@b}},
-        \n{scale} = {\pgfkeysvalueof{/tikz/ellipse/axis/@scale}},
-        \n{angle} = {\pgfkeysvalueof{/tikz/ellipse/@angle}},
-        \n{xcenter} = {\pgfkeysvalueof{/tikz/ellipse/@xcenter}},
-        \n{ycenter} = {\pgfkeysvalueof{/tikz/ellipse/@ycenter}},
-      in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
-        (-\n{scale}*\n{a}, 0) -- (\n{scale}*\n{a}, 0)
-        (0, -\n{scale}*\n{b}) -- (0, \n{scale}*\n{b})
-    }
-  },
   % hyperbola with foci and a point
-  % hyperbola parametric equation: x = a*cosh(t), y = b*sinh(t)
   hyperbola/@domain/.initial=-1.5:1.5,
   hyperbola/doamin/.code args = {#1}{
     \pgfkeysalso{/tikz/hyperbola/@domain = #1}
   },
-  hyperbola/@a/.initial = 0,
-  hyperbola/@b/.initial = 0,
-  hyperbola/@c/.initial = 0,
-  hyperbola/@angle/.initial = 0,
-  hyperbola/@xcenter/.initial = 0,
-  hyperbola/@ycenter/.initial = 0,
-  hyperbola/define/.code args = {#1,#2,#3}{
-    % 提取各点的坐标分量 x-coordinate and y-coordinate
-    % 注意: 根据 LaTeX 的规则, 宏不能含有数字, 提取坐标的 x 和 y 分量的宏不要含有数字
-    \newdimen\xFL
-    \newdimen\yFL
-    \newdimen\xFR
-    \newdimen\yFR
-    \newdimen\xP
-    \newdimen\yP
-    \pgfextractx{\xFL}{\pgfpointanchor{#1}{center}}
-    \pgfextracty{\yFL}{\pgfpointanchor{#1}{center}}
-    \pgfextractx{\xFR}{\pgfpointanchor{#2}{center}}
-    \pgfextracty{\yFR}{\pgfpointanchor{#2}{center}}
-    \pgfextractx{\xP}{\pgfpointanchor{#3}{center}}
-    \pgfextracty{\yP}{\pgfpointanchor{#3}{center}}
-
-    % semimajor axis: a = |PF1 - PF2| / 2
-    \pgfmathsetmacro{\PFLeft}{veclen(\xP-\xFL, \yP-\yFL)} % 计算 PF1
-    \pgfmathsetmacro{\PFRight}{veclen(\xP-\xFR, \yP-\yFR)} % 计算 PF2
-    \pgfmathsetmacro{\a}{abs(\PFLeft - \PFRight)/2cm} % 计算 a 并转换单位
-
-    % the distance from the center to a focus: c = |F1F2| / 2
-    \pgfmathsetmacro{\c}{veclen(\xFL-\xFR, \yFL-\yFR) / 2cm} % c = |F1F2| / 2
-
-    % semiminor axis: b = sqrt(c^2 - a^2)
-    \pgfmathsetmacro{\b}{sqrt(\c^2 - \a^2)} 
-
-    % hyperbola center
-    \pgfmathsetmacro{\xcenter}{(\xFL + \xFR) / 2cm} 
-    \pgfmathsetmacro{\ycenter}{(\yFL + \yFR) / 2cm} 
-
-    % angle of rotation
-    \pgfmathsetmacro{\angle}{atan2(\yFR-\yFL, \xFR-\xFL)}
-
-    \pgfkeysalso{/tikz/hyperbola/@a = \a}
-    \pgfkeysalso{/tikz/hyperbola/@b = \b}
-    \pgfkeysalso{/tikz/hyperbola/@c = \c}
-    \pgfkeysalso{/tikz/hyperbola/@xcenter = \xcenter}
-    \pgfkeysalso{/tikz/hyperbola/@ycenter = \ycenter}
-    \pgfkeysalso{/tikz/hyperbola/@angle = \angle}
-    \typeout{=========================}
-    \typeout{
-      hyperbola:{
-        a:\pgfkeysvalueof{/tikz/hyperbola/@a}, 
-        b:\pgfkeysvalueof{/tikz/hyperbola/@b}, 
-        c:\pgfkeysvalueof{/tikz/hyperbola/@c}, 
-        angle:\pgfkeysvalueof{/tikz/hyperbola/@angle}, 
-        center:(\pgfkeysvalueof{/tikz/hyperbola/@xcenter},\pgfkeysvalueof{/tikz/hyperbola/@ycenter})
-      }
-    }
-    \typeout{=========================}
-  },
-  hyperbola/.style = {
+  hyperbola/.style args = {#1,#2,#3}{
     insert path = {
       let
-        \n{a} = {\pgfkeysvalueof{/tikz/hyperbola/@a}},
-        \n{b} = {\pgfkeysvalueof{/tikz/hyperbola/@b}},
-        \n{angle} = {\pgfkeysvalueof{/tikz/hyperbola/@angle}},
-        \n{xcenter} = {\pgfkeysvalueof{/tikz/hyperbola/@xcenter}},
-        \n{ycenter} = {\pgfkeysvalueof{/tikz/hyperbola/@ycenter}},
-      in [smooth,domain=\pgfkeysvalueof{/tikz/hyperbola/@domain},variable=\euclidea@var,transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
-        plot({-\n{a}*cosh(\euclidea@var)},{\n{b}*sinh(\euclidea@var)})  % right branch
-        plot({ \n{a}*cosh(\euclidea@var)},{\n{b}*sinh(\euclidea@var)})  % left branch
+        \p{F1F2} = ($(#2) - (#1)$),
+        \p{PF1} = ($(#3) - (#1)$),
+        \p{PF2} = ($(#3) - (#2)$),
+        \p{O} = ($(#1)!.5!(#2)$),
+        \n{a} = {abs(veclen(\p{PF2}) - veclen(\p{PF1}))/2},
+        \n{c} = {veclen(\p{F1F2})/2},
+        \n{b} = {sqrt(\n{c}^2-\n{a}^2)},
+        \n{angle} = {atan2(\y{F1F2}, \x{F1F2})},
+      in [smooth,domain=\pgfkeysvalueof{/tikz/hyperbola/@domain},variable=\euclidea@var,transform={\n{angle}:(\x{O},\y{O})}]
+        plot({-\n{a}*cosh(\euclidea@var)},{\n{b}*sinh(\euclidea@var)})  % right arm
+        plot({ \n{a}*cosh(\euclidea@var)},{\n{b}*sinh(\euclidea@var)})  % left arm
+        plot({-\n{a}*sinh(\euclidea@var)},{\n{b}*sinh(\euclidea@var)})  % right arm
+        plot({ \n{a}*sinh(\euclidea@var)},{\n{b}*sinh(\euclidea@var)})  % left arm
     }
-  },
-  % asymptote parametric equation: x = a*sinh(t), y = b*sinh(t)
-  asymptote/.style = {
-    insert path = {
-      let
-        \n{a} = {\pgfkeysvalueof{/tikz/hyperbola/@a}},
-        \n{b} = {\pgfkeysvalueof{/tikz/hyperbola/@b}},
-        \n{angle} = {\pgfkeysvalueof{/tikz/hyperbola/@angle}},
-        \n{xcenter} = {\pgfkeysvalueof{/tikz/hyperbola/@xcenter}},
-        \n{ycenter} = {\pgfkeysvalueof{/tikz/hyperbola/@ycenter}},
-      in [smooth,domain=\pgfkeysvalueof{/tikz/hyperbola/@domain},variable=\euclidea@var,transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
-        plot({-\n{a}*sinh(\euclidea@var)},{\n{b}*sinh(\euclidea@var)})  
-        plot({ \n{a}*sinh(\euclidea@var)},{\n{b}*sinh(\euclidea@var)})  
-    }
-  },
-  % hyperbola directrices: k = 1.5
-  %   (-a^2/c, -k*b) -- (-a^2/c, k*b)
-  %   ( a^2/c, -k*b) -- ( a^2/c, k*b)
-  hyperbola/directrix/@scale/.initial = 1.5,
-  hyperbola/directrix/scale/.code args= {#1}{
-    \pgfkeysalso{/tikz/hyperbola/directrix/@scale = #1}
-  },
-  hyperbola/directrix/.style = {
-    insert path = {
-      let
-        \n{a} = {\pgfkeysvalueof{/tikz/hyperbola/@a}},
-        \n{b} = {\pgfkeysvalueof{/tikz/hyperbola/@b}},
-        \n{c} = {\pgfkeysvalueof{/tikz/hyperbola/@c}},
-        \n{d} = {\n{a}^2/\n{c}},
-        \n{scale} = {\pgfkeysvalueof{/tikz/hyperbola/directrix/@scale}},
-        \n{angle} = {\pgfkeysvalueof{/tikz/hyperbola/@angle}},
-        \n{xcenter} = {\pgfkeysvalueof{/tikz/hyperbola/@xcenter}},
-        \n{ycenter} = {\pgfkeysvalueof{/tikz/hyperbola/@ycenter}},
-      in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
-        (-\n{d}, -\n{scale}*\n{b}) -- (-\n{d}, \n{scale}*\n{b})
-        ( \n{d}, -\n{scale}*\n{b}) -- ( \n{d}, \n{scale}*\n{b})
-    }
-  },
-  % hyperbola axes: k = 1.5
-  %   (-k*c, 0) -- (k*c, 0)
-  %   (0, -k*b) -- (0, k*b)
-  hyperbola/axis/@scale/.initial = 1.5,
-  hyperbola/axis/scale/.code args= {#1}{
-    \pgfkeysalso{/tikz/hyperbola/axis/@scale = #1}
-  },
-  hyperbola/axis/.style = {
-    insert path = {
-      let
-        \n{b} = {\pgfkeysvalueof{/tikz/hyperbola/@b}},
-        \n{c} = {\pgfkeysvalueof{/tikz/hyperbola/@c}},
-        \n{scale} = {\pgfkeysvalueof{/tikz/hyperbola/axis/@scale}},
-        \n{angle} = {\pgfkeysvalueof{/tikz/hyperbola/@angle}},
-        \n{xcenter} = {\pgfkeysvalueof{/tikz/hyperbola/@xcenter}},
-        \n{ycenter} = {\pgfkeysvalueof{/tikz/hyperbola/@ycenter}},
-      in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
-        (-\n{scale}*\n{c}, 0) -- (\n{scale}*\n{c}, 0)
-        (0, -\n{scale}*\n{b}) -- (0, \n{scale}*\n{b})
-    }
-  },
-  % parabola with the focus and vertex
-  % parabola parametric equation: 
-  % y^2 = 4a*x, x = a*t^2, y= 2a*t
-  % The quantity 4a is known as the latus rectum.
-  parabola/@domain/.initial=-2:2,
-  parabola/doamin/.code args = {#1}{
-    \pgfkeysalso{/tikz/parabola/@domain = #1}
-  },
-  parabola/@a/.initial = 0,
-  parabola/@angle/.initial = 0,
-  parabola/@xvertex/.initial = 0,
-  parabola/@yvertex/.initial = 0,
-  parabola/define/.code args = {#1,#2}{
-    % 提取各点的坐标分量 x-coordinate and y-coordinate
-    % 注意: 根据 LaTeX 的规则, 宏不能含有数字, 提取坐标的 x 和 y 分量的宏不要含有数字
-    \newdimen\xF
-    \newdimen\yF
-    \newdimen\xP
-    \newdimen\yP
-    \pgfextractx{\xF}{\pgfpointanchor{#1}{center}}
-    \pgfextracty{\yF}{\pgfpointanchor{#1}{center}}
-    \pgfextractx{\xP}{\pgfpointanchor{#2}{center}}
-    \pgfextracty{\yP}{\pgfpointanchor{#2}{center}}
-
-    % latus rectum 4a
-    % 注意: semi-latus rectum 通常表示为 p (=2a), 
-    % macro 不要定义为 \p, \p 有表示向量的含义
-    \pgfmathsetmacro{\a}{veclen(\xP-\xF, \yP-\yF)/1cm} % 计算 PF
-    
-    % parabola vertex
-    \pgfmathsetmacro{\xvertex}{(\xP) / 1cm} 
-    \pgfmathsetmacro{\yvertex}{(\yP) / 1cm} 
-
-    % angle of rotation
-    \pgfmathsetmacro{\angle}{atan2(\yF-\yP, \xF-\xP)}
-
-    \pgfkeysalso{/tikz/parabola/@a = \a}
-    \pgfkeysalso{/tikz/parabola/@xvertex = \xvertex}
-    \pgfkeysalso{/tikz/parabola/@yvertex = \yvertex}
-    \pgfkeysalso{/tikz/parabola/@angle = \angle}
-    \typeout{=========================}
-    \typeout{
-      parabola:{
-        a:\pgfkeysvalueof{/tikz/parabola/@a}, 
-        angle:\pgfkeysvalueof{/tikz/parabola/@angle}, 
-        center:(\pgfkeysvalueof{/tikz/parabola/@xvertex},\pgfkeysvalueof{/tikz/parabola/@yvertex})
-      }
-    }
-    \typeout{=========================}
-  },  
-  parabola/.style = {
-    insert path = {
-      let
-        \n{a} = {\pgfkeysvalueof{/tikz/parabola/@a}},
-        \n{angle} = {\pgfkeysvalueof{/tikz/parabola/@angle}},
-        \n{xvertex} = {\pgfkeysvalueof{/tikz/parabola/@xvertex}},
-        \n{yvertex} = {\pgfkeysvalueof{/tikz/parabola/@yvertex}},
-      in [smooth,domain=\pgfkeysvalueof{/tikz/parabola/@domain},variable=\euclidea@var,transform={\n{angle}:(\n{xvertex},\n{yvertex})}]
-        plot({\n{a}*(\euclidea@var)^2},{2*\n{a}*(\euclidea@var)}) 
-    }
-  },
-  % parabola directrix: k = 2
-  %   (-a, -k*a) -- (-a, 2k*a)
-  parabola/directrix/@scale/.initial = 2,
-  parabola/directrix/scale/.code args= {#1}{
-    \pgfkeysalso{/tikz/parabola/directrix/@scale = #1}
-  },
-  parabola/directrix/.style = {
-    insert path = {
-      let
-        \n{a} = {\pgfkeysvalueof{/tikz/parabola/@a}},
-        \n{scale} = {\pgfkeysvalueof{/tikz/parabola/directrix/@scale}},
-        \n{angle} = {\pgfkeysvalueof{/tikz/parabola/@angle}},
-        \n{xcenter} = {\pgfkeysvalueof{/tikz/parabola/@xvertex}},
-        \n{ycenter} = {\pgfkeysvalueof{/tikz/parabola/@yvertex}},
-      in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
-        (-\n{a}, -2*\n{scale}*\n{a}) -- (-\n{a}, 2*\n{scale}*\n{a})
-    }
-  },
-  % parabola directrix: k = 2
-  %   (-2a, 0) -- (k^2*a, 0)
-  parabola/axis/@scale/.initial = 2,
-  parabola/axis/scale/.code args= {#1}{
-    \pgfkeysalso{/tikz/parabola/axis/@scale = #1}
-  },
-  parabola/axis/.style = {
-    insert path = {
-      let
-        \n{a} = {\pgfkeysvalueof{/tikz/parabola/@a}},
-        \n{scale} = {\pgfkeysvalueof{/tikz/parabola/axis/@scale}},
-        \n{angle} = {\pgfkeysvalueof{/tikz/parabola/@angle}},
-        \n{xcenter} = {\pgfkeysvalueof{/tikz/parabola/@xvertex}},
-        \n{ycenter} = {\pgfkeysvalueof{/tikz/parabola/@yvertex}},
-      in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
-        (-2*\n{a}, 0) -- (\n{scale}^2*\n{a},0)
-    }
-  },
+  }, 
 }
 
 % Utilities for implementation of 'intercept'

@@ -1,4 +1,4 @@
-# Euclidea
+# Euclidea: A tikz library for Euclidean geometry constructions.
 
 ## Introduction
 
@@ -6,41 +6,79 @@ Euclidea is a tikz library designed for enchancing tikz in Euclidean geometry dr
 
 ### Commands
 
-* `\axes (xmin:xmax, ymin:ymax);`: creates axes with the range from (xmin,ymin) to (xmax, ymax).
-* `\ellipse [options] (a,b);`: creates an ellipse with semi-major/minor axes (a,b).
-* `\hyperbola [options] (a,b);`: creates a hyperbola with semi-major/minor axes (a,b).
-* `\asymptote [options] (a,b);`: creates the asymptote of above hypterbola.
-* `\parabola [options] (a,b,c);`: creates a parabola: y = a * x * x + b * x + c.
+- `\axes (xmin:xmax, ymin:ymax);`: creates axes with the range from (xmin,ymin) to (xmax, ymax).
+- `\ellipse [options] (a,b);`: creates an ellipse with semi-major/minor axes (a,b).
+- `\hyperbola [options] (a,b);`: creates a hyperbola with semi-major/minor axes (a,b).
+- `\asymptote [options] (a,b);`: creates the asymptotes of above hypterbola.
+- `\parabola [options] (a,b,c);`: creates a parabola: y = a _ x _ x + b \* x + c.
 
 ### Path Operations
 
-* `affine={A,B,k}`: returns affine combination of two points, i.e. A + k * ( B - A ).
-* `midpoint={A,B}`: returns midpoint of AB.
-* `translate={A,B,C}`: returns translation of point C by the vector AB, i.e. C + ( B - A ).
-* `reflect={A,B,C}`: reflects point C across line AB.
-* `project={A,B,C}`: projects point C onto line AB.
-* `inverse={O,A,P}`: returns the inverse point of point C with respect to circle(O,A).
-* `revolve={A,B}`: rotates point B by the angle around point A.
-* `angle bisector={A,B,C}`: alias for `[revolve/angle={A,B,C},revolve/scale=.5,revolve={A,B}]`.
-* `erect={A,B}`: alias for `[revolve/angle=90,revolve={A,B}]`.
-* `equilateral={A,B}`: alias for `[revolve/angle=60,revolve={A,B}]`.
-* `intercept={A,B}`: intercepts a line segment (starting from point A) of a certain length on line AB.
-* `intersect={A,B,C,D}`: returns the intersection of line AB and line CD. 
-* `perpendicular bisector={A,B}`: creates the perpendicular bisector of segment AB.
-* `perpendicular={A,B,C}`: creates a line through point C perpendicular to line AB.
-* `parallel={A,B,C}`: creates a line through point C parallel to line AB.
-* `extend={A,B}`: alias for `[parallel={A,B,A}]`.
-* `circumcenter={A,B,C}`: returns the circumcenter of a triangle.
-* `orthocenter={A,B,C}`: returns the orthocenter of a triangle.
-* `incenter={A,B,C}`: returns the incenter of a triangle.
-* `excenter={A,B,C}`: returns the excenter of a triangle.
-* `nine-point center={A,B,C}`: returns the nine-point center of a triangle.
-* `circle={O,A}`: creates a circle with the center (O) through point A.
-* `tangent point={O,A,P}`: returns the tangent point of the tangent (to the left of vector OP) through point P to the circle {O,A}.
-* `external center={O1,A1,O2,A2}`: returns the external homothetic center of two circles.
-* `internal center={O1,A1,O2,A2}`: returns the internal homothetic center of two circles.
-* `radical axis={O1,A1,O2,A2}`: creates the radical axis of two non-concentric circles.
-* `transform = {angle:(xshift,yshift)}`: rotates around the origin by `angle` and then shifts by (`xshift`,`yshift`).
+- `affine={A,B,k}`: returns affine combination of two points, i.e. A + k \* ( B - A ).
+- `midpoint={A,B}`: returns midpoint of AB.
+- `translate={A,B,C}`: returns translation of point C by the vector AB, i.e. C + ( B - A ).
+- `reflect={A,B,C}`: reflects point C across line AB.
+- `project={A,B,C}`: projects point C onto line AB.
+- `inverse={O,A,P}`: returns the inverse point of point C with respect to circle(O,A).
+- revolve
+  - `revolve/scale=k`: set the scale of rotation angle(positive or negative);
+  - `revolve/angle=a`: set the rotation angle = a(degrees);
+  - `revolve/angle={P}`: set the rotation angle = the angle between OP and x-axis;
+  - `revolve/angle={P1,P2}`: set the rotation angle = the angle between OP2 and OP1;
+  - `revolve/angle={P1,P2,P3}`: set the rotation angle = the angle between P3P1 and P2P1;
+  - `revolve/angle={P1,P2,P3,P4}`: set the rotation angle = the angle between P4P3 and P2P1;
+  - `revolve={A,B}`: rotates point B by the angle around point A.
+- `angle bisector={A,B,C}`: alias for `[revolve/angle={A,B,C},revolve/scale=.5,revolve={A,B}]`.
+- `erect={A,B}`: alias for `[revolve/angle=90,revolve={A,B}]`.
+- `equilateral={A,B}`: alias for `[revolve/angle=60,revolve={A,B}]`.
+- `intercept={A,B}`: intercepts a line segment (starting from point A) of a certain length on line AB.
+- `intersect={A,B,C,D}`: returns the intersection of line AB and line CD.
+- `perpendicular bisector={A,B}`: creates the perpendicular bisector of segment AB.
+- `perpendicular={A,B,C}`: creates a line through point C perpendicular to line AB.
+- `parallel={A,B,C}`: creates a line through point C parallel to line AB.
+- `extend={A,B}`: alias for `[parallel={A,B,A}]`.
+- `circumcenter={A,B,C}`: returns the circumcenter of a triangle.
+- `orthocenter={A,B,C}`: returns the orthocenter of a triangle.
+- `incenter={A,B,C}`: returns the incenter of a triangle.
+- `excenter={A,B,C}`: returns the excenter of a triangle.
+- `nine-point center={A,B,C}`: returns the nine-point center of a triangle.
+- `circle={O,A}`: creates a circle with the center (O) through point A.
+- `tangent point={O,A,P}`: returns the tangent point of the tangent (to the left of vector OP) through point P to the circle {O,A}.
+- `external center={O1,A1,O2,A2}`: returns the external homothetic center of two circles.
+- `internal center={O1,A1,O2,A2}`: returns the internal homothetic center of two circles.
+- `radical axis={O1,A1,O2,A2}`: creates the radical axis of two non-concentric circles.
+- `transform = {angle:(xshift,yshift)}`: rotates around the origin by `angle` and then shifts by (`xshift`,`yshift`).
+
+### Conics
+
+- Ellipse
+
+  - `ellipse/define = {F1,F2,P}`: define an ellipse with two foci and a point.
+  - `ellipse`: creates the ellipse path.
+  - `ellipse/directrix/scale=k`: set the scale of directrices.
+  - `ellipse/directrix`: create the directrices.
+  - `ellipse/axis/scale=k`: set the scale of axes
+  - `ellipse/axis`: create the axes.
+
+- Hyperbola
+
+  - `hyperbola/define = {F1,F2,P}`: define a hyperbola with two foci and a point.
+  - `hyperbola/domain=t1:t2`: set the domain for parametric equation: x = a*cosh(t), y = b*sinh(t).
+  - `hyperbola`: creates the hyperbola path.
+  - `hyperbola/directrix/scale=k`: set the scale of directrices.
+  - `hyperbola/directrix`: create the directrices.
+  - `hyperbola/axis/scale=k`: set the scale of axes.
+  - `hyperbola/axis`: create the axes.
+
+- Parabola
+
+  - `parabola/define = {F,P}`: define a parabola with the focus and vertex.
+  - `parabola/domain=t1:t2`: set the domain for parametric equation: x = a*t^2, y = 2a*t, where `a` is the distance from the focus to the vertex.
+  - `parabola`: creates the parabola path.
+  - `parabola/directrix/scale=k`: set the scale of directrix.
+  - `parabola/directrix`: create the directrix.
+  - `parabola/axis/scale=k`: set the scale of axis.
+  - `parabola/axis`: create the axis.
 
 ## Example
 
@@ -75,7 +113,7 @@ Here is TikZ code for drawing Simson line.
     extend={A',C'}];%simson line
   \draw (0,4) node (L) {Simson Line};
   \draw[->,>=latex] (L) to[out=-90,in=45] ($(A')!-.25!(C')$);
-  
+
   \pic[draw,red,angle radius=2mm]{right angle= P--A'--C};
   \pic[draw,red,angle radius=2mm]{right angle= P--B'--C};
   \pic[draw,red,angle radius=2mm]{right angle= P--C'--A};

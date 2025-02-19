@@ -1,6 +1,6 @@
 \chapter{射影几何 Projective Geometry}
 
-射影几何是非欧几里得几何,属于高等几何内容.
+射影几何是非欧几里得几何,属于高等几何内容\cite{projgeo}.
 
 \section{笛沙格定理 Desargues's theorem}
 \begin{theorem}[笛沙格定理,Desargues's theorem]
@@ -36,7 +36,7 @@ $A_1B_1 \cap A_2B_2$,$B_1C_1 \cap B_2C_2$, $C_1A_1 \cap C_2A_2$共线.
   \draw[purple] (C1) -- (Y) (C2) -- (Y);
   \draw[purple] (B1) -- (Z) (B2) -- (Z);
   \foreach \p in {A1,B1,C1,A2,B2,C2,X,Y,Z}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \draw (A1) node[above] {$A_1$};
   \draw (B1) node[left] {$B_1$};
   \draw (C1) node[below] {$C_1$};
@@ -54,11 +54,15 @@ $A_1B_1 \cap A_2B_2$,$B_1C_1 \cap B_2C_2$, $C_1A_1 \cap C_2A_2$共线.
 
 \section{帕普斯定理 Pappus's hexagon theorem}
 \begin{theorem}[帕普斯定理,Pappus's hexagon theorem\label{pappus}]
-直线$a$上依次有点$A_1,A_2,A_3$,
-直线$b$上依次有点$B_1,B_2,B_3$,
-设$A_1B_2 \cap A_2B_1 = Z,A_1B_3 \cap A_3B_1 = Y,A_2B_3 \cap A_3B_2 = Z$,
+设 $A_1,A_3,A_5$ 和 $A_2,A_4,A_6$ 为共面二直线上的两组共线点, 若
+$A_1A_2 \cap A_4A_5 = X,A_2A_3 \cap A_5A_6 = Y,A_3A_4 \cap A_6A_1 = Z$,
 则$X,Y,Z$共线.
 \end{theorem}
+
+\begin{remark*}
+  这是\hyperref[pascal]{帕斯卡定理}的退化形式, $A_1A_2A_3A_4A_5A_6$构成简单六点形,
+三对对边的交点共线.
+\end{remark*}
 
 \begin{figure}[!htp]
 \begin{center}
@@ -67,33 +71,29 @@ $A_1B_1 \cap A_2B_2$,$B_1C_1 \cap B_2C_2$, $C_1A_1 \cap C_2A_2$共线.
     \a = 30; % 直线 a 的倾角
     \b = 0;  % 直线 b 的倾角
   }
-  \coordinate (A1) at (\a:2);
-  \coordinate (A2) at (\a:5);
-  \coordinate (A3) at (\a:11);
-  \coordinate (B1) at (\b:3);
-  \coordinate (B2) at (\b:6);
-  \coordinate (B3) at (\b:9);
+  % 批量定义坐标
+  \foreach \i/\angle/\distance in {1/\a/2, 3/\a/11, 5/\a/5,
+  2/\b/6, 4/\b/3,  6/\b/9} {
+    \coordinate (A\i) at (\angle:\distance);
+  }
+
   \coordinate (O) at (0,0);
-  \coordinate[intersect={A1,B2,A2,B1}] (X);
-  \coordinate[intersect={A1,B3,A3,B1}] (Y);
-  \coordinate[intersect={A2,B3,A3,B2}] (Z);
-  \draw[blue,thick] (O) -- (A3) (O) -- (B3);
-  \draw[cyan,thick] (X) -- (Z);
-  \draw[purple] (A1) -- (B2) (A2) -- (B1);
-  \draw[teal] (A1) -- (B3) (A3) -- (B1);
-  \draw[magenta] (A2) -- (B3) (A3) -- (B2);
-  \foreach \p in {A1,A2,A3,B1,B2,B3,X,Y,Z}
-    \fill[orange] (\p) circle (2pt);
-  \draw (A1) node[above] {$A_1$};
-  \draw (A2) node[above] {$A_2$};
-  \draw (A3) node[above] {$A_3$};
-  \draw (B1) node[below] {$B_1$};
-  \draw (B2) node[below] {$B_2$};
-  \draw (B3) node[below] {$B_3$};
-  \draw (X) node[below] {$X$};
-  \draw (Y) node[below] {$Y$};
-  \draw (Z) node[below] {$Z$};
-  \draw (O) node[left] {$O$};
+  \coordinate[intersect={A1,A2,A4,A5}] (X);
+  \coordinate[intersect={A2,A3,A5,A6}] (Y);
+  \coordinate[intersect={A3,A4,A6,A1}] (Z);
+
+  \draw[blue,thick] (O) -- (A3) (O) -- (A6);
+  \draw[cyan,thick] (X) -- (Y);
+  \draw[purple] (A1) -- (A2) (A4) -- (A5);
+  \draw[teal] (A2) -- (A3) (A5) -- (A6);
+  \draw[magenta] (A3) -- (A4) (A6) -- (A1);
+
+  \foreach \p/\placement/\text in {A1/above/A_1, A2/below/A_2, A3/above/A_3,
+  A4/below/A_4, A5/above/A_5, A6/below/A_6, 
+  X/below/X, Y/below/Y, Z/below/Z} {
+    \fill[red] (\p) circle (2pt);
+    \draw (\p) node[\placement] {$\text$};
+  }
 \end{tikzpicture}
 \end{center}
 \caption{帕普斯定理}
@@ -102,8 +102,18 @@ $A_1B_1 \cap A_2B_2$,$B_1C_1 \cap B_2C_2$, $C_1A_1 \cap C_2A_2$共线.
 \section{帕斯卡定理 Pascal's theorem}
 
 \begin{theorem}[帕斯卡定理,Pascal's theorem\label{pascal}]
+  对于任意一个内接于非退化的二阶曲线的简单六点形, 它的三对对边的交点在一条直线上. 或者说, 
 圆锥曲线的内接六边形其三条对边的交点共线.
 \end{theorem}
+
+它与\hyperref[brianchon]{布列安桑定理}对偶, 是帕普斯定理的推广.(当这个圆锥曲线退化成两条直线时, 
+帕斯卡定理就会变成\hyperref[pappus]{帕普斯定理})
+该定理由法国数学家布莱士·帕斯卡于16岁时提出但并未证明, 是射影几何中的一个重要定理.
+
+\begin{remark*}
+  这里的内接六边形不一定是凸六边形, 对于任意的简单六点形 $A_1A_2A_3A_4A_5A_6$, 其三对对边分别是:
+$A_1A_2$ 和 $A_4A_5$, $A_2A_3$ 和 $A_5A_6$, $A_3A_4$ 和 $A_6A_1$. 如图\ref{pascal-fig1}和图\ref{pascal-fig2}.
+\end{remark*}
 
 \begin{figure}[!htp]
 \begin{center}
@@ -112,6 +122,10 @@ $A_1B_1 \cap A_2B_2$,$B_1C_1 \cap B_2C_2$, $C_1A_1 \cap C_2A_2$共线.
     % 椭圆参数
     \a = 4;
     \b = 3;
+  }
+  \tikzset{
+    % 图形整体旋转
+    rotate = 136,
   }
   
   % 批量定义坐标
@@ -130,18 +144,13 @@ $A_1B_1 \cap A_2B_2$,$B_1C_1 \cap B_2C_2$, $C_1A_1 \cap C_2A_2$共线.
   \draw[purple] (A2) -- (X) (A4) -- (X);
   \draw[teal] (A2) -- (Y) (A6) -- (Y);
   \draw[magenta] (A1) -- (Z) (A3) -- (Z);
-  \foreach \p in {A1,A2,A3,A4,A5,A6,X,Y,Z}
-    \fill[orange] (\p) circle (2pt);
-  \draw (A1) node[below] {$A_1$};
-  \draw (A2) node[below] {$A_2$};
-  \draw (A3) node[below] {$A_3$};
-  \draw (A4) node[right] {$A_4$};
-  \draw (A5) node[above] {$A_5$};
-  \draw (A6) node[left] {$A_6$};
-  \draw (X) node[below] {$X$};
-  \draw (Y) node[below] {$Y$};
-  \draw (Z) node[below] {$Z$};
-  \draw (O) node[right] {$O$};
+
+  \foreach \p/\placement/\text in {A1/left/A_1, A2/below/A_2, A3/below/A_3,
+  A4/below/A_4, A5/right/A_5, A6/above/A_6, 
+  X/below/X, Y/below/Y, Z/below/Z} {
+    \fill[red] (\p) circle (2pt);
+    \draw (\p) node[\placement] {$\text$};
+  }
 \end{tikzpicture}
 \end{center}
 \caption{帕斯卡定理}
@@ -155,6 +164,10 @@ $A_1B_1 \cap A_2B_2$,$B_1C_1 \cap B_2C_2$, $C_1A_1 \cap C_2A_2$共线.
     % 椭圆参数
     \a = 4;
     \b = 3;
+  }
+  \tikzset{
+    % 图形整体旋转
+    rotate = 136,
   }
   
   % 批量定义坐标
@@ -170,35 +183,24 @@ $A_1B_1 \cap A_2B_2$,$B_1C_1 \cap B_2C_2$, $C_1A_1 \cap C_2A_2$共线.
   \draw[red,thick] (0,0) ellipse [x radius=\a,y radius=\b];
   \draw[blue,thick] (A1) -- (A2) -- (A3) -- (A4) -- (A5) -- (A6) -- cycle;
   \draw[cyan,thick] (X) -- (Y);
-  % \draw[purple] (A2) -- (X) (A4) -- (X);
-  % \draw[teal] (A2) -- (Y) (A6) -- (Y);
-  % \draw[magenta] (A1) -- (Z) (A3) -- (Z);
-  \foreach \p in {A1,A2,A3,A4,A5,A6,X,Y,Z}
-    \fill[orange] (\p) circle (2pt);
-  \draw (A1) node[left] {$A_1$};
-  \draw (A2) node[below] {$A_2$};
-  \draw (A3) node[right] {$A_3$};
-  \draw (A4) node[below] {$A_4$};
-  \draw (A5) node[above] {$A_5$};
-  \draw (A6) node[below] {$A_6$};
-  \draw (X) node[below] {$X$};
-  \draw (Y) node[below] {$Y$};
-  \draw (Z) node[below] {$Z$};
-  \draw (O) node[right] {$O$};
+  
+  \foreach \p/\placement/\text in {A1/left/A_1, A2/below/A_2, A3/above/A_3,
+  A4/below/A_4, A5/above left/A_5, A6/above right/A_6, 
+  X/below left/X, Y/above right/Y, Z/below right/Z} {
+    \fill[red] (\p) circle (2pt);
+    \draw (\p) node[\placement] {$\text$};
+  }
 \end{tikzpicture}
 \end{center}
 \caption{帕斯卡定理}
 \label{pascal-fig2}
 \end{figure}
-它与\hyperref[brianchon]{布列安桑定理}对偶, 是帕普斯定理的推广.(当这个圆锥曲线退化成两条直线时, 
-帕斯卡定理就会变成\hyperref[pappus]{帕普斯定理})
-该定理由法国数学家布莱士·帕斯卡于16岁时提出但并未证明,是射影几何中的一个重要定理.
-注意: 这里的内接六边形不一定是凸六边形, 将顺序调换后仍然成立,如图\ref{pascal-fig1}和图\ref{pascal-fig2}.
 
 \section{布列安桑定理 Brianchon's theorem}
 
 \begin{theorem}[布列安桑定理,Brianchon's theorem\label{brianchon}]
-设$ABCDEF$为圆锥曲线的外切六边形,则直线$AD,BE,CF$三线共点.
+  对于任意一个外切于非退化的二阶曲线的简单六线形, 它的三对对顶点的连线通过一个点. 或者说, 
+设$A_1A_2A_3A_4A_5A_6$为圆锥曲线的外切六边形,则直线$A_1A_4,A_2A_5,A_3A_6$三线共点.
 \end{theorem}
 
 布列安桑定理的对偶定理是\hyperref[pascal]{帕斯卡定理}.
@@ -207,44 +209,42 @@ $A_1B_1 \cap A_2B_2$,$B_1C_1 \cap B_2C_2$, $C_1A_1 \cap C_2A_2$共线.
 \begin{center}
 \begin{tikzpicture}
   \tikzmath{
-    \r = 3;
+    % 椭圆参数
+    \a = 4;
+    \b = 3;
   }
-  % 定义切点
-  \coordinate (P1) at (-130:\r);
-  \coordinate (P2) at (-90:\r);
-  \coordinate (P3) at (-30:\r);
-  \coordinate (P4) at (50:\r);
-  \coordinate (P5) at (95:\r);
-  \coordinate (P6) at (165:\r);
-  \coordinate (O) at (0,0);
-  \coordinate (Q1) at ($(P1)!1!90:(O)$);
-  \coordinate (Q2) at ($(P2)!1!90:(O)$);
-  \coordinate (Q3) at ($(P3)!1!90:(O)$);
-  \coordinate (Q4) at ($(P4)!1!90:(O)$);
-  \coordinate (Q5) at ($(P5)!1!90:(O)$);
-  \coordinate (Q6) at ($(P6)!1!90:(O)$);
-  \coordinate[intersect={P1,Q1,P2,Q2}] (A);
-  \coordinate[intersect={P2,Q2,P3,Q3}] (B);
-  \coordinate[intersect={P3,Q3,P4,Q4}] (C);
-  \coordinate[intersect={P4,Q4,P5,Q5}] (D);
-  \coordinate[intersect={P5,Q5,P6,Q6}] (E);
-  \coordinate[intersect={P6,Q6,P1,Q1}] (F);
-  \draw[red,thick] (0,0) circle (\r);
-  \draw[thick] (A) -- (B) -- (C) -- (D) -- (E) -- (F) -- cycle;
-  \draw[purple] (A) -- (D) (B) -- (E) (C) -- (F);
-  \foreach \p in {P1,P2,P3,P4,P5,P6}
-    \fill[green] (\p) circle (2pt);
-  % \foreach \p in {Q1,Q2,Q3,Q4,Q5,Q6}
-  %   \fill[blue] (\p) circle (2pt);
-  \foreach \p in {O,A,B,C,D,E,F}
-    \fill[orange] (\p) circle (2pt);
-  \draw (O) node[below] {$O$};
-  \draw (A) node[below] {$A$};
-  \draw (B) node[below] {$B$};
-  \draw (C) node[right] {$C$};
-  \draw (D) node[above] {$D$};
-  \draw (E) node[above] {$E$};
-  \draw (F) node[left] {$F$};
+  \tikzset{
+    % 图形整体旋转
+    rotate = 136,
+  }
+  
+  % 批量定义坐标
+  \foreach \i/\angle in {1/75, 2/135, 3/185, 4/245, 5/305, 6/365} {
+    % 椭圆上的点
+    \coordinate (P\i) at ({\a*cos(\angle)}, {\b*sin(\angle)});
+    % 该点上的切向量
+    \coordinate (T\i) at (-{\a*sin(\angle)}, {\b*cos(\angle)});
+    % 该点上的切线上的一点
+    \coordinate (Q\i) at ($(P\i)+(T\i)$);
+  }
+
+  \coordinate[intersect={P1,Q1,P2,Q2}] (A1);
+  \coordinate[intersect={P2,Q2,P3,Q3}] (A2);
+  \coordinate[intersect={P3,Q3,P4,Q4}] (A3);
+  \coordinate[intersect={P4,Q4,P5,Q5}] (A4);
+  \coordinate[intersect={P5,Q5,P6,Q6}] (A5);
+  \coordinate[intersect={P6,Q6,P1,Q1}] (A6);
+
+  \draw[red,thick] (0,0) ellipse [x radius=\a,y radius=\b];
+  \draw[teal,thick] (A1) -- (A2) -- (A3) -- (A4) -- (A5) -- (A6) -- cycle;
+  \draw[purple] (A1) -- (A4) (A2) -- (A5) (A3) -- (A6);
+
+  \foreach \p/\placement/\text in {A1/below/A_1, A2/below/A_2, A3/above right/A_3,
+  A4/above right/A_4, A5/above/A_5, A6/above left/A_6} {
+    \fill[red] (\p) circle (2pt);
+    \draw (\p) node[\placement] {$\text$};
+  }
+
 \end{tikzpicture}
 \end{center}
 \caption{布列安桑定理}
@@ -282,7 +282,7 @@ $A_1B_1 \cap A_2B_2$,$B_1C_1 \cap B_2C_2$, $C_1A_1 \cap C_2A_2$共线.
   \draw[thick,cyan] (A) -- (F) (B) -- (F) (A) -- (D) (B) -- (C);
   \draw[blue,thick] (P) -- (G);
   \foreach \p in {O,P,A,B,C,D,E,F,G}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \draw (O) node[below] {$O$};
   \draw (P) node[above] {$P$};
   \draw (A) node[above] {$A$};

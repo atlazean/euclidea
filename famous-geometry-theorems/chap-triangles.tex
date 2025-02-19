@@ -13,7 +13,7 @@
 Stillwell甚至将勾股定理作为数学历史的开篇\cite{stillwell}.
 
 \begin{proof}
-(面积法) 正方形的面积由 4 个三角形面积加上中间小正方形面积:
+采用面积法证明, 正方形的面积由 4 个三角形面积加上中间小正方形面积, 如图\ref{pythagoras-fig}:
 \begin{align*}
   S &= 4(\cfrac{1}{2}ab)+c^2 \\
     &= 2ab+c^2 \\
@@ -57,7 +57,8 @@ Stillwell甚至将勾股定理作为数学历史的开篇\cite{stillwell}.
   \draw ($(H)!.5!(E)$) node[above right] {$c$};
 \end{tikzpicture}
 \end{center}
-\caption{勾股定理}
+\caption{勾股定理的证明}
+\label{pythagoras-fig}
 \end{figure}
 
 \begin{theorem}[勾股定理的逆定理]
@@ -99,7 +100,7 @@ Stillwell甚至将勾股定理作为数学历史的开篇\cite{stillwell}.
   \draw[thick] (A) -- (B) -- (C) -- cycle;
   \draw[thick,red] (C) -- (D);
   \foreach \p in {A,B,C,D}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \pic[draw,red,angle radius=6pt]{right angle=A--C--B};
   \pic[draw,red,angle radius=6pt]{right angle=C--D--B};
   \draw (A) node[below left] {$A$};
@@ -141,7 +142,7 @@ Stillwell甚至将勾股定理作为数学历史的开篇\cite{stillwell}.
   \draw[thick,red] (A) -- (D);
   \draw[thick,blue] (A) -- (E);
   \foreach \p in {A,B,C,D,E}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \draw (A) node[above] {$A$};
   \draw (B) node[below left] {$B$};
   \draw (C) node[below right] {$C$};
@@ -186,7 +187,7 @@ AB^2+AC^2 &= 2AE^2 + 2ED^2 + 2BD^2 \\
   \draw[thick] (A) -- (B) -- (C) -- cycle;
   \draw[thick,red] (A) -- (D);
   \foreach \p in {A,B,C,D}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \pic[draw,blue,angle radius=12pt] {angle=B--A--D};
   \pic[draw,blue,angle radius=14pt] {angle=D--A--C};
   \draw (A) node[above] {$A$};
@@ -230,7 +231,7 @@ AB^2+AC^2 &= 2AE^2 + 2ED^2 + 2BD^2 \\
   \draw[thick] (A) -- (B) -- (C) -- cycle;
   \draw[circle={O,A}];
   \foreach \p in {O,A,B,C,D}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \draw[red,thick,dashed] (B) -- (D);
   \draw[red,thick,dashed] (C) -- (D);
   \pic[draw,red,angle radius=6pt]{right angle=B--C--D};
@@ -270,7 +271,7 @@ AB^2+AC^2 &= 2AE^2 + 2ED^2 + 2BD^2 \\
   \coordinate (D) at ($(A)!(B)!(C)$);
   \draw[thick] (A) -- (B) -- (C) -- cycle;
   \foreach \p in {A,B,C,D}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \draw[red,dashed] (B) -- (D);
   \pic[draw,red,angle radius=6pt]{right angle=B--D--A};
   \draw (A) node[above] {$A$};
@@ -326,7 +327,7 @@ AB^2+AC^2 &= 2AE^2 + 2ED^2 + 2BD^2 \\
   \coordinate[translate={N,M,C}] (G);
   \coordinate[intersect={A,B,C,G}] (G);
   \foreach \p in {A,B,C,D,E,F,G}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \draw[red] (M) -- (N);
   \draw[thick] (C) -- (D);
   \draw[blue,dashed] (C) -- (G);
@@ -349,8 +350,7 @@ AB^2+AC^2 &= 2AE^2 + 2ED^2 + 2BD^2 \\
   \cfrac{CE}{EA} &= \cfrac{FG}{AF} \\
   \intertext{所以:}
   \cfrac{AF}{FB} \cdot \cfrac{BD}{DC} \cdot \cfrac{CE}{EA} 
-  &= \cfrac{AF}{FB} \cdot \cfrac{FB}{FG} \cdot \cfrac{FG}{AF} \\
-  &= 1
+  &= \cfrac{AF}{FB} \cdot \cfrac{FB}{FG} \cdot \cfrac{FG}{AF} = 1
 \end{align*}
 \end{proof}
 
@@ -382,7 +382,7 @@ AB^2+AC^2 &= 2AE^2 + 2ED^2 + 2BD^2 \\
   \coordinate[intersect={C,A,B,O}] (E);
   \coordinate[intersect={A,B,C,O}] (F);
   \foreach \p in {A,B,C,D,E,F,O}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \draw[red] (A) -- (D);
   \draw[red] (B) -- (E);
   \draw[red] (C) -- (F);
@@ -487,7 +487,7 @@ A &= \cfrac{1}{2} ab \sin C \\
   \draw[blue] (D) -- (F);
   \draw[thick] (A) -- (F);
   \foreach \p in {O,A,B,C,D,E,F,P}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \pic[draw,red,angle radius=6pt]{right angle=P--D--C};
   \pic[draw,red,angle radius=6pt]{right angle=P--E--A};
   \pic[draw,red,angle radius=6pt]{right angle=P--F--B};
@@ -550,7 +550,7 @@ A &= \cfrac{1}{2} ab \sin C \\
   \draw[fill=purple] (D) -- (E) -- (F) -- cycle;
   \foreach \p/\placement in {A/above,B/below left,C/below right,
   D/left,E/below,F/above}{
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
     \draw (\p) node[\placement] {$\p$};
   }
 \end{tikzpicture}

@@ -51,7 +51,7 @@
   \draw[thick] (A) -- (D);
   \draw[thick] (C) -- (D);
   \foreach \p in {O,A,B,C,D}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \pic[draw,blue,double,angle radius=12pt] {angle=A--C--D};
   \pic[draw,blue,double,angle radius=12pt] {angle=B--A--D};
   \draw (A) node[below] {$A$};
@@ -105,7 +105,7 @@
   \draw[dashed] (B) -- (D);
   \draw[dashed] (A) -- (C);
   \foreach \p in {O,A,B,C,D,P}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \draw (A) node[above right] {$A$};
   \draw (B) node[below left] {$B$};
   \draw (C) node[below right] {$C$};
@@ -135,7 +135,7 @@
   \draw[dashed] (B) -- (D);
   \draw[dashed] (A) -- (C);
   \foreach \p in {O,A,B,C,D,P}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \draw (A) node[above right] {$A$};
   \draw (B) node[below right] {$B$};
   \draw (C) node[above left] {$C$};
@@ -166,7 +166,7 @@
   \draw[dashed] (T) -- (A);
   \draw[dashed] (T) -- (B);
   \foreach \p in {O,A,B,P,T}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \draw (A) node[above right] {$A$};
   \draw (B) node[below right] {$B$};
   \draw (P) node[above] {$P$};
@@ -212,7 +212,7 @@
   \draw[thick,blue] (P) -- (A) (P) -- (B);
   \draw[dashed,red] (P) -- (M) (O) -- (P);
   \foreach \p in {O,A,B,M,N,P}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \draw (A) node[below] {$A$};
   \draw (B) node[below] {$B$};
   \draw (M) node[below left] {$M$};
@@ -282,7 +282,7 @@ OA &= AB+OB=\cfrac{{\lambda}^2d}{{\lambda}^2-1} \\
   \draw[thick] (B) -- (D);
   \draw[thick,blue,dashed] (A) -- (E) (C) -- (E);
   \foreach \p in {O,A,B,C,D,E}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \draw (A) node[below left] {$A$};
   \draw (B) node[below right] {$B$};
   \draw (C) node[above right] {$C$};
@@ -341,7 +341,7 @@ OA &= AB+OB=\cfrac{{\lambda}^2d}{{\lambda}^2-1} \\
   \coordinate[intersect={A,D,M,E}] (F);
   \draw[thick,blue] (E) -- (F);
   \foreach \p in {A,B,C,D,E,F,M}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \pic[draw,red,angle radius=6pt]{right angle=C--M--D};
   \pic[draw,red,angle radius=6pt]{right angle=M--E--C};
   \draw (A) node[above left] {$A$};
@@ -395,7 +395,7 @@ OA &= AB+OB=\cfrac{{\lambda}^2d}{{\lambda}^2-1} \\
   \draw[thick] (A) -- (B) -- (C) -- cycle; 
   \draw[thick] (D) -- (E) -- (F) -- cycle;
   \foreach \p in {A,B,C,D,E,F}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \draw (A) node[above] {$A$};
   \draw (B) node[below left] {$B$};
   \draw (C) node[below right] {$C$};
@@ -434,7 +434,7 @@ OA &= AB+OB=\cfrac{{\lambda}^2d}{{\lambda}^2-1} \\
   \draw[circle={O4,C},thick,purple];
   \draw[thick] (F) -- (A) (F) -- (B) (E) -- (A) (E) -- (D); 
   \foreach \p in {A,B,C,D,E,F}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \draw (A) node[below left] {$A$};
   \draw (B) node[below] {$B$};
   \draw (C) node[above right] {$C$};
@@ -490,7 +490,7 @@ OA &= AB+OB=\cfrac{{\lambda}^2d}{{\lambda}^2-1} \\
   \draw[magenta,thick] (O) circle (\r);
   \draw[dashed,thick,purple,circle={O5,B1}];
   \foreach \p in {O1,O2,O3,O4}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \foreach \p in {A1,A2,A3,A4}
     \fill[teal] (\p) circle (2pt);
   \foreach \p in {B1,B2,B3,B4}
@@ -553,7 +553,7 @@ OA &= AB+OB=\cfrac{{\lambda}^2d}{{\lambda}^2-1} \\
   \draw[dashed,thick,purple,circle={O6,D1}];
   \draw[thick] (B1) -- (B3) -- (B5) -- (B2) -- (B4) -- cycle; 
   \foreach \p in {A1,A2,A3,A4,A5,B1,B2,B3,B4,B5,O1,O2,O3,O4,O5}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
 \end{tikzpicture}
 \end{center}
 \caption{密克定理之五圆定理}
@@ -598,7 +598,7 @@ OA &= AB+OB=\cfrac{{\lambda}^2d}{{\lambda}^2-1} \\
   % \foreach \p in {Q1,Q2,Q3,Q4}
   %   \fill[blue] (\p) circle (2pt);
   \foreach \p in {O,A,B,C,D,E,F}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \draw (O) node[below] {$O$};
   \draw (A) node[below] {$A$};
   \draw (B) node[below] {$B$};
@@ -675,7 +675,7 @@ $PQ$ 即是.
   \draw[magenta] (A1) -- (A2) (B1) -- (B2);
   \draw[blue] (C1) -- (C2) (D1) -- (D2);
   \foreach \p in {A1,A2,B1,B2,C1,C2,D1,D2,O1,O2,O3,O4}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \draw (O1) node[below] {$O_1$};
   \draw (O2) node[below] {$O_2$};
   \draw (O3) node[below] {$O_3$};
@@ -714,7 +714,7 @@ $PQ$ 即是.
   \draw[thick] (O3) circle (\r3);
   \draw[thick,teal] (X) -- (Z);
   \foreach \p in {O1,O2,O3,X,Y,Z}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \draw (O1) node[below] {$O_1$};
   \draw (O2) node[below] {$O_2$};
   \draw (O3) node[below] {$O_3$};
@@ -785,7 +785,7 @@ $PQ$ 即是.
   \draw[thick] (O2) circle (\r2);
   \draw[thick] (O3) circle (\r3);
   \foreach \p in {O1,O2,O3,U,V,W,X,Y,Z}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \draw (O1) node[below] {$O_1$};
   \draw (O2) node[below] {$O_2$};
   \draw (O3) node[below] {$O_3$};
@@ -839,7 +839,7 @@ $PQ$ 即是.
   \draw[thick,red] (O) circle (\r);
   \draw[thick] (P) -- (Q) (A) -- (B) -- (C) -- (D) -- cycle;
   \foreach \p in {A,B,C,D,M,P,Q,X,Y}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \draw (A) node[above left] {$A$};
   \draw (B) node[below right] {$B$};
   \draw (C) node[above right] {$C$};

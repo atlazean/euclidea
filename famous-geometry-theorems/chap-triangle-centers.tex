@@ -29,7 +29,7 @@
   \node at (P) [below] {$P$};
   \node at (D) [above right] {$D$};
   \foreach \p in {A,B,C,D,P}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
 \end{tikzpicture}
 \end{center}
 \caption{重心坐标}
@@ -190,7 +190,7 @@
   \coordinate (E) at ($(C)!0.5!(A)$);
   \coordinate (F) at ($(A)!0.5!(B)$);
   \path[centroid={A,B,C}] coordinate (G);
-  \fill (G) [orange] circle (2pt);
+  \fill (G) [red] circle (2pt);
   \draw (G) node[below] {$G$};
   \draw[thick] (A) -- (B) -- (C) -- cycle;
   \draw[blue] (A) -- (D) (B) -- (E) (C) -- (F);
@@ -253,7 +253,7 @@ $\sin{A},\cos{A},\sin{B},\cos{B},\sin{C},\cos{C}$,
   \coordinate (B) at (4,0);
   \coordinate (C) at (-1,4);
   \path[circumcenter={A,B,C}] coordinate (O);
-  \fill (O) [orange] circle (2pt);
+  \fill (O) [red] circle (2pt);
   \draw (O) node[below] {$O$};
   \node[draw,red] at (O) [circle through=(A)]{};
   \draw[thick] (A) -- (B) -- (C) -- cycle;
@@ -264,7 +264,7 @@ $\sin{A},\cos{A},\sin{B},\cos{B},\sin{C},\cos{C}$,
   \coordinate (D) at ($(B)!(O)!(C)$);
   \coordinate (E) at ($(C)!(O)!(A)$);
   \coordinate (F) at ($(A)!(O)!(B)$);
-  \draw[orange] (O) -- (D) (O) -- (E) (O) -- (F);
+  \draw[red] (O) -- (D) (O) -- (E) (O) -- (F);
   \draw (A) -- (B) node[near start,sloped] {$|$} node[near end,sloped] {$|$};
   \draw (B) -- (C) node[near start,sloped] {$||$} node[near end,sloped] {$||$};
   \draw (C) -- (A) node[near start,sloped] {$|||$} node[near end,sloped] {$|||$};
@@ -283,7 +283,7 @@ $\sin{A},\cos{A},\sin{B},\cos{B},\sin{C},\cos{C}$,
   \coordinate (B) at (3,0);
   \coordinate (C) at (0,4);
   \path[circumcenter={A,B,C}] coordinate (O);
-  \fill (O) [orange] circle (2pt);
+  \fill (O) [red] circle (2pt);
   \draw (O) node[below] {$O$};
   \node[draw,red] at (O) [circle through=(A)]{};
   \draw[thick] (A) -- (B) -- (C) -- cycle;
@@ -303,7 +303,7 @@ $\sin{A},\cos{A},\sin{B},\cos{B},\sin{C},\cos{C}$,
   \coordinate (B) at (0,0);
   \coordinate (C) at (60:4);
   \path[circumcenter={A,B,C}] coordinate (O);
-  \fill (O) [orange] circle (2pt);
+  \fill (O) [red] circle (2pt);
   \draw (O) node[below] {$O$};
   \node[draw,red] at (O) [circle through=(A)]{};
   \draw[thick] (A) -- (B) -- (C) -- cycle;
@@ -339,7 +339,7 @@ $\sin{A},\cos{A},\sin{B},\cos{B},\sin{C},\cos{C}$,
   \coordinate (B) at (4,0);
   \coordinate (C) at (-1,4);
   \path[orthocenter={A,B,C}] coordinate (H);
-  \fill (H) [orange] circle (2pt);
+  \fill (H) [red] circle (2pt);
   \draw (H) node[below] {$H$};
   \draw[thick] (A) -- (B) -- (C) -- cycle;
   \coordinate (D) at ($(B)!(A)!(C)$);
@@ -365,7 +365,7 @@ $\sin{A},\cos{A},\sin{B},\cos{B},\sin{C},\cos{C}$,
   \coordinate (B) at (3,0);
   \coordinate (C) at (0,4);
   \path[orthocenter={A,B,C}] coordinate (H);
-  \fill (H) [orange] circle (2pt);
+  \fill (H) [red] circle (2pt);
   \draw (H) node[below] {$H$};
   \draw[thick] (A) -- (B) -- (C) -- cycle;
   \coordinate (D) at ($(B)!(A)!(C)$);
@@ -387,7 +387,7 @@ $\sin{A},\cos{A},\sin{B},\cos{B},\sin{C},\cos{C}$,
   \coordinate (B) at (0,0);
   \coordinate (C) at (60:4);
   \path[orthocenter={A,B,C}] coordinate (H);
-  \fill (H) [orange] circle (2pt);
+  \fill (H) [red] circle (2pt);
   \draw (H) node[below] {$H$};
   \draw[thick] (A) -- (B) -- (C) -- cycle;
   \coordinate (D) at ($(B)!(A)!(C)$);
@@ -424,7 +424,7 @@ $\sin{A},\cos{A},\sin{B},\cos{B},\sin{C},\cos{C}$,
   \coordinate (B) at (4,0);
   \coordinate (C) at (-1,4);
   \path[incenter={A,B,C}] coordinate (I);
-  \fill (I) [orange] circle (2pt);
+  \fill (I) [red] circle (2pt);
   \draw (I) node[below] {$I$};
   \node[draw,red] at (I) [circle through=($(B)!(I)!(C)$)]{};
   \draw[thick] (A) -- (B) -- (C) -- cycle;
@@ -470,9 +470,9 @@ $\sin{A},\cos{A},\sin{B},\cos{B},\sin{C},\cos{C}$,
   \path[excenter={B,A,C}] coordinate (JB);
   \path[excenter={C,A,B}] coordinate (JC);
   \foreach \point in {I,JA,JB,JC}
-    \fill (\point) [orange] circle (2pt);
+    \fill (\point) [red] circle (2pt);
   %\draw (\point) node[below] {$E$};
-  \node[draw,orange] at (I) [circle through=($(B)!(I)!(C)$)]{};
+  \node[draw,red] at (I) [circle through=($(B)!(I)!(C)$)]{};
   \node[draw,red] at (JA) [circle through=($(B)!(JA)!(C)$)]{};
   \node[draw,red] at (JB) [circle through=($(B)!(JB)!(C)$)]{};
   \node[draw,red] at (JC) [circle through=($(B)!(JC)!(C)$)]{};
@@ -528,7 +528,7 @@ $\sin{A},\cos{A},\sin{B},\cos{B},\sin{C},\cos{C}$,
   \path[incenter={A,B,C}] coordinate (I);
   \path[nine-point center={A,B,C}] coordinate (N);
   \foreach \point in {A,B,C,H,O,G,I,N}
-    \fill (\point) [orange] circle (2pt);;
+    \fill (\point) [red] circle (2pt);;
   \draw[thick] (A) -- (B) -- (C) -- cycle;
   \draw[thick,cyan] (H) -- (O) -- (G);
   \draw (A) node[left] {$A$};
@@ -585,7 +585,7 @@ $\sin{A},\cos{A},\sin{B},\cos{B},\sin{C},\cos{C}$,
   \coordinate (M3) at ($(C)!.5!(A)$);
   \coordinate[nine-point center={A,B,C}] (N);
   \foreach \point in {A,B,C,E1,E2,E3,F1,F2,F3,M1,M2,M3,N}
-    \fill (\point) [orange] circle (2pt);
+    \fill (\point) [red] circle (2pt);
   \draw[thick] (A) -- (B) -- (C) -- cycle;
   \draw[thick,magenta,circle={N,E1}];
   \draw[blue] (A) -- (F1) (B) -- (F2) (C) -- (F3);
@@ -616,8 +616,8 @@ $\sin{A},\cos{A},\sin{B},\cos{B},\sin{C},\cos{C}$,
   \path[excenter={C,A,B}] coordinate (JC);
   \path[nine-point center={A,B,C}] coordinate(N);
   \foreach \point in {I,JA,JB,JC}
-    \fill (\point) [orange] circle (2pt);
-  \node[draw,orange] at (I) [circle through=($(B)!(I)!(C)$)]{};
+    \fill (\point) [red] circle (2pt);
+  \node[draw,red] at (I) [circle through=($(B)!(I)!(C)$)]{};
   \node[draw,red] at (JA) [circle through=($(B)!(JA)!(C)$)]{};
   \node[draw,red] at (JB) [circle through=($(B)!(JB)!(C)$)]{};
   \node[draw,red] at (JC) [circle through=($(B)!(JC)!(C)$)]{};
@@ -675,7 +675,7 @@ $\sin{A},\cos{A},\sin{B},\cos{B},\sin{C},\cos{C}$,
   \coordinate (P') at (2,1); % 任意一点
   \coordinate[revolve/angle=60,revolve={C,P'}] (Q');
   \foreach \point in {A,B,C,A',B',C',P,Q,P',Q'}
-    \fill (\point) [orange] circle (2pt);
+    \fill (\point) [red] circle (2pt);
   \draw[thick,red] (A) -- (A') (B) -- (B') (C) -- (C');
   \draw[magenta] (Q) -- (C);
   \draw[thick] (A) -- (B) -- (C') -- cycle;
@@ -708,7 +708,7 @@ $\sin{A},\cos{A},\sin{B},\cos{B},\sin{C},\cos{C}$,
   \coordinate (D) at ($(A)!0.75!-120:(B)$);
   \coordinate (P) at (2,0.5); % 任意一点
   \foreach \point in {A,B,C,D,P}
-    \fill (\point) [orange] circle (2pt);
+    \fill (\point) [red] circle (2pt);
   \draw[thick] (A) -- (B) -- (C) -- cycle;
   \draw[blue] (B) -- (D) (C) -- (D) (P) -- (A);
   \draw[red] (A) -- (D);
@@ -734,7 +734,7 @@ $\sin{A},\cos{A},\sin{B},\cos{B},\sin{C},\cos{C}$,
   \coordinate (P) at (2,0.5); % 任意一点
   \coordinate[intersect={A,D,P,C}] (D);
   \foreach \point in {A,B,C,D,P}
-    \fill (\point) [orange] circle (2pt);
+    \fill (\point) [red] circle (2pt);
   \draw[thick] (A) -- (B) -- (C) -- cycle;
   \draw[red] (A) -- (D);
   \draw[teal] (P) -- (C) (P) -- (B) (P) -- (A);
@@ -837,7 +837,7 @@ $\sin{A},\cos{A},\sin{B},\cos{B},\sin{C},\cos{C}$,
   \coordinate[circumcenter={F1,F2,O}] (P);
   \draw[purple,thick,circle={P,O}];
   \foreach \p in {A,B,C,F1,F2,O,N}
-    \fill[orange] (\p) circle (2pt);
+    \fill[red] (\p) circle (2pt);
   \draw[thick] (A) -- (B) -- (C) -- cycle;
   \draw (A) node[above] {$A$};
   \draw (B) node[below left] {$B$};

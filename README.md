@@ -6,11 +6,11 @@ Euclidea is a tikz library designed for enchancing tikz in Euclidean geometry dr
 
 ### Commands
 
-- `\axes (xmin:xmax, ymin:ymax);`: creates axes with the range from (xmin,ymin) to (xmax, ymax).
+- `\axes (xmin:xmax, ymin:ymax);`: creates x-axis and y-axis with the range from (xmin,ymin) to (xmax, ymax).
 - `\ellipse [options] (a,b);`: creates an ellipse with semi-major/minor axes (a,b).
 - `\hyperbola [options] (a,b);`: creates a hyperbola with semi-major/minor axes (a,b).
 - `\asymptote [options] (a,b);`: creates the asymptotes of above hypterbola.
-- `\parabola [options] (a,b,c);`: creates a parabola: y = a _ x _ x + b \* x + c.
+- `\parabola [options] (a,b,c);`: creates a parabola: y = a \* x ^ 2 + b \* x + c.
 
 ### Path Operations
 
@@ -21,7 +21,7 @@ Euclidea is a tikz library designed for enchancing tikz in Euclidean geometry dr
 - `project={A,B,C}`: projects point C onto line AB.
 - `inverse={O,A,P}`: returns the inverse point of point C with respect to circle(O,A).
 - revolve
-  - `revolve/scale=k`: set the scale of rotation angle(positive or negative);
+  - `revolve/scale=k`: set the scale of rotation angle(positive or negative), default: 1.0;
   - `revolve/angle=a`: set the rotation angle = a(degrees);
   - `revolve/angle={P}`: set the rotation angle = the angle between OP and x-axis;
   - `revolve/angle={P1,P2}`: set the rotation angle = the angle between OP2 and OP1;
@@ -31,7 +31,11 @@ Euclidea is a tikz library designed for enchancing tikz in Euclidean geometry dr
 - `angle bisector={A,B,C}`: alias for `[revolve/angle={A,B,C},revolve/scale=.5,revolve={A,B}]`.
 - `erect={A,B}`: alias for `[revolve/angle=90,revolve={A,B}]`.
 - `equilateral={A,B}`: alias for `[revolve/angle=60,revolve={A,B}]`.
-- `intercept={A,B}`: intercepts a line segment (starting from point A) of a certain length on line AB.
+- intercept
+  - `intercept/length=a`: set the length of intercept operation = `a`.
+  - `intercept/length={P1,P2}`: set the length of intercept operation = `|P1P2|`.
+  - `intercept/scale=k`: set the scale of intercept length, default: 1.0.
+  - `intercept={A,B}`: intercepts a line segment (starting from point A) of a certain length on line AB.
 - `intersect={A,B,C,D}`: returns the intersection of line AB and line CD.
 - `perpendicular bisector={A,B}`: creates the perpendicular bisector of segment AB.
 - `perpendicular={A,B,C}`: creates a line through point C perpendicular to line AB.

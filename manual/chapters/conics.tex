@@ -175,11 +175,11 @@ arc(start angle:end angle: x radius and y radius)
 当指定绘制双曲线 (hyperbola) 的 \verbum{domain} (default: \verbum{domain=-1.5:1.5})时, \verbum{domain} 是下列双曲线参数方程中 $t$ 的取值范围:
 \begin{align*}
   \begin{cases}
-  x = \cosh t,\\y = \sinh t
+  x = \pm a \cosh t,\\y = b \sinh t
   \end{cases}
 \end{align*}
 
-$t$ 的几何意义: 射线出原点交单位双曲线 $x^2-y^2=1$ 于 $(\cosh t, y = \sinh t)$,
+$t$ 的几何意义: 射线出原点交单位双曲线 $x^2-y^2=1$ 于 $(x = \cosh t, y = \sinh t)$,
 $t$ 是射线,双曲线和 $x$ 轴围成的面积的二倍. 对于双曲线上位于 $x$ 轴下方的点, 这个面积被认为是负值.
 
 当指定绘制渐进线 (asymptote) 的 \verbum{domain} (default: \verbum{domain=-2:2})时, \verbum{domain} 是下列直线方程中 $x$ 的取值范围:

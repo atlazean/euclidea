@@ -1,0 +1,92 @@
+% 定义两圆交点(两个交点)的键值对
+
+\documentclass{standalone}
+
+\usepackage{tikz}
+\usetikzlibrary{math,calc}
+%\input{../tikzlibraryeuclidea.code.tex}
+
+% circle-circle instersection
+% Given two circles: O1(A, B) and O2(C, D)
+% 1. find solutions to equations:
+%    x^2 + y^2 = ra^2 and (x-d)^2 + y^2 = rb^2
+%    wherein d = the distance of two centers
+% 2. rotate and then shift the intersections to get the 
+%    solutions to original coordinates
+\tikzset{
+  % cc 1/.initial = {0,0},
+  % cc 2/.initial = {0,0},
+  circle-circle/.code args = {#1,#2,#3,#4}{% 
+    \newdimen\xA% center 1
+    \newdimen\yA
+    \newdimen\xB
+    \newdimen\yB
+    \newdimen\xC% center 2
+    \newdimen\yC
+    \newdimen\xD
+    \newdimen\yD
+    \pgfextractx{\xA}{\pgfpointanchor{#1}{center}}
+    \pgfextracty{\yA}{\pgfpointanchor{#1}{center}}
+    \pgfextractx{\xB}{\pgfpointanchor{#2}{center}}
+    \pgfextracty{\yB}{\pgfpointanchor{#2}{center}}
+    \pgfextractx{\xC}{\pgfpointanchor{#3}{center}}
+    \pgfextracty{\yC}{\pgfpointanchor{#3}{center}}
+    \pgfextractx{\xD}{\pgfpointanchor{#4}{center}}
+    \pgfextracty{\yD}{\pgfpointanchor{#4}{center}}
+    \pgfmathsetmacro{\xa}{\xA / 1cm}
+    \pgfmathsetmacro{\ya}{\yA / 1cm}
+    \pgfmathsetmacro{\ra}{veclen(\xB-\xA, \yB-\yA) / 1cm}
+    \pgfmathsetmacro{\xb}{\xC / 1cm}
+    \pgfmathsetmacro{\yb}{\yC / 1cm}
+    \pgfmathsetmacro{\rb}{veclen(\xD-\xC, \yD-\yC) / 1cm}
+    % 计算圆心之间的距离 d
+    \pgfmathsetmacro{\d}{sqrt((\xb-\xa)^2+(\yb-\ya)^2)}
+    % 计算中间值 a（沿圆心连线方向的距离）
+    \pgfmathsetmacro{\a}{(\ra^2-\rb^2+\d^2)/(2*\d)}
+    % 计算垂直偏移 b（交点到圆心连线的垂直距离）
+    % 注意 : \a 可能为-, 应加括号
+    \pgfmathsetmacro{\b}{sqrt(\ra^2-(\a)^2)}
+    \typeout{d:\d, a:\a, b:\b}
+    % 将 (\a, \b) 逆旋转和逆平移变换, 得到原坐标系的坐标
+    % 计算单位向量（从第一圆心指向第二圆心的方向）：
+    \pgfmathsetmacro{\c}{(\xb-\xa)/\d}% cos theta
+    \pgfmathsetmacro{\s}{(\yb-\ya)/\d}% sin theta
+    % 旋转矩阵[c -s; s c] 
+    \typeout{[c s: \c, \s]}
+    % 两圆交点的坐标
+    % \pgfkeysalso{/tikz/cc 1={\xa+\a*\c-\b*\s,\ya+\a*\s+\b*\c}}% 
+    % \pgfkeysalso{/tikz/cc 2={\xa+\a*\c+\b*\s,\ya+\a*\s-\b*\c}}%
+    % 可以显示只是算式, 未算出结果 在 coordinate 中再计算出
+    \typeout{Point 1: (\xa+\a*\c-\b*\s,\ya+\a*\s+\b*\c)}
+    \typeout{Point 2: (\xa+\a*\c+\b*\s,\ya+\a*\s-\b*\c)} 
+    \coordinate (cc1) at (\xa+\a*\c-\b*\s,\ya+\a*\s+\b*\c);
+    \coordinate (cc2) at (\xa+\a*\c+\b*\s,\ya+\a*\s-\b*\c);
+  }
+} 
+
+% \def\cc{intersectcc(1,1,2.5,2,2,1.5)}
+
+\begin{document}
+\begin{tikzpicture}
+  \tikzmath{
+    \ra = 2.5;% radius a
+    \rb = 1.5;% radius b
+  }
+
+  \draw[help lines] (-5,-5) grid (5,5);
+  \draw[red] (-5,0) -- (5,0) (0,-5) -- (0, 5);
+  
+  \coordinate (O1) at (1,1);
+  \coordinate (A1) at ($(O1)+(0:\ra)$);
+  \coordinate (O2) at (0,0);
+  \coordinate (A2) at ($(O2)+(0:\rb)$);
+
+  \draw (O1) circle(\ra);
+  \draw (O2) circle(\rb);
+
+  \tikzset{circle-circle={O1,A1,O2,A2}}
+
+  \fill[red] (cc1) circle(2pt);
+  \fill[red] (cc2) circle(2pt);
+\end{tikzpicture}
+\end{document}

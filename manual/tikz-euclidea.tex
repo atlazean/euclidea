@@ -3,10 +3,23 @@
 \usepackage{compositor}
 \usepackage{fontset}
 \usepackage{codeblocks}
-\usepackage{tikzplot}
+% \usepackage{tikzplot}
 
-%\usetikzlibrary{euclidea}
-%\input{../tikzlibraryeuclidea.code.tex}
+\usepackage{tikz}
+\usetikzlibrary{
+  arrows.meta,
+  calc,
+  math,
+  intersections,
+  through,
+  angles,
+  quotes,
+  decorations,
+  decorations.markings,
+  %euclidea,
+  positioning,
+}
+\input{../tikzlibraryeuclidea.code.tex}
 
 \newcommand{\showcode}[1]{\inputminted[]{latex}{#1}\begin{center}\input{#1}\end{center}}
 
@@ -39,7 +52,7 @@
 %\xpretocmd{\mint}{\begin{tcolorbox}}{}{}% 出现错误
 %\xapptocmd{\mint}{\end{tcolorbox}}{}{}%
 
-\title{TikZ 几何作图}
+\title{\Huge{\textbf{使用 TikZ 几何作图}}}
 
 \begin{document}
 

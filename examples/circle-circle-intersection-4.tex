@@ -1,0 +1,70 @@
+% 定义两圆交点(两个交点)的键值对
+
+\documentclass{standalone}
+
+\usepackage{tikz}
+
+% circle-circle instersection
+% Given two circles: A(xa, ya, ra) and B(xb, yb, rb)
+% 1. find solutions to equations:
+%    x^2 + y^2 = ra^2 and (x-d)^2 + y^2 = rb^2
+%    wherein d = the distance of two centers
+% 2. rotate and then shift the intersections to get the 
+%    solutions to original coordinates
+\tikzset{
+  cc 1 x/.initial = 0,
+  cc 1 y/.initial = 0,
+  cc 2 x/.initial = 0,
+  cc 2 y/.initial = 0,
+  circle-circle/.code args = {#1,#2,#3,#4,#5,#6}{% 
+    \pgfmathsetmacro{\xa}{#1}
+    \pgfmathsetmacro{\ya}{#2}
+    \pgfmathsetmacro{\ra}{#3}
+    \pgfmathsetmacro{\xb}{#4}
+    \pgfmathsetmacro{\yb}{#5}
+    \pgfmathsetmacro{\rb}{#6}
+    % 计算圆心之间的距离 d
+    \pgfmathsetmacro{\d}{sqrt((\xb-\xa)^2+(\yb-\ya)^2)}
+    % 计算中间值 a（沿圆心连线方向的距离）
+    \pgfmathsetmacro{\a}{(\ra^2-\rb^2+\d^2)/(2*\d)}
+    % 计算垂直偏移 b（交点到圆心连线的垂直距离）：
+    \pgfmathsetmacro{\b}{sqrt(\ra^2-(\a)^2)}%\a 可能为-, 应加括号
+    \typeout{d:\d, a:\a, b:\b}
+    % 将 (\a, \b) 逆旋转和逆平移变换, 得到原坐标系的坐标
+    % 计算单位向量（从第一圆心指向第二圆心的方向）：
+    \pgfmathsetmacro{\c}{(\xb-\xa)/\d}% cos theta
+    \pgfmathsetmacro{\s}{(\yb-\ya)/\d}% sin theta
+    % 旋转矩阵[c -s; s c] 
+    \typeout{[c s: \c, \s]}
+    % 两圆交点的坐标
+    \pgfkeysalso{/tikz/cc 1 x = {\xa+\a*\c-\b*\s}}% 
+    \pgfkeysalso{/tikz/cc 1 y = {\ya+\a*\s+\b*\c}}% 
+    \pgfkeysalso{/tikz/cc 2 x = {\xa+\a*\c+\b*\s}}% 
+    \pgfkeysalso{/tikz/cc 2 y = {\ya+\a*\s-\b*\c}}% 
+    % 可以显示只是算式, 未算出结果 在 coordinate 中再计算出
+    \typeout{\pgfkeysvalueof{/tikz/cc 1 x}}
+    \typeout{\pgfkeysvalueof{/tikz/cc 1 y}}
+    \typeout{\pgfkeysvalueof{/tikz/cc 2 x}}
+    \typeout{\pgfkeysvalueof{/tikz/cc 2 y}}
+    \coordinate (cc1) at (\pgfkeysvalueof{/tikz/cc 1 x}, \pgfkeysvalueof{/tikz/cc 1 y});
+    \coordinate (cc2) at (\pgfkeysvalueof{/tikz/cc 2 x}, \pgfkeysvalueof{/tikz/cc 2 y});
+  }
+} 
+
+% \def\cc{intersectcc(1,1,2.5,2,2,1.5)}
+
+\begin{document}
+\begin{tikzpicture}
+  \draw[help lines] (-5,-5) grid (5,5);
+  \draw[red] (-5,0) -- (5,0) (0,-5) -- (0, 5);
+  \tikzset{circle-circle={1,1,2.5,2,2,1.5}}
+  % \pgfkeysgetvalue{/tikz/cc 1}{\A}    
+  % \pgfkeysgetvalue{/tikz/cc 2}{\B}     
+  % \coordinate (A) at (\A);
+  % \coordinate (B) at (\B);
+  \draw (1,1) circle(2.5);
+  \draw (2,2) circle(1.5);
+  \fill[red] (cc1) circle(2pt);
+  \fill[red] (cc2) circle(2pt);
+\end{tikzpicture}
+\end{document}

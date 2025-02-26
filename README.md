@@ -51,6 +51,8 @@ Euclidea is a tikz library designed for enchancing tikz in Euclidean geometry dr
 - `external center={O1,A1,O2,A2}`: returns the external homothetic center of two circles.
 - `internal center={O1,A1,O2,A2}`: returns the internal homothetic center of two circles.
 - `radical axis={O1,A1,O2,A2}`: creates the radical axis of two non-concentric circles.
+- `circle-line={O,A,P,Q}`: creates circle-line instersections (named: cl1, cl2) of circle (O, A) and line (P, Q).
+- `circle-circle={O1,A1,O2,A2}`: creates circle-circle instersections (named: cc1, cc2) of circle O1(O1, A1) and circle O2(O2, A2).
 - `transform = {angle:(xshift,yshift)}`: rotates around the origin by `angle` and then shifts by (`xshift`,`yshift`).
 
 ### Conics
@@ -61,8 +63,9 @@ Euclidea is a tikz library designed for enchancing tikz in Euclidean geometry dr
   - `ellipse`: creates the ellipse path.
   - `ellipse/directrix/scale=k`: set the scale of directrices.
   - `ellipse/directrix`: create the directrices.
-  - `ellipse/axis/scale=k`: set the scale of axes
+  - `ellipse/axis/scale=k`: set the scale of axes.
   - `ellipse/axis`: create the axes.
+  - `ellipse/a`, `ellipse/b`, `ellipse/c`, `ellipse/e`: ellipse semimajor-axis, semiminor-axis, linear eccentricity, eccentricity.
 
 - Hyperbola
 
@@ -73,16 +76,18 @@ Euclidea is a tikz library designed for enchancing tikz in Euclidean geometry dr
   - `hyperbola/directrix`: create the directrices.
   - `hyperbola/axis/scale=k`: set the scale of axes.
   - `hyperbola/axis`: create the axes.
+  - `hyperbola/a`, `hyperbola/b`, `hyperbola/c`, `hyperbola/e`: hyperbola semimajor-axis, semiminor-axis, linear eccentricity, eccentricity.
 
 - Parabola
 
-  - `parabola/define = {F,P}`: define a parabola with the focus and vertex.
+  - `parabola/define = {F,V}`: define a parabola with the focus and vertex.
   - `parabola/domain=t1:t2`: set the domain for parametric equation: x = a*t^2, y = 2a*t, where `a` is the distance from the focus to the vertex.
   - `parabola`: creates the parabola path.
   - `parabola/directrix/scale=k`: set the scale of directrix.
   - `parabola/directrix`: create the directrix.
   - `parabola/axis/scale=k`: set the scale of axis.
   - `parabola/axis`: create the axis.
+  - `parabola/a`, `parabola/e`: 1/4 parabola latus rectum, eccentricity (1.0).
 
 ## Example
 

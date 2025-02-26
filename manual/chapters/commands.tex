@@ -503,6 +503,44 @@ parallel={A,B,A}
 \showcode{snippets/commands/tangent.tex}
 
 % ---------------------------------
+\section{两圆的交点 Circle-Circle Intersection}
+
+\emph{调用方式}
+
+\begin{tcolorbox}{}
+\mint{latex}{circle-circle={O1,A1,O2,A2}}
+\end{tcolorbox}
+
+\emph{参数说明}
+
+求圆1 ($O_1$ 为圆心, $A_1$ 为圆上任意一点)
+和圆2 ($O_2$ 为圆心, $A_2$ 为圆上任意一点) 
+交点坐标(存储在 cc1 和 cc2 中, 以 $Q_1Q_2$ 为正方向, cc1 在左侧, cc2 在右侧).
+
+\emph{示例}
+
+\showcode{snippets/commands/circle-circle-intersection.tex}
+
+% ---------------------------------
+\section{圆与直线的交点 Circle-Line Intersection}
+
+\emph{调用方式}
+
+\begin{tcolorbox}{}
+\mint{latex}{circle-line={O,A,P,Q}}
+\end{tcolorbox}
+
+\emph{参数说明}
+
+求圆 ($O$ 为圆心, $A$ 为圆上任意一点)
+和直线 ($P,Q$ 为直线上任意不重合的两点) 
+交点坐标(存储在 cl1 和 cl2 中, 以 $PQ$ 为正方向, cl1 在 cl2 的正方向上).
+
+\emph{示例}
+
+\showcode{snippets/commands/circle-line-intersection.tex}
+
+% ---------------------------------
 \section{外位似中心 External Homothetic Center}
 
 \emph{调用方式}

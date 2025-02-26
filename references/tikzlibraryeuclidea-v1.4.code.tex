@@ -1,4 +1,4 @@
-\ProvidesFile{tikzlibraryeuclidea.code.tex}[2025/02/26 v1.5.0 A tikz library for Euclidean geometry constructions]
+\ProvidesFile{tikzlibraryeuclidea.code.tex}[2025/02/18 v1.4.0 A tikz library for Euclidean geometry constructions]
 
 \usetikzlibrary{math,calc,quotes}
 
@@ -42,9 +42,6 @@
   };
 }
 
-% =====================
-% tikzset 中不要有空行
-% =====================
 \tikzset{
   % specifying start and end with modifiers(see tikz manual 13.5) 
   % commands supporting partway modifiers:
@@ -444,127 +441,6 @@
       in (\p{s}) -- (\p{e})
     }
   },
-  % circle-line instersections (named: cl1, cl2) of circle (O, A) and line (P, Q)
-  % 1. find solutions to equations:
-  %    x^2 + y^2 = ra^2 and x = a
-  %    wherein a = the (signed) distance from circle center to line
-  % 2. rotate and then shift the intersections to get the 
-  %    solutions to original coordinates
-  circle-line/.code args = {#1,#2,#3,#4}{% 
-    \newdimen\xO
-    \newdimen\yO
-    \newdimen\xA
-    \newdimen\yA
-    \newdimen\xP
-    \newdimen\yP
-    \newdimen\xQ
-    \newdimen\yQ
-    \pgfextractx{\xO}{\pgfpointanchor{#1}{center}}
-    \pgfextracty{\yO}{\pgfpointanchor{#1}{center}}
-    \pgfextractx{\xA}{\pgfpointanchor{#2}{center}}
-    \pgfextracty{\yA}{\pgfpointanchor{#2}{center}}
-    \pgfextractx{\xP}{\pgfpointanchor{#3}{center}}
-    \pgfextracty{\yP}{\pgfpointanchor{#3}{center}}
-    \pgfextractx{\xQ}{\pgfpointanchor{#4}{center}}
-    \pgfextracty{\yQ}{\pgfpointanchor{#4}{center}}
-    \pgfmathsetmacro{\xa}{\xO / 1cm}
-    \pgfmathsetmacro{\ya}{\yO / 1cm}
-    \pgfmathsetmacro{\xp}{\xP / 1cm}
-    \pgfmathsetmacro{\yp}{\yP / 1cm}
-    \pgfmathsetmacro{\xq}{\xQ / 1cm}
-    \pgfmathsetmacro{\yq}{\yQ / 1cm}
-    \pgfmathsetmacro{\ra}{veclen(\xA-\xO, \yA-\yO) / 1cm}
-    % 考虑向量 (xq-xp, yq-yp) 和 (x-xp, y-yp) 的叉乘
-    % C = (xq-xp)*(y-yp)-(x-xp)(yq-yp)
-    % C = 0: (x,y) 在 PQ 直线上
-    % C > 0: (x,y) 在 PQ 左侧
-    % C < 0: (x,y) 在 PQ 右侧
-    % 设 C = u*x+v*y+w, 则:
-    \pgfmathsetmacro{\u}{-(\yq-\yp)}
-    \pgfmathsetmacro{\v}{\xq-\xp}
-    \pgfmathsetmacro{\w}{\xp*(\yq-\yp)-\yp*(\xq-\xp)}
-
-    \pgfmathsetmacro{\temp}{sqrt((\u)^2+(\v)^2)}%\u \v 可能为-, 需加括号
-    % 计算变换坐标系后的交点坐标 (a,b), 此时 PQ 方向是 y 轴正方向
-    % 计算圆与直线之间的距离 a, a > 0 时, 圆心在 PQ 左侧; a < 0 时, 圆心在 PQ 右侧 
-    \pgfmathsetmacro{\a}{(\u*\xa+\v*\ya+\w)/\temp}
-    % 计算垂直偏移 b (PQ方向为正方向)
-    \pgfmathsetmacro{\b}{sqrt(\ra^2-(\a)^2)}% 注意加括号
-    % 将 (\a, \b) 逆旋转和逆平移变换, 得到原坐标系的坐标
-    % 计算单位向量（PQ 方向顺时针 90）：
-    \pgfmathsetmacro{\c}{-\u/\temp}% cos theta
-    \pgfmathsetmacro{\s}{-\v/\temp}% sin theta
-    
-    \typeout{=========================}
-    \typeout{Circle: center (\xa, \ya) radius \ra}
-    \typeout{Line coefficients: \u, \v, \w}
-    \typeout{Circle-line intersection(simplified): a:\a, b:\b}
-    % 旋转矩阵[c -s; s c] 
-    \typeout{theta: [cos(theta) sin(theta): \c, \s]}
-    \typeout{=========================}
-
-    % 两圆交点的坐标
-    \coordinate (cl1) at (\xa+\a*\c-\b*\s,\ya+\a*\s+\b*\c);
-    \coordinate (cl2) at (\xa+\a*\c+\b*\s,\ya+\a*\s-\b*\c);
-  },
-  % circle-circle instersections (named: cc1, cc2) of circle O1(A, B) and circle O2(C, D)
-  % 1. find solutions to equations:
-  %    x^2 + y^2 = ra^2 and (x-d)^2 + y^2 = rb^2
-  %    wherein d = the distance of two centers
-  % 2. rotate and then shift the intersections to get the 
-  %    solutions to original coordinates
-  circle-circle/.code args = {#1,#2,#3,#4}{% 
-    \newdimen\xA% center 1
-    \newdimen\yA
-    \newdimen\xB
-    \newdimen\yB
-    \newdimen\xC% center 2
-    \newdimen\yC
-    \newdimen\xD
-    \newdimen\yD
-    \pgfextractx{\xA}{\pgfpointanchor{#1}{center}}
-    \pgfextracty{\yA}{\pgfpointanchor{#1}{center}}
-    \pgfextractx{\xB}{\pgfpointanchor{#2}{center}}
-    \pgfextracty{\yB}{\pgfpointanchor{#2}{center}}
-    \pgfextractx{\xC}{\pgfpointanchor{#3}{center}}
-    \pgfextracty{\yC}{\pgfpointanchor{#3}{center}}
-    \pgfextractx{\xD}{\pgfpointanchor{#4}{center}}
-    \pgfextracty{\yD}{\pgfpointanchor{#4}{center}}
-    \pgfmathsetmacro{\xa}{\xA / 1cm}
-    \pgfmathsetmacro{\ya}{\yA / 1cm}
-    \pgfmathsetmacro{\ra}{veclen(\xB-\xA, \yB-\yA) / 1cm}
-    \pgfmathsetmacro{\xb}{\xC / 1cm}
-    \pgfmathsetmacro{\yb}{\yC / 1cm}
-    \pgfmathsetmacro{\rb}{veclen(\xD-\xC, \yD-\yC) / 1cm}
-    % 计算圆心之间的距离 d
-    \pgfmathsetmacro{\d}{sqrt((\xb-\xa)^2+(\yb-\ya)^2)}
-    % 计算中间值 a (沿圆心连线方向的距离), 可能为 - 
-    \pgfmathsetmacro{\a}{(\ra^2-\rb^2+\d^2)/(2*\d)}
-    % 计算垂直偏移 b(交点到圆心连线的垂直距离)
-    % 注意 : \a 可能为-, 应加括号
-    \pgfmathsetmacro{\b}{sqrt(\ra^2-(\a)^2)}
-    
-    % 将 (\a, \b) 逆旋转和逆平移变换, 得到原坐标系的坐标
-    % 计算单位向量（从第一圆心指向第二圆心的方向）：
-    \pgfmathsetmacro{\c}{(\xb-\xa)/\d}% cos theta
-    \pgfmathsetmacro{\s}{(\yb-\ya)/\d}% sin theta
-
-    \typeout{=========================}
-    \typeout{Distance: \d}
-    \typeout{Circle-circle intersection(simplified): a:\a, b:\b}
-    % 旋转矩阵[c -s; s c] 
-    \typeout{theta: [cos(theta) sin(theta): \c, \s]}
-    \typeout{=========================}
-
-    % 两圆交点的坐标
-    % \pgfkeysalso{/tikz/cc 1={\xa+\a*\c-\b*\s,\ya+\a*\s+\b*\c}}% 
-    % \pgfkeysalso{/tikz/cc 2={\xa+\a*\c+\b*\s,\ya+\a*\s-\b*\c}}%
-    % 可以显示只是算式, 未算出结果 在 coordinate 中再计算出
-    % \typeout{Point 1: (\xa+\a*\c-\b*\s,\ya+\a*\s+\b*\c)}
-    % \typeout{Point 2: (\xa+\a*\c+\b*\s,\ya+\a*\s-\b*\c)} 
-    \coordinate (cc1) at (\xa+\a*\c-\b*\s,\ya+\a*\s+\b*\c);
-    \coordinate (cc2) at (\xa+\a*\c+\b*\s,\ya+\a*\s-\b*\c);
-  },
   % ========== Path Definitions ==========
   % perpendicular bisector of the line segment (#1 -- #2)
   perpendicular bisector/.style args = {#1,#2}{
@@ -622,13 +498,12 @@
   },
   % ========== Conics Definitions ==========
   % ellipse with foci and a point
-  ellipse/a/.initial = 0,
-  ellipse/b/.initial = 0,
-  ellipse/c/.initial = 0,
-  ellipse/e/.initial = 0,
-  ellipse/angle/.initial = 0,
-  ellipse/xcenter/.initial = 0,
-  ellipse/ycenter/.initial = 0,
+  ellipse/@a/.initial = 0,
+  ellipse/@b/.initial = 0,
+  ellipse/@c/.initial = 0,
+  ellipse/@angle/.initial = 0,
+  ellipse/@xcenter/.initial = 0,
+  ellipse/@ycenter/.initial = 0,
   ellipse/define/.code args = {#1,#2,#3}{
     % 提取各点的坐标分量 x-coordinate and y-coordinate
     % 注意: 根据 LaTeX 的规则, 宏不能含有数字, 提取坐标的 x 和 y 分量的宏不要含有数字
@@ -654,10 +529,7 @@
     \pgfmathsetmacro{\c}{veclen(\xFL-\xFR, \yFL-\yFR) / 2cm} 
 
     % semiminor axis: b = sqrt(a^2 - c^2)
-    \pgfmathsetmacro{\b}{sqrt(\a^2 - \c^2)}
-
-    % ellipse eccentricity
-    \pgfmathsetmacro{\e}{\c/\a}
+    \pgfmathsetmacro{\b}{sqrt(\a^2 - \c^2)} % 
 
     % ellipse center
     \pgfmathsetmacro{\xcenter}{(\xFL + \xFR) / 2cm} 
@@ -666,21 +538,20 @@
     % angle of rotation
     \pgfmathsetmacro{\angle}{atan2(\yFR-\yFL, \xFR-\xFL)} 
 
-    \pgfkeysalso{/tikz/ellipse/a = \a}
-    \pgfkeysalso{/tikz/ellipse/b = \b}
-    \pgfkeysalso{/tikz/ellipse/c = \c}
-    \pgfkeysalso{/tikz/ellipse/e = \e}
-    \pgfkeysalso{/tikz/ellipse/xcenter = \xcenter}
-    \pgfkeysalso{/tikz/ellipse/ycenter = \ycenter}
-    \pgfkeysalso{/tikz/ellipse/angle = \angle}
+    \pgfkeysalso{/tikz/ellipse/@a = \a}
+    \pgfkeysalso{/tikz/ellipse/@b = \b}
+    \pgfkeysalso{/tikz/ellipse/@c = \c}
+    \pgfkeysalso{/tikz/ellipse/@xcenter = \xcenter}
+    \pgfkeysalso{/tikz/ellipse/@ycenter = \ycenter}
+    \pgfkeysalso{/tikz/ellipse/@angle = \angle}
     \typeout{=========================}
     \typeout{
       ellipse:{
-        a:\pgfkeysvalueof{/tikz/ellipse/a}, 
-        b:\pgfkeysvalueof{/tikz/ellipse/b}, 
-        c:\pgfkeysvalueof{/tikz/ellipse/c}, 
-        angle:\pgfkeysvalueof{/tikz/ellipse/angle}, 
-        center:(\pgfkeysvalueof{/tikz/ellipse/xcenter},\pgfkeysvalueof{/tikz/ellipse/ycenter})
+        a:\pgfkeysvalueof{/tikz/ellipse/@a}, 
+        b:\pgfkeysvalueof{/tikz/ellipse/@b}, 
+        c:\pgfkeysvalueof{/tikz/ellipse/@c}, 
+        angle:\pgfkeysvalueof{/tikz/ellipse/@angle}, 
+        center:(\pgfkeysvalueof{/tikz/ellipse/@xcenter},\pgfkeysvalueof{/tikz/ellipse/@ycenter})
       }
     }
     \typeout{=========================}
@@ -688,11 +559,11 @@
   ellipse/.style = {
     insert path = {
       let
-        \n{a} = {\pgfkeysvalueof{/tikz/ellipse/a}},
-        \n{b} = {\pgfkeysvalueof{/tikz/ellipse/b}},
-        \n{angle} = {\pgfkeysvalueof{/tikz/ellipse/angle}},
-        \n{xcenter} = {\pgfkeysvalueof{/tikz/ellipse/xcenter}},
-        \n{ycenter} = {\pgfkeysvalueof{/tikz/ellipse/ycenter}},
+        \n{a} = {\pgfkeysvalueof{/tikz/ellipse/@a}},
+        \n{b} = {\pgfkeysvalueof{/tikz/ellipse/@b}},
+        \n{angle} = {\pgfkeysvalueof{/tikz/ellipse/@angle}},
+        \n{xcenter} = {\pgfkeysvalueof{/tikz/ellipse/@xcenter}},
+        \n{ycenter} = {\pgfkeysvalueof{/tikz/ellipse/@ycenter}},
       in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
         (0,0) ellipse [x radius=\n{a},y radius=\n{b}]
     }
@@ -707,14 +578,14 @@
   ellipse/directrix/.style = {
     insert path = {
       let
-        \n{a} = {\pgfkeysvalueof{/tikz/ellipse/a}},
-        \n{b} = {\pgfkeysvalueof{/tikz/ellipse/b}},
-        \n{c} = {\pgfkeysvalueof{/tikz/ellipse/c}},
+        \n{a} = {\pgfkeysvalueof{/tikz/ellipse/@a}},
+        \n{b} = {\pgfkeysvalueof{/tikz/ellipse/@b}},
+        \n{c} = {\pgfkeysvalueof{/tikz/ellipse/@c}},
         \n{d} = {\n{a}^2/\n{c}},
         \n{scale} = {\pgfkeysvalueof{/tikz/ellipse/directrix/scale}},
-        \n{angle} = {\pgfkeysvalueof{/tikz/ellipse/angle}},
-        \n{xcenter} = {\pgfkeysvalueof{/tikz/ellipse/xcenter}},
-        \n{ycenter} = {\pgfkeysvalueof{/tikz/ellipse/ycenter}},
+        \n{angle} = {\pgfkeysvalueof{/tikz/ellipse/@angle}},
+        \n{xcenter} = {\pgfkeysvalueof{/tikz/ellipse/@xcenter}},
+        \n{ycenter} = {\pgfkeysvalueof{/tikz/ellipse/@ycenter}},
       in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
         (-\n{d}, -\n{b}*\n{scale}) -- (-\n{d}, \n{b}*\n{scale})
         ( \n{d}, -\n{b}*\n{scale}) -- ( \n{d}, \n{b}*\n{scale})
@@ -730,12 +601,12 @@
   ellipse/axis/.style = {
     insert path = {
       let
-        \n{a} = {\pgfkeysvalueof{/tikz/ellipse/a}},
-        \n{b} = {\pgfkeysvalueof{/tikz/ellipse/b}},
+        \n{a} = {\pgfkeysvalueof{/tikz/ellipse/@a}},
+        \n{b} = {\pgfkeysvalueof{/tikz/ellipse/@b}},
         \n{scale} = {\pgfkeysvalueof{/tikz/ellipse/axis/scale}},
-        \n{angle} = {\pgfkeysvalueof{/tikz/ellipse/angle}},
-        \n{xcenter} = {\pgfkeysvalueof{/tikz/ellipse/xcenter}},
-        \n{ycenter} = {\pgfkeysvalueof{/tikz/ellipse/ycenter}},
+        \n{angle} = {\pgfkeysvalueof{/tikz/ellipse/@angle}},
+        \n{xcenter} = {\pgfkeysvalueof{/tikz/ellipse/@xcenter}},
+        \n{ycenter} = {\pgfkeysvalueof{/tikz/ellipse/@ycenter}},
       in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
         (-\n{scale}*\n{a}, 0) -- (\n{scale}*\n{a}, 0)
         (0, -\n{scale}*\n{b}) -- (0, \n{scale}*\n{b})
@@ -747,13 +618,12 @@
   % hyperbola/doamin/.code args = {#1}{
   %   \pgfkeysalso{/tikz/hyperbola/domain = #1}
   % },
-  hyperbola/a/.initial = 0,
-  hyperbola/b/.initial = 0,
-  hyperbola/c/.initial = 0,
-  hyperbola/e/.initial = 0,
-  hyperbola/angle/.initial = 0,
-  hyperbola/xcenter/.initial = 0,
-  hyperbola/ycenter/.initial = 0,
+  hyperbola/@a/.initial = 0,
+  hyperbola/@b/.initial = 0,
+  hyperbola/@c/.initial = 0,
+  hyperbola/@angle/.initial = 0,
+  hyperbola/@xcenter/.initial = 0,
+  hyperbola/@ycenter/.initial = 0,
   hyperbola/define/.code args = {#1,#2,#3}{
     % 提取各点的坐标分量 x-coordinate and y-coordinate
     % 注意: 根据 LaTeX 的规则, 宏不能含有数字, 提取坐标的 x 和 y 分量的宏不要含有数字
@@ -781,9 +651,6 @@
     % semiminor axis: b = sqrt(c^2 - a^2)
     \pgfmathsetmacro{\b}{sqrt(\c^2 - \a^2)} 
 
-    % hyperbola eccentricity
-    \pgfmathsetmacro{\e}{\c/\a} 
-
     % hyperbola center
     \pgfmathsetmacro{\xcenter}{(\xFL + \xFR) / 2cm} 
     \pgfmathsetmacro{\ycenter}{(\yFL + \yFR) / 2cm} 
@@ -791,21 +658,20 @@
     % angle of rotation
     \pgfmathsetmacro{\angle}{atan2(\yFR-\yFL, \xFR-\xFL)}
 
-    \pgfkeysalso{/tikz/hyperbola/a = \a}
-    \pgfkeysalso{/tikz/hyperbola/b = \b}
-    \pgfkeysalso{/tikz/hyperbola/c = \c}
-    \pgfkeysalso{/tikz/hyperbola/e = \e}
-    \pgfkeysalso{/tikz/hyperbola/xcenter = \xcenter}
-    \pgfkeysalso{/tikz/hyperbola/ycenter = \ycenter}
-    \pgfkeysalso{/tikz/hyperbola/angle = \angle}
+    \pgfkeysalso{/tikz/hyperbola/@a = \a}
+    \pgfkeysalso{/tikz/hyperbola/@b = \b}
+    \pgfkeysalso{/tikz/hyperbola/@c = \c}
+    \pgfkeysalso{/tikz/hyperbola/@xcenter = \xcenter}
+    \pgfkeysalso{/tikz/hyperbola/@ycenter = \ycenter}
+    \pgfkeysalso{/tikz/hyperbola/@angle = \angle}
     \typeout{=========================}
     \typeout{
       hyperbola:{
-        a:\pgfkeysvalueof{/tikz/hyperbola/a}, 
-        b:\pgfkeysvalueof{/tikz/hyperbola/b}, 
-        c:\pgfkeysvalueof{/tikz/hyperbola/c}, 
-        angle:\pgfkeysvalueof{/tikz/hyperbola/angle}, 
-        center:(\pgfkeysvalueof{/tikz/hyperbola/xcenter},\pgfkeysvalueof{/tikz/hyperbola/ycenter})
+        a:\pgfkeysvalueof{/tikz/hyperbola/@a}, 
+        b:\pgfkeysvalueof{/tikz/hyperbola/@b}, 
+        c:\pgfkeysvalueof{/tikz/hyperbola/@c}, 
+        angle:\pgfkeysvalueof{/tikz/hyperbola/@angle}, 
+        center:(\pgfkeysvalueof{/tikz/hyperbola/@xcenter},\pgfkeysvalueof{/tikz/hyperbola/@ycenter})
       }
     }
     \typeout{=========================}
@@ -813,11 +679,11 @@
   hyperbola/.style = {
     insert path = {
       let
-        \n{a} = {\pgfkeysvalueof{/tikz/hyperbola/a}},
-        \n{b} = {\pgfkeysvalueof{/tikz/hyperbola/b}},
-        \n{angle} = {\pgfkeysvalueof{/tikz/hyperbola/angle}},
-        \n{xcenter} = {\pgfkeysvalueof{/tikz/hyperbola/xcenter}},
-        \n{ycenter} = {\pgfkeysvalueof{/tikz/hyperbola/ycenter}},
+        \n{a} = {\pgfkeysvalueof{/tikz/hyperbola/@a}},
+        \n{b} = {\pgfkeysvalueof{/tikz/hyperbola/@b}},
+        \n{angle} = {\pgfkeysvalueof{/tikz/hyperbola/@angle}},
+        \n{xcenter} = {\pgfkeysvalueof{/tikz/hyperbola/@xcenter}},
+        \n{ycenter} = {\pgfkeysvalueof{/tikz/hyperbola/@ycenter}},
       in [smooth,domain=\pgfkeysvalueof{/tikz/hyperbola/domain},variable=\euclidea@var,transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
         plot({-\n{a}*cosh(\euclidea@var)},{\n{b}*sinh(\euclidea@var)})  % right branch
         plot({ \n{a}*cosh(\euclidea@var)},{\n{b}*sinh(\euclidea@var)})  % left branch
@@ -827,11 +693,11 @@
   asymptote/.style = {
     insert path = {
       let
-        \n{a} = {\pgfkeysvalueof{/tikz/hyperbola/a}},
-        \n{b} = {\pgfkeysvalueof{/tikz/hyperbola/b}},
-        \n{angle} = {\pgfkeysvalueof{/tikz/hyperbola/angle}},
-        \n{xcenter} = {\pgfkeysvalueof{/tikz/hyperbola/xcenter}},
-        \n{ycenter} = {\pgfkeysvalueof{/tikz/hyperbola/ycenter}},
+        \n{a} = {\pgfkeysvalueof{/tikz/hyperbola/@a}},
+        \n{b} = {\pgfkeysvalueof{/tikz/hyperbola/@b}},
+        \n{angle} = {\pgfkeysvalueof{/tikz/hyperbola/@angle}},
+        \n{xcenter} = {\pgfkeysvalueof{/tikz/hyperbola/@xcenter}},
+        \n{ycenter} = {\pgfkeysvalueof{/tikz/hyperbola/@ycenter}},
       in [smooth,domain=\pgfkeysvalueof{/tikz/hyperbola/domain},variable=\euclidea@var,transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
         plot({-\n{a}*sinh(\euclidea@var)},{\n{b}*sinh(\euclidea@var)})  
         plot({ \n{a}*sinh(\euclidea@var)},{\n{b}*sinh(\euclidea@var)})  
@@ -847,14 +713,14 @@
   hyperbola/directrix/.style = {
     insert path = {
       let
-        \n{a} = {\pgfkeysvalueof{/tikz/hyperbola/a}},
-        \n{b} = {\pgfkeysvalueof{/tikz/hyperbola/b}},
-        \n{c} = {\pgfkeysvalueof{/tikz/hyperbola/c}},
+        \n{a} = {\pgfkeysvalueof{/tikz/hyperbola/@a}},
+        \n{b} = {\pgfkeysvalueof{/tikz/hyperbola/@b}},
+        \n{c} = {\pgfkeysvalueof{/tikz/hyperbola/@c}},
         \n{d} = {\n{a}^2/\n{c}},
         \n{scale} = {\pgfkeysvalueof{/tikz/hyperbola/directrix/scale}},
-        \n{angle} = {\pgfkeysvalueof{/tikz/hyperbola/angle}},
-        \n{xcenter} = {\pgfkeysvalueof{/tikz/hyperbola/xcenter}},
-        \n{ycenter} = {\pgfkeysvalueof{/tikz/hyperbola/ycenter}},
+        \n{angle} = {\pgfkeysvalueof{/tikz/hyperbola/@angle}},
+        \n{xcenter} = {\pgfkeysvalueof{/tikz/hyperbola/@xcenter}},
+        \n{ycenter} = {\pgfkeysvalueof{/tikz/hyperbola/@ycenter}},
       in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
         (-\n{d}, -\n{scale}*\n{b}) -- (-\n{d}, \n{scale}*\n{b})
         ( \n{d}, -\n{scale}*\n{b}) -- ( \n{d}, \n{scale}*\n{b})
@@ -870,12 +736,12 @@
   hyperbola/axis/.style = {
     insert path = {
       let
-        \n{b} = {\pgfkeysvalueof{/tikz/hyperbola/b}},
-        \n{c} = {\pgfkeysvalueof{/tikz/hyperbola/c}},
+        \n{b} = {\pgfkeysvalueof{/tikz/hyperbola/@b}},
+        \n{c} = {\pgfkeysvalueof{/tikz/hyperbola/@c}},
         \n{scale} = {\pgfkeysvalueof{/tikz/hyperbola/axis/scale}},
-        \n{angle} = {\pgfkeysvalueof{/tikz/hyperbola/angle}},
-        \n{xcenter} = {\pgfkeysvalueof{/tikz/hyperbola/xcenter}},
-        \n{ycenter} = {\pgfkeysvalueof{/tikz/hyperbola/ycenter}},
+        \n{angle} = {\pgfkeysvalueof{/tikz/hyperbola/@angle}},
+        \n{xcenter} = {\pgfkeysvalueof{/tikz/hyperbola/@xcenter}},
+        \n{ycenter} = {\pgfkeysvalueof{/tikz/hyperbola/@ycenter}},
       in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
         (-\n{scale}*\n{c}, 0) -- (\n{scale}*\n{c}, 0)
         (0, -\n{scale}*\n{b}) -- (0, \n{scale}*\n{b})
@@ -889,9 +755,8 @@
   % parabola/doamin/.code args = {#1}{
   %   \pgfkeysalso{/tikz/parabola/domain = #1}
   % },
-  parabola/a/.initial = 0,
-  parabola/e/.initial = 1,
-  parabola/angle/.initial = 0,
+  parabola/@a/.initial = 0,
+  parabola/@angle/.initial = 0,
   parabola/@xvertex/.initial = 0,
   parabola/@yvertex/.initial = 0,
   parabola/define/.code args = {#1,#2}{
@@ -899,34 +764,34 @@
     % 注意: 根据 LaTeX 的规则, 宏不能含有数字, 提取坐标的 x 和 y 分量的宏不要含有数字
     \newdimen\xF
     \newdimen\yF
-    \newdimen\xV
-    \newdimen\yV
+    \newdimen\xP
+    \newdimen\yP
     \pgfextractx{\xF}{\pgfpointanchor{#1}{center}}
     \pgfextracty{\yF}{\pgfpointanchor{#1}{center}}
-    \pgfextractx{\xV}{\pgfpointanchor{#2}{center}}
-    \pgfextracty{\yV}{\pgfpointanchor{#2}{center}}
+    \pgfextractx{\xP}{\pgfpointanchor{#2}{center}}
+    \pgfextracty{\yP}{\pgfpointanchor{#2}{center}}
 
     % latus rectum 4a
     % 注意: semi-latus rectum 通常表示为 p (=2a), 
     % macro 不要定义为 \p, \p 有表示向量的含义
-    \pgfmathsetmacro{\a}{veclen(\xV-\xF, \yV-\yF)/1cm} % 计算 PF
+    \pgfmathsetmacro{\a}{veclen(\xP-\xF, \yP-\yF)/1cm} % 计算 PF
     
     % parabola vertex
-    \pgfmathsetmacro{\xvertex}{(\xV) / 1cm} 
-    \pgfmathsetmacro{\yvertex}{(\yV) / 1cm} 
+    \pgfmathsetmacro{\xvertex}{(\xP) / 1cm} 
+    \pgfmathsetmacro{\yvertex}{(\yP) / 1cm} 
 
     % angle of rotation
-    \pgfmathsetmacro{\angle}{atan2(\yF-\yV, \xF-\xV)}
+    \pgfmathsetmacro{\angle}{atan2(\yF-\yP, \xF-\xP)}
 
-    \pgfkeysalso{/tikz/parabola/a = \a}
+    \pgfkeysalso{/tikz/parabola/@a = \a}
     \pgfkeysalso{/tikz/parabola/@xvertex = \xvertex}
     \pgfkeysalso{/tikz/parabola/@yvertex = \yvertex}
-    \pgfkeysalso{/tikz/parabola/angle = \angle}
+    \pgfkeysalso{/tikz/parabola/@angle = \angle}
     \typeout{=========================}
     \typeout{
       parabola:{
-        a:\pgfkeysvalueof{/tikz/parabola/a}, 
-        angle:\pgfkeysvalueof{/tikz/parabola/angle}, 
+        a:\pgfkeysvalueof{/tikz/parabola/@a}, 
+        angle:\pgfkeysvalueof{/tikz/parabola/@angle}, 
         center:(\pgfkeysvalueof{/tikz/parabola/@xvertex},\pgfkeysvalueof{/tikz/parabola/@yvertex})
       }
     }
@@ -935,8 +800,8 @@
   parabola/.style = {
     insert path = {
       let
-        \n{a} = {\pgfkeysvalueof{/tikz/parabola/a}},
-        \n{angle} = {\pgfkeysvalueof{/tikz/parabola/angle}},
+        \n{a} = {\pgfkeysvalueof{/tikz/parabola/@a}},
+        \n{angle} = {\pgfkeysvalueof{/tikz/parabola/@angle}},
         \n{xvertex} = {\pgfkeysvalueof{/tikz/parabola/@xvertex}},
         \n{yvertex} = {\pgfkeysvalueof{/tikz/parabola/@yvertex}},
       in [smooth,domain=\pgfkeysvalueof{/tikz/parabola/domain},variable=\euclidea@var,transform={\n{angle}:(\n{xvertex},\n{yvertex})}]
@@ -952,9 +817,9 @@
   parabola/directrix/.style = {
     insert path = {
       let
-        \n{a} = {\pgfkeysvalueof{/tikz/parabola/a}},
+        \n{a} = {\pgfkeysvalueof{/tikz/parabola/@a}},
         \n{scale} = {\pgfkeysvalueof{/tikz/parabola/directrix/scale}},
-        \n{angle} = {\pgfkeysvalueof{/tikz/parabola/angle}},
+        \n{angle} = {\pgfkeysvalueof{/tikz/parabola/@angle}},
         \n{xcenter} = {\pgfkeysvalueof{/tikz/parabola/@xvertex}},
         \n{ycenter} = {\pgfkeysvalueof{/tikz/parabola/@yvertex}},
       in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
@@ -970,9 +835,9 @@
   parabola/axis/.style = {
     insert path = {
       let
-        \n{a} = {\pgfkeysvalueof{/tikz/parabola/a}},
+        \n{a} = {\pgfkeysvalueof{/tikz/parabola/@a}},
         \n{scale} = {\pgfkeysvalueof{/tikz/parabola/axis/scale}},
-        \n{angle} = {\pgfkeysvalueof{/tikz/parabola/angle}},
+        \n{angle} = {\pgfkeysvalueof{/tikz/parabola/@angle}},
         \n{xcenter} = {\pgfkeysvalueof{/tikz/parabola/@xvertex}},
         \n{ycenter} = {\pgfkeysvalueof{/tikz/parabola/@yvertex}},
       in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]

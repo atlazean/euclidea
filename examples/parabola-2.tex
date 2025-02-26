@@ -9,11 +9,11 @@
   \axes(-5:5, -5:5);
 
   \coordinate (F) at (0,1);
-  \coordinate (P) at (0.5,0);
+  \coordinate (V) at (0.5,0);
 
   \tikzset{
     % parabola/doamin=-1.25:1.25,
-    parabola/define={F,P},
+    parabola/define={F,V},
   }
 
   \draw [purple, thick, parabola] node [above] {parabola};
@@ -24,7 +24,7 @@
   % parabola/axis/scale=2.5,
   parabola/axis] node [right] {axis};
 
-  \foreach \pp/\placement in {F/right,P/above}{
+  \foreach \pp/\placement in {F/right,V/above}{
     \fill[red] (\pp) circle (2pt);
     \draw (\pp) node[\placement] {$\pp$};
   }

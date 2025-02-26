@@ -51,9 +51,12 @@
   `ellipse`: creates the ellipse path.
   `ellipse/directrix/scale=k`: set the scale of directrices.
   `ellipse/directrix`: create the directrices.
-  `ellipse/axis/scale=k`: set the scale of axes
+  `ellipse/axis/scale=k`: set the scale of axes.
   `ellipse/axis`: create the axes.
+  `ellipse/a`, `ellipse/b`, `ellipse/c`, `ellipse/e`: ellipse semimajor-axis, semiminor-axis, linear eccentricity, eccentricity.
 \end{minted}
+
+注意: \mint{latex}{ellipse/define = {F1,F2,P}} 必须单独使用 tikzset 定义才能访问 /tikz/ellipse 下面的变量, 这和作用域有关.
 
 \emph{示例}
 
@@ -136,6 +139,7 @@ arc(start angle:end angle: x radius and y radius)
   `parabola/directrix`: create the directrix.
   `parabola/axis/scale=k`: set the scale of axis.
   `parabola/axis`: create the axis.
+  `parabola/a`, `parabola/e`: 1/4 parabola latus rectum, eccentricity (1.0).
 \end{minted}
 
 \emph{示例}
@@ -211,8 +215,56 @@ $t$ 是射线,双曲线和 $x$ 轴围成的面积的二倍. 对于双曲线上�
   `hyperbola/directrix`: create the directrices.
   `hyperbola/axis/scale=k`: set the scale of axes.
   `hyperbola/axis`: create the axes.
+  `hyperbola/a`, `hyperbola/b`, `hyperbola/c`, `hyperbola/e`: hyperbola semimajor-axis, semiminor-axis, linear eccentricity, eccentricity.
 \end{minted}
 
 \emph{示例}
 
 \showcode{snippets/conics/hyperbola4.tex}
+
+% ---------------------------------
+\section{过椭圆外一点作椭圆的切线 Tangents to an Ellipse}
+
+过椭圆外一点作椭圆的切线的方法有: 利用椭圆的光学性质作图; 
+或者根据射影几何理论, 采用极点极线法.此处采用前者.
+
+方法 1: 
+
+\begin{enumerate}
+  \item 作出椭圆的辅助圆 (以椭圆中心为圆心, 以长半轴长 $a$ 为半径的圆);
+  \item 作出一个以 $PF_1$ 或 $PF_2$ 为直径的圆;
+  \item 两圆交于 $Q,R$, 则直线 $PQ,PR$ 即为所求.
+\end{enumerate}
+
+\showcode{snippets/conics/tangents-of-ellipse-1.tex}
+
+方法 2: 
+
+\begin{enumerate}
+  \item 作出一个以 $F_1$ 为圆心, $2a$ 为半径的圆;
+  \item 作出一个以 $F_2$ 为圆心, $PF_2$ 为半径的圆;
+  \item 两圆交于 $Q,R$, 则 $F_2Q,F_2R$ 的中垂线即为所求.
+\end{enumerate}
+
+\showcode{snippets/conics/tangents-of-ellipse-2.tex}
+
+% ---------------------------------
+\section{过双曲线外一点作双曲线的切线 Tangents to a Hyperbola}
+
+类似椭圆的切线作法, 对于双曲线同样有下面的方法:
+
+\showcode{snippets/conics/tangents-of-Hyperbola-1.tex}
+
+\showcode{snippets/conics/tangents-of-Hyperbola-2.tex}
+
+% ---------------------------------
+\section{过抛物线外一点作抛物线的切线 Tangents to a Parabola}
+
+抛物线的切线作法如下:
+
+\begin{enumerate}
+  \item 以点 $P$ 为圆心, $PF$ 为半径作圆, 交准线将于 $Q,R$;
+  \item $FQ,FR$ 的中垂线即为所求.
+\end{enumerate}
+
+

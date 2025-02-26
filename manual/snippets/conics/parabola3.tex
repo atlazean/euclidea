@@ -1,12 +1,12 @@
 \begin{tikzpicture}
   \axes(-5:5, -5:5);
 
-  \coordinate (F) at (0,1);
-  \coordinate (P) at (0.5,0);
+  \coordinate (F) at (0,1);% focus
+  \coordinate (V) at (0.5,0);% vertex
 
   \tikzset{
     % parabola/doamin=-1.25:1.25,
-    parabola/define={F,P},
+    parabola/define={F,V},
   }
 
   \draw [purple, thick, parabola] node [above] {parabola};
@@ -17,7 +17,10 @@
   % parabola/axis/scale=2.5,
   parabola/axis] node [right] {axis};
 
-  \foreach \pp/\placement in {F/right,P/above}{
+  \draw[red] (-4,-4) node[above] {$a:{\pgfkeysvalueof{/tikz/parabola/a}}$};
+  \draw[red] (-4,-4) node[below] {$e:{\pgfkeysvalueof{/tikz/parabola/e}}$};
+
+  \foreach \pp/\placement in {F/right,V/above}{
     \fill[red] (\pp) circle (2pt);
     \draw (\pp) node[\placement] {$\pp$};
   }

@@ -297,5 +297,68 @@ $A_1A_2$ 和 $A_4A_5$, $A_2A_3$ 和 $A_5A_6$, $A_3A_4$ 和 $A_6A_1$. 如图\ref{
 \caption{极点与极线}
 \end{figure}
 
+\section{彭赛列闭合定理 Poncelet's closure theorem}
 
+彭赛列闭合定理（Poncelet's Closure Theorem）是几何学中的一个经典定理，由法国数学家 让-维克托·彭赛列（Jean-Victor Poncelet） 在 19 世纪提出。
+
+\begin{theorem}[彭赛列闭合定理 Poncelet's closure theorem\label{poncelet}]
+  设 $C_1$ 和 $C_2$ 是两个圆锥曲线，且 $C_2$ 完全位于 $C_1$ 的内部。如果存在一个 
+$n$-边形 $P$, 使得: $P$ 的所有顶点都在 $C_1$ 上；$P$ 的所有边都与 
+$C_2$ 相切; 那么, 对于任意一个初始点 $p_0 \in C_1$, 都可以通过以下步骤构造一个闭合的 
+$n$-边形:从 $p_0$ 出发, 画一条与 $C_2$ 相切的直线, 交 $C_1$ 于 $p_1$; 重复上述步骤,
+直到回到 $p_0$ 形成一个闭合多边形.
+\end{theorem}
+
+由于彭赛列闭合定理涉及圆锥曲线, 作图时通常需要借助计算机辅助软件动态调整参数直到多边形闭合, 例如: Geogebra 或其他类似的软件。
+若 $C_1,C_2$ 为同心圆, 正多边形即能满足内接外切条件。
+
+下图是以 $n = 3$ 为例的两个圆:
+
+\begin{figure}[!htp]
+\begin{center}
+
+  \begin{tikzpicture}
+    \axes(-5:5,-5:5);
+    \tikzmath{
+      \r = 4;
+    }
+    \foreach \i/\angle in {1/75,2/-135,3/-30} {
+      \coordinate (A\i) at (\angle:\r);
+    }
+
+    \draw[thick,teal] (A1) -- (A2) -- (A3) -- cycle;
+
+    % 外接圆
+    \coordinate (O) at (0,0);% 圆心
+    \draw[thick,purple] (O) circle (\r);
+
+    % A1 A2 A3 的内切圆
+    \coordinate[incenter={A1,A2,A3}] (I);
+    \coordinate (P) at ($(A1)!(I)!(A2)$);%temp
+    \draw[thick,violet,circle={I,P}];
+
+    % 验证
+    \coordinate (B1) at (140:\r);
+    \coordinate (M) at ($(B1)!.5!(I)$);
+    % 求 B1 向内切圆切线的切点
+    \tikzset{circle-circle={I,P,M,B1}};
+    % 求切线与外接圆的交点
+    \tikzset{circle-line={O,A1,B1,cc1}}
+    \coordinate (B2) at (cl1);%cl2 即 B1
+    \tikzset{circle-line={O,A1,B1,cc2}}
+    \coordinate (B3) at (cl1);%cl2 即 B1
+
+    \draw[thick,blue] (B1) -- (B2) -- (B3) -- cycle;
+
+    \foreach \p/\placement in {A1/above,A2/below left,A3/below right,
+    B1/above,B2/below,B3/right} {
+      \fill[red] (\p) circle (2pt);
+      \draw (\p) node[\placement] {$\p$};
+    }
+
+  \end{tikzpicture}
+
+\end{center}
+\caption{彭赛列闭合定理($n=3$)}
+\end{figure}
 

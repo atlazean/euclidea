@@ -484,8 +484,33 @@ parallel={A,B,A}
 \emph{调用方式}
 
 \begin{tcolorbox}{}
+\mint{latex}{circle-tangent = {O,A,P}}
+\end{tcolorbox}
+
+\emph{参数说明}
+
+\begin{description}
+  \item[O]: 圆心坐标
+  \item[A]: 为圆上任意一点
+  \item[P]: 圆外一点坐标
+\end{description}
+
+过圆 ($O$ 为圆心, $A$ 为圆上任意一点) 外一点 $P$ 作切线, 
+求得两个切点(存储在tp1 和 tp2 中, 其中 tp1 在向量 $OP$ 的左边).
+
+\emph{示例}
+
+\showcode{snippets/commands/tangent-2.tex}
+
+\emph{调用方式}
+
+\begin{tcolorbox}{}
 \mint{latex}{tangent point={O,A,P}}
 \end{tcolorbox}
+
+\begin{remark*}
+  该调用方式已过时, 每次只能求出一个切点, 另一个切点需要用对称作出.
+\end{remark*}
 
 \emph{参数说明}
 
@@ -500,7 +525,7 @@ parallel={A,B,A}
 
 \emph{示例}
 
-\showcode{snippets/commands/tangent.tex}
+\showcode{snippets/commands/tangent-1.tex}
 
 % ---------------------------------
 \section{两圆的交点 Circle-Circle Intersection}

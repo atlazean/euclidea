@@ -1,11 +1,11 @@
-\ProvidesFile{tikzlibraryeuclidea.code.tex}[2025/02/26 v1.5.0 A tikz library for Euclidean geometry constructions]
+\ProvidesFile{tikzlibraryeuclidea.code.tex}[2025/02/27 v1.5.1 A tikz library for Euclidean geometry constructions]
 
 \usetikzlibrary{math,calc,quotes}
 
-% https://tex.stackexchange.com/questions/455991/pgfmath-function-for-strings-and-numbers
-% Solving the error:
+% pgfmath-solution to the error:
 % Package PGF Math: Could not parse input 'A' as a floating 
 % point number, sorry. The unreadable part was near 'A'..
+% https://tex.stackexchange.com/questions/455991/pgfmath-function-for-strings-and-numbers
 \pgfkeys{
   /pgf/fpu/handlers/invalid number/.code = {%
     \pgfmathfloatparsenumber{3Y0.0e0]}%
@@ -13,6 +13,16 @@
 }
 
 \makeatletter
+
+% ===============================================
+% Caveats
+% ===============================================
+
+% 在 TikZ 中，函数本身并没有直接的“返回多个值”的机制，因为 TikZ 是一种基于 TeX 的绘图语言，主要用于描述图形，
+% 而不是像编程语言那样处理多返回值逻辑。不过，通过一些技巧，你可以在 TikZ 中模拟类似“返回多个值”的效果。
+% https://tex.stackexchange.com/questions/510418/tikz-declare-function-with-multiple-outputs
+
+% tikzset 中不要有空行
 
 % 注意: 计算过程是保留坐标单位(pt)的, 所以存在乘除法单位的问题, 首先数值始终携带单位, 
 % 在 calc 运算时有的需要转换为标量; 将坐标转换为 pt 值, 数值可能超出限值, 出现 
@@ -42,9 +52,6 @@
   };
 }
 
-% =====================
-% tikzset 中不要有空行
-% =====================
 \tikzset{
   % specifying start and end with modifiers(see tikz manual 13.5) 
   % commands supporting partway modifiers:
@@ -110,9 +117,9 @@
       {\pgfpoint{0cm}{0cm}}
       {\pgfpointanchor{#1}{center}}
     \pgfkeysalso{/tikz/revolve/@angle = \pgfmathresult}
-    \typeout{=========================}
-    \typeout{/tikz/revolve/@angle:\pgfkeysvalueof{/tikz/revolve/@angle}}
-    \typeout{=========================}
+    % \typeout{=========================}
+    % \typeout{/tikz/revolve/@angle:\pgfkeysvalueof{/tikz/revolve/@angle}}
+    % \typeout{=========================}
   },
   % set revolve/@angle with angle between two position vectors
   revolve/@set angle 2/.code args = {#1,#2}{
@@ -120,9 +127,9 @@
       {\pgfpointanchor{#1}{center}}
       {\pgfpointanchor{#2}{center}}
     \pgfkeysalso{/tikz/revolve/@angle = \pgfmathresult}
-    \typeout{=========================}
-    \typeout{/tikz/revolve/@angle:\pgfkeysvalueof{/tikz/revolve/@angle}}
-    \typeout{=========================}
+    % \typeout{=========================}
+    % \typeout{/tikz/revolve/@angle:\pgfkeysvalueof{/tikz/revolve/@angle}}
+    % \typeout{=========================}
   },
   % set revolve/@angle with angle {A,B,C}, angle between two sides
   % (A is apex, B is the start point, C is the end point) 
@@ -133,9 +140,9 @@
       {\pgfpointanchor{#1}{center}}
       {\pgfpointanchor{#3}{center}}
     \pgfkeysalso{/tikz/revolve/@angle = \pgfmathresult}
-    \typeout{=========================}
-    \typeout{/tikz/revolve/@angle:\pgfkeysvalueof{/tikz/revolve/@angle}}
-    \typeout{=========================}
+    % \typeout{=========================}
+    % \typeout{/tikz/revolve/@angle:\pgfkeysvalueof{/tikz/revolve/@angle}}
+    % \typeout{=========================}
   },
   % set revolve/@angle with angle between two vectors(ccw, AB and CD) 
   revolve/@set angle 4/.code args = {#1,#2,#3,#4}{
@@ -145,9 +152,9 @@
       {\pgfpointanchor{#3}{center}}
       {\pgfpointanchor{#4}{center}}
     \pgfkeysalso{/tikz/revolve/@angle = \pgfmathresult}
-    \typeout{=========================}
-    \typeout{/tikz/revolve/@angle:\pgfkeysvalueof{/tikz/revolve/@angle}}
-    \typeout{=========================}
+    % \typeout{=========================}
+    % \typeout{/tikz/revolve/@angle:\pgfkeysvalueof{/tikz/revolve/@angle}}
+    % \typeout{=========================}
   },
   revolve/angle/.code = {%
     \pgfmathfloatparsenumber{#1}
@@ -207,9 +214,9 @@
     \else
       \pgfkeysalso{/tikz/intercept/@length = #1}
     \fi
-    \typeout{=========================}
-    \typeout{/tikz/intercept/@length:\pgfkeysvalueof{/tikz/intercept/@length}}
-    \typeout{=========================} 
+    % \typeout{=========================}
+    % \typeout{/tikz/intercept/@length:\pgfkeysvalueof{/tikz/intercept/@length}}
+    % \typeout{=========================} 
   },
   % intercept={A,B}: intercepts a line segment(starting 
   % from point A) of a certain length on line AB.
@@ -377,7 +384,7 @@
       in (#1) circle ({veclen(\p{OA})})
     }
   },
-  % tagent point = {O,A,P}
+  % tagent point = {O,A,P} NOTE: deprecated
   % O,A: center of circle and an abitary point on the circle 
   % P: a point outside the circle
   tangent point/.style args = {#1,#2,#3}{
@@ -444,7 +451,8 @@
       in (\p{s}) -- (\p{e})
     }
   },
-  % circle-line instersections (named: cl1, cl2) of circle (O, A) and line (P, Q)
+  % circle-line instersections (named: cl1, cl2) of circle (O, A) 
+  % and line (P, Q)
   % 1. find solutions to equations:
   %    x^2 + y^2 = ra^2 and x = a
   %    wherein a = the (signed) distance from circle center to line
@@ -507,7 +515,8 @@
     \coordinate (cl1) at (\xa+\a*\c-\b*\s,\ya+\a*\s+\b*\c);
     \coordinate (cl2) at (\xa+\a*\c+\b*\s,\ya+\a*\s-\b*\c);
   },
-  % circle-circle instersections (named: cc1, cc2) of circle O1(A, B) and circle O2(C, D)
+  % circle-circle instersections (named: cc1, cc2) of circle 
+  % O1(A, B) and circle O2(C, D)
   % 1. find solutions to equations:
   %    x^2 + y^2 = ra^2 and (x-d)^2 + y^2 = rb^2
   %    wherein d = the distance of two centers
@@ -565,6 +574,16 @@
     \coordinate (cc1) at (\xa+\a*\c-\b*\s,\ya+\a*\s+\b*\c);
     \coordinate (cc2) at (\xa+\a*\c+\b*\s,\ya+\a*\s-\b*\c);
   },
+  % tangent lines to circle: circle-tagent = {O,A,P}, create 
+  % tangent points (named: tp1, tp2, tp1 is on the left side of OP )
+  % O,A: center of circle and an abitary point on the circle 
+  % P: a point outside the circle
+  circle-tangent/.code args = {#1,#2,#3} {
+    \coordinate (euclidea@mid) at ($(#1)!.5!(#3)$);
+    \tikzset{circle-circle={#1,#2,euclidea@mid,#1},}
+    \coordinate (tp1) at (cc1);
+    \coordinate (tp2) at (cc2);
+  },
   % ========== Path Definitions ==========
   % perpendicular bisector of the line segment (#1 -- #2)
   perpendicular bisector/.style args = {#1,#2}{
@@ -615,7 +634,8 @@
   extend/.style args = {#1,#2} {
     parallel={#1,#2,#1}
   },
-  % rotate around the origin by `angle` and then shift by (`xshift`,`yshift`)
+  % rotate around the origin by `angle` and then 
+  % shift by (`xshift`,`yshift`)
   % tansform = {angle:(xshift,yshift)}
   transform/.style args = {#1:(#2,#3)} {
     cm={cos(#1), sin(#1), -sin(#1), cos(#1), (#2,#3)}
@@ -631,7 +651,8 @@
   ellipse/ycenter/.initial = 0,
   ellipse/define/.code args = {#1,#2,#3}{
     % 提取各点的坐标分量 x-coordinate and y-coordinate
-    % 注意: 根据 LaTeX 的规则, 宏不能含有数字, 提取坐标的 x 和 y 分量的宏不要含有数字
+    % 注意: 根据 LaTeX 的规则, 宏不能含有数字, 
+    % 提取坐标的 x 和 y 分量的宏不要含有数字
     \newdimen\xFL
     \newdimen\yFL
     \newdimen\xFR
@@ -680,7 +701,8 @@
         b:\pgfkeysvalueof{/tikz/ellipse/b}, 
         c:\pgfkeysvalueof{/tikz/ellipse/c}, 
         angle:\pgfkeysvalueof{/tikz/ellipse/angle}, 
-        center:(\pgfkeysvalueof{/tikz/ellipse/xcenter},\pgfkeysvalueof{/tikz/ellipse/ycenter})
+        center:(\pgfkeysvalueof{/tikz/ellipse/xcenter},
+          \pgfkeysvalueof{/tikz/ellipse/ycenter})
       }
     }
     \typeout{=========================}
@@ -756,7 +778,8 @@
   hyperbola/ycenter/.initial = 0,
   hyperbola/define/.code args = {#1,#2,#3}{
     % 提取各点的坐标分量 x-coordinate and y-coordinate
-    % 注意: 根据 LaTeX 的规则, 宏不能含有数字, 提取坐标的 x 和 y 分量的宏不要含有数字
+    % 注意: 根据 LaTeX 的规则, 宏不能含有数字, 
+    % 提取坐标的 x 和 y 分量的宏不要含有数字
     \newdimen\xFL
     \newdimen\yFL
     \newdimen\xFR
@@ -776,7 +799,7 @@
     \pgfmathsetmacro{\a}{abs(\PFLeft - \PFRight)/2cm} % 计算 a 并转换单位
 
     % the distance from the center to a focus: c = |F1F2| / 2
-    \pgfmathsetmacro{\c}{veclen(\xFL-\xFR, \yFL-\yFR) / 2cm} % c = |F1F2| / 2
+    \pgfmathsetmacro{\c}{veclen(\xFL-\xFR, \yFL-\yFR) / 2cm}
 
     % semiminor axis: b = sqrt(c^2 - a^2)
     \pgfmathsetmacro{\b}{sqrt(\c^2 - \a^2)} 
@@ -805,7 +828,8 @@
         b:\pgfkeysvalueof{/tikz/hyperbola/b}, 
         c:\pgfkeysvalueof{/tikz/hyperbola/c}, 
         angle:\pgfkeysvalueof{/tikz/hyperbola/angle}, 
-        center:(\pgfkeysvalueof{/tikz/hyperbola/xcenter},\pgfkeysvalueof{/tikz/hyperbola/ycenter})
+        center:(\pgfkeysvalueof{/tikz/hyperbola/xcenter},
+          \pgfkeysvalueof{/tikz/hyperbola/ycenter})
       }
     }
     \typeout{=========================}
@@ -818,7 +842,8 @@
         \n{angle} = {\pgfkeysvalueof{/tikz/hyperbola/angle}},
         \n{xcenter} = {\pgfkeysvalueof{/tikz/hyperbola/xcenter}},
         \n{ycenter} = {\pgfkeysvalueof{/tikz/hyperbola/ycenter}},
-      in [smooth,domain=\pgfkeysvalueof{/tikz/hyperbola/domain},variable=\euclidea@var,transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
+      in [smooth,domain=\pgfkeysvalueof{/tikz/hyperbola/domain},
+      variable=\euclidea@var,transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
         plot({-\n{a}*cosh(\euclidea@var)},{\n{b}*sinh(\euclidea@var)})  % right branch
         plot({ \n{a}*cosh(\euclidea@var)},{\n{b}*sinh(\euclidea@var)})  % left branch
     }
@@ -832,7 +857,8 @@
         \n{angle} = {\pgfkeysvalueof{/tikz/hyperbola/angle}},
         \n{xcenter} = {\pgfkeysvalueof{/tikz/hyperbola/xcenter}},
         \n{ycenter} = {\pgfkeysvalueof{/tikz/hyperbola/ycenter}},
-      in [smooth,domain=\pgfkeysvalueof{/tikz/hyperbola/domain},variable=\euclidea@var,transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
+      in [smooth,domain=\pgfkeysvalueof{/tikz/hyperbola/domain},
+      variable=\euclidea@var,transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
         plot({-\n{a}*sinh(\euclidea@var)},{\n{b}*sinh(\euclidea@var)})  
         plot({ \n{a}*sinh(\euclidea@var)},{\n{b}*sinh(\euclidea@var)})  
     }
@@ -896,7 +922,8 @@
   parabola/@yvertex/.initial = 0,
   parabola/define/.code args = {#1,#2}{
     % 提取各点的坐标分量 x-coordinate and y-coordinate
-    % 注意: 根据 LaTeX 的规则, 宏不能含有数字, 提取坐标的 x 和 y 分量的宏不要含有数字
+    % 注意: 根据 LaTeX 的规则, 宏不能含有数字, 
+    % 提取坐标的 x 和 y 分量的宏不要含有数字
     \newdimen\xF
     \newdimen\yF
     \newdimen\xV
@@ -927,7 +954,8 @@
       parabola:{
         a:\pgfkeysvalueof{/tikz/parabola/a}, 
         angle:\pgfkeysvalueof{/tikz/parabola/angle}, 
-        center:(\pgfkeysvalueof{/tikz/parabola/@xvertex},\pgfkeysvalueof{/tikz/parabola/@yvertex})
+        center:(\pgfkeysvalueof{/tikz/parabola/@xvertex},
+          \pgfkeysvalueof{/tikz/parabola/@yvertex})
       }
     }
     \typeout{=========================}
@@ -939,7 +967,9 @@
         \n{angle} = {\pgfkeysvalueof{/tikz/parabola/angle}},
         \n{xvertex} = {\pgfkeysvalueof{/tikz/parabola/@xvertex}},
         \n{yvertex} = {\pgfkeysvalueof{/tikz/parabola/@yvertex}},
-      in [smooth,domain=\pgfkeysvalueof{/tikz/parabola/domain},variable=\euclidea@var,transform={\n{angle}:(\n{xvertex},\n{yvertex})}]
+      in [smooth,domain=\pgfkeysvalueof{/tikz/parabola/domain},
+      variable=\euclidea@var,
+      transform={\n{angle}:(\n{xvertex},\n{yvertex})}]
         plot({\n{a}*(\euclidea@var)^2},{2*\n{a}*(\euclidea@var)}) 
     }
   },
@@ -1005,7 +1035,8 @@
 \newcommand\parabola{} % just for safety
 \def\parabola[#1]#2(#3,#4,#5){
   \path[smooth,domain=-2:2,#1,variable=\euclidea@var]
-    plot({\euclidea@var},{(#3)*\euclidea@var*\euclidea@var+(#4)*\euclidea@var+(#5)})
+    plot({\euclidea@var},
+      {(#3)*\euclidea@var*\euclidea@var+(#4)*\euclidea@var+(#5)})
 }
 
 % Syntax of ellipse:
@@ -1022,8 +1053,10 @@
 \newcommand\hyperbola{} % just for safety
 \def\hyperbola[#1]#2(#3,#4){
   \path[smooth,domain=-1.5:1.5,#1,variable=\euclidea@var]
-    plot({-(#3)*cosh(\euclidea@var)},{(#4)*sinh(\euclidea@var)})  % right arm
-    plot({ (#3)*cosh(\euclidea@var)},{(#4)*sinh(\euclidea@var)})  % left arm
+    plot({-(#3)*cosh(\euclidea@var)},
+      {(#4)*sinh(\euclidea@var)})% right arm
+    plot({ (#3)*cosh(\euclidea@var)},
+      {(#4)*sinh(\euclidea@var)})% left arm
 }
 
 % Syntax of asymptote:

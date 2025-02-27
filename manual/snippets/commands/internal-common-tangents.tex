@@ -10,10 +10,15 @@
   \coordinate (O2) at (4,0);
   \coordinate (A2) at ($(O2)+(\b:\r2)$);
   \coordinate[internal center={O1,A1,O2,A2}] (P); 
-  \coordinate[tangent point={O1,A1,P}] (B);
-  \coordinate[tangent point={O2,A2,P}] (C);
-  \coordinate[reflect={O1,O2,B}] (D);
-  \coordinate[reflect={O1,O2,C}] (E);
+  
+  \tikzset{circle-tangent={O1,A1,P},}
+  \coordinate (B) at (tp1);
+  \coordinate (C) at (tp2);
+
+  \tikzset{circle-tangent={O2,A2,P},}
+  \coordinate (D) at (tp1);
+  \coordinate (E) at (tp2);
+  
   \draw[thick,circle={O1,A1}];
   \draw[thick,circle={O2,A2}];
   \draw[thick,purple] (P) -- (B) (P) -- (C) (P) -- (D) (P) -- (E);

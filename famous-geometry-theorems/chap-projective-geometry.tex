@@ -337,15 +337,13 @@ $n$-边形:从 $p_0$ 出发, 画一条与 $C_2$ 相切的直线, 交 $C_1$ 于 $
     \coordinate (P) at ($(A1)!(I)!(A2)$);%temp
     \draw[thick,violet,circle={I,P}];
 
-    % 验证
-    \coordinate (B1) at (140:\r);
-    \coordinate (M) at ($(B1)!.5!(I)$);
     % 求 B1 向内切圆切线的切点
-    \tikzset{circle-circle={I,P,M,B1}};
+    \coordinate (B1) at (140:\r);
+    \tikzset{circle-tangent={I,P,B1}};%tp1,tp2
     % 求切线与外接圆的交点
-    \tikzset{circle-line={O,A1,B1,cc1}}
+    \tikzset{circle-line={O,A1,B1,tp1}}
     \coordinate (B2) at (cl1);%cl2 即 B1
-    \tikzset{circle-line={O,A1,B1,cc2}}
+    \tikzset{circle-line={O,A1,B1,tp2}}
     \coordinate (B3) at (cl1);%cl2 即 B1
 
     \draw[thick,blue] (B1) -- (B2) -- (B3) -- cycle;

@@ -53,6 +53,7 @@ Euclidea is a tikz library designed for enchancing tikz in Euclidean geometry dr
 - `radical axis={O1,A1,O2,A2}`: creates the radical axis of two non-concentric circles.
 - `circle-line={O,A,P,Q}`: creates circle-line instersections (named: cl1, cl2) of circle (O, A) and line (P, Q).
 - `circle-circle={O1,A1,O2,A2}`: creates circle-circle instersections (named: cc1, cc2) of circle O1(O1, A1) and circle O2(O2, A2).
+- `circle-tagent = {O,A,P}`: creates tangent points (named: tp1, tp2, tp1 is on the left side of OP )
 - `transform = {angle:(xshift,yshift)}`: rotates around the origin by `angle` and then shifts by (`xshift`,`yshift`).
 
 ### Conics

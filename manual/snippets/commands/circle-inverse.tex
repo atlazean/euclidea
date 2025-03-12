@@ -3,7 +3,7 @@
   \coordinate (O) at (0,0);
   \coordinate (A) at +(0:2);  % 圆上一点, 相对坐标
   \coordinate (P) at (2,2);
-  \coordinate[inverse={O,A,P}] (Q);
+  \coordinate[circle inverse={O,A,P}] (Q);
 
   \draw[thick,circle={O,A}];
   \draw[thick] (O) -- (P);

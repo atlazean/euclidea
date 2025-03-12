@@ -15,4 +15,4 @@ fi
 
 rm -rf $PKGDIR
 mkdir -p $PKGDIR
-cp tikzlibraryeuclidea.code.tex $PKGDIR 
+cp *.code.tex $PKGDIR 

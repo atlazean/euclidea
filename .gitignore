@@ -275,7 +275,6 @@ TSWLatexianTemp*
 # Makeindex log files
 *.lpz
 
-playground/
 *.latexcode
 *.pdf_tex
 *.pdf
@@ -286,3 +285,5 @@ svg-inkscape/
 *.table
 
 .DS_Store
+
+troubleshooting/

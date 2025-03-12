@@ -19,7 +19,7 @@ Euclidea is a tikz library designed for enchancing tikz in Euclidean geometry dr
 - `translate={A,B,C}`: returns translation of point C by the vector AB, i.e. C + ( B - A ).
 - `reflect={A,B,C}`: reflects point C across line AB.
 - `project={A,B,C}`: projects point C onto line AB.
-- `inverse={O,A,P}`: returns the inverse point of point C with respect to circle(O,A).
+- `circle inverse={O,A,P}`: returns the inverse point of point C with respect to circle(O,A).
 - revolve
   - `revolve/scale=k`: set the scale of rotation angle(positive or negative), default: 1.0;
   - `revolve/angle=a`: set the rotation angle = a(degrees);

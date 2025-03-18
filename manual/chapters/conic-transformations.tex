@@ -1,0 +1,365 @@
+\chapter{圆锥曲线的变换 Conic Transformations}
+
+\section{坐标变换 Coordinate Transformations}
+
+下面讨论坐标轴平移和旋转后坐标的变化.
+
+\subsection{Translation}
+
+\begin{center}
+\begin{tikzpicture}
+  \tikzmath{
+    \xmin = 0;
+    \xmax = 3;
+    \ymin = 0;
+    \ymax = 3;
+    \dx = 1.5;
+    \dy = 1;
+  }
+  % original coordinate system
+  \draw[-latex] ({(\xmin)-0.5},0) -- ({(\xmax)+0.5},0) node[below] {$x$};
+  \draw[-latex] (0,{(\ymin)-0.5}) -- (0,{(\ymax)+0.5}) node[left] {$y$};
+  \draw (0,0) node[below left] {$O$};
+  % the transformed coordinate system
+  \draw[red,-latex] ({(\xmin)-0.5},\dy) -- ({(\xmax)+0.5},\dy) node[below] {$x'$};
+  \draw[red,-latex] (\dx,{(\ymin)-0.5}) -- (\dx,{(\ymax)+0.5}) node[left] {$y'$};
+  \draw[red] (\dx,\dy) node[below left] {$O'$};
+  \coordinate (P) at (2.5,2.5);
+  \foreach \p/\placement in {P/above}{
+    \fill[teal] (\p) circle (2pt);
+    \draw (\p) node[\placement] {$\p$};
+  }
+\end{tikzpicture}
+\end{center}
+
+\[
+  \begin{cases}
+    x' = x - dx\\
+    y' = y - dy
+  \end{cases}
+\]
+
+\[
+  \begin{pmatrix}
+    x'\\
+    y'\\
+    1
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    1 & 0 & -d_x\\
+    0 & 1 & -d_y\\
+    0 & 0 & 1
+  \end{pmatrix}
+  \begin{pmatrix}
+    x\\
+    y\\
+    1
+  \end{pmatrix}
+\]
+
+\[
+  \begin{pmatrix}
+    x\\
+    y\\
+    1
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    1 & 0 & d_x\\
+    0 & 1 & d_y\\
+    0 & 0 & 1
+  \end{pmatrix}
+  \begin{pmatrix}
+    x'\\
+    y'\\
+    1
+  \end{pmatrix}
+\]
+
+\subsection{Rotation}
+
+\begin{center}
+\begin{tikzpicture}
+  \tikzmath{
+    \xmin = 0;
+    \xmax = 3;
+    \ymin = 0;
+    \ymax = 3;
+    \a = 15;
+  }
+  % original coordinate system
+  \draw[-latex] ({(\xmin)-0.5},0) -- ({(\xmax)+0.5},0) node[below] {$x$};
+  \draw[-latex] (0,{(\ymin)-0.5}) -- (0,{(\ymax)+0.5}) node[left] {$y$};
+  \draw (0,0) node[below left] {$O$};
+  % the transformed coordinate system
+  \draw[rotate=\a,red,-latex] ({(\xmin)-0.5},0) -- ({(\xmax)+0.5},0) node[below] {$x'$};
+  \draw[rotate=\a,red,-latex] (0,{(\ymin)-0.5}) -- (0,{(\ymax)+0.5}) node[left] {$y'$};
+  % \draw (0,0) node[below left] {$O$};
+
+  \coordinate (O) at (0,0);
+  \coordinate (P) at (2.5,2.5);
+  \coordinate (A) at (1,0);
+  \coordinate (B) at (\a:1);
+
+  \pic[draw,teal,"$\phi$",angle eccentricity=1.25,angle radius=8mm] {angle=A--O--P};
+  \pic[draw,red,"$\theta$",angle eccentricity=1.25,angle radius=12mm] {angle=A--O--B};
+
+  \draw[teal] (O) -- (P);
+  \foreach \p/\placement in {P/above}{
+    \fill[teal] (\p) circle (2pt);
+    \draw (\p) node[\placement] {$\p$};
+  }
+\end{tikzpicture}
+\end{center}
+
+\[
+  \begin{cases}
+    x = r\cos\phi\\
+    y = r\sin\phi
+  \end{cases}
+\]
+
+\[
+  \begin{cases}
+    x' = r\cos(\phi-\theta)\\
+    y' = r\sin(\phi-\theta)
+  \end{cases}
+\]
+
+\[
+  \begin{cases}
+    x' = x\cos\theta+y\sin\theta\\
+    y' = y\cos\theta-x\sin\theta
+  \end{cases}
+\]
+
+\[
+  \begin{pmatrix}
+    x'\\
+    y'\\
+    1
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    \cos\theta & \sin\theta & 0\\
+    -\sin\theta & \cos\theta & 0\\
+    0 & 0 & 1
+  \end{pmatrix}
+  \begin{pmatrix}
+    x\\
+    y\\
+    1
+  \end{pmatrix}
+\]
+
+\[
+  \begin{pmatrix}
+    x\\
+    y\\
+    1
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    \cos\theta & -\sin\theta & 0\\
+    \sin\theta & \cos\theta & 0\\
+    0 & 0 & 1
+  \end{pmatrix}
+  \begin{pmatrix}
+    x'\\
+    y'\\
+    1
+  \end{pmatrix}
+\]
+
+\section{圆锥曲线的变换}
+
+\subsection{圆锥曲线方程的一般形式}
+
+设二次曲线的方程为:
+
+\[
+  ax^2 + bxy + cy^2 + dx + ey + f = 0
+\]
+
+记
+
+\[
+  Q = \begin{pmatrix}
+    a & b/2 & d/2\\
+    b/2 & c & e/2\\
+    d/2 & e/2 & f
+  \end{pmatrix}
+\]
+
+\[
+  \mathbf{x} = (x,y,1)^T
+\]
+
+则:
+
+\[
+  \mathbf{x}^T Q \mathbf{x} = 0
+\]
+
+\subsection{圆锥曲线的切线方程}
+
+设$\mathbf{x}_0$ 是圆锥曲线上的一点, 则过该点的切线方程是:
+
+\[
+  \mathbf{x}_0^T Q \mathbf{x} = 0
+\]
+
+\subsection{圆锥曲线的中心}
+
+设 $Q_{31},Q_{32},Q_{33}$ 是 矩阵 Q 的代数余子式, 如果 $Q_{33} = 0$, 则曲线是抛物线, 其中心在无穷远处;
+否则曲线的中心是$\left(\dfrac{Q_{31}}{Q_{33}}, \dfrac{Q_{32}}{Q_{33}}\right)$.
+
+
+\subsection{将圆锥曲线方程从一般形式化为标准形式}
+
+因为抛物线是没有中心的, 对于任意圆锥曲线, 可以先进行旋转, 消除交叉项 $xy$, 然后再处理.
+
+\subsubsection{旋转坐标系}
+
+首先是旋转, 消除交叉项 $xy$, 旋转角度为 $\theta(-\pi/4 \leq \theta \leq \pi/4)$, 且:
+
+\[
+  \cot2\theta = \dfrac{1-\tan^2\theta}{2\tan\theta} = \dfrac{a-c}{b}
+\]
+
+令 $\tau = \cot2\theta$, 则:
+
+\[
+  \tan^2\theta + 2\tau \tan\theta -1 = 0
+\]
+
+取绝对值最小的根, 这样保证 $-\pi/4 \leq \theta \leq \pi/4$, 即:
+
+\[
+  \tan\theta = \begin{cases}
+    - \tau + \sqrt{\tau^2+1}, & \text{if } \tau \geq 0;\\
+    - \tau - \sqrt{\tau^2+1}, & \text{otherwise}.
+  \end{cases}
+\]
+
+\begin{gather*}
+  t = \tan\theta\\
+  c = \cos\theta = \dfrac{1}{\sqrt{t^2+1}}\\
+  s = \sin\theta = \tan\theta \cos\theta = tc
+\end{gather*}
+
+这样无需进行三角函数运算.
+
+构造旋转矩阵:
+
+\[
+  R =
+  \begin{pmatrix}
+    c & -s & 0\\
+    s & c & 0\\
+    0 & 0 & 1
+  \end{pmatrix}
+\]
+
+计算 $\tilde{Q}=R^TQR$ 就得到新的系数矩阵.
+
+\subsubsection{平移坐标系}
+
+然后根据系数矩阵 $\tilde{Q}$判断是否为抛物线, 即 $\tilde{Q}_{11} = 0$ 或 $\tilde{Q}_{22} = 0$. 如果是抛物线,
+则将坐标系平移至顶点; 否则将坐标系平移至中心.
+
+若$\tilde{Q}_{11} = 0$ 且 $\tilde{Q}_{22} \neq 0$, 则抛物线简化为:
+
+\[
+  cy^2+dx+ey+f=0
+\] 
+
+其中:
+
+\begin{gather*}
+  c = \tilde{Q}_{22}\\
+  d = 2\tilde{Q}_{13}\\
+  e = 2\tilde{Q}_{23}\\
+  f = \tilde{Q}_{33}
+\end{gather*}
+
+则抛物线的顶点为: $\left(-\dfrac{e}{2c},\dfrac{e^2-4cf}{4cd}\right)$.
+
+
+\subsection{五点确定圆锥曲线}
+
+设二次曲线的方程为:
+
+\[
+  ax^2 + bxy + cy^2 + dx + ey + f = 0
+\]
+
+将 $(x_i,y_i) (i=1,2,\cdots,5)$ 代入上式, 并组成线性方程组.
+由于 $(a, b, c, d, e, f) \neq \mathbf{0}$, 该方程组的系数矩阵的行列式为 0, 即:
+
+\[
+\det \begin{pmatrix}
+x^2 & xy & y^2 & x & y & 1 \\
+x^2_1 & x_1y_1 & y^2_1 & x_1 & y_1 & 1 \\
+x^2_2 & x_2y_2 & y^2_2 & x_2 & y_2 & 1 \\
+x^2_3 & x_3y_3 & y^2_3 & x_3 & y_3 & 1 \\
+x^2_4 & x_4y_4 & y^2_4 & x_4 & y_4 & 1 \\
+x^2_5 & x_5y_5 & y^2_5 & x_5 & y_5 & 1 \\
+\end{pmatrix} = 0
+\]
+
+化简该行列式即得到二次曲线的方程.
+
+\subsection{与五条直线相切的圆锥曲线}
+
+根据对偶原理, 二次曲线可以用两种方式定义, 点形式和直线形式:
+
+点形式定义: 由点集满足的二次方程定义, 例如:
+  \[
+  ax^2 + bxy + cy^2 + dxz + eyz + fz^2 = 0
+  \]
+  
+用矩阵形式表示为:
+  \[
+  (x, y, z) \begin{pmatrix} a & b/2 & d/2 \\ b/2 & c & e/2 \\ d/2 & e/2 & f \end{pmatrix} \begin{pmatrix} x \\ y \\ z \end{pmatrix} = 0
+  \]
+称该矩阵为 \( Q \).
+
+设 $(x_0,y_0,z_0)$ 是曲线上的点,  则过该点的切线方程为:
+
+\[
+  (x_0,y_0,z_0) \begin{pmatrix} a & b/2 & d/2 \\ b/2 & c & e/2 \\ d/2 & e/2 & f \end{pmatrix} \begin{pmatrix} x \\ y \\ z \end{pmatrix} = 0
+\]
+
+
+直线形式定义: 由所有与原曲线相切的直线的包络定义，用直线坐标 \( (l, m, n) \) 的二次方程表示:
+  \[
+  Al^2 + Blm + Cm^2 + Dlm + Emn + Fn^2 = 0
+  \]
+同样用矩阵形式：
+  \[
+  (l, m, n) \begin{pmatrix} A & B/2 & D/2 \\ B/2 & C & E/2 \\ D/2 & E/2 & F \end{pmatrix} \begin{pmatrix} l \\ m \\ n \end{pmatrix} = 0
+  \]
+称该矩阵为 $Q^*$. $Q^*$ 是 $Q$ 的伴随矩阵:
+
+\[
+  Q^{-1} = \dfrac{Q^*}{\det(Q)}.
+\]
+
+我们可以根据 5 条直线的方程求出 $Q^*$, 再求其逆矩阵, 从而得到曲线的方程.
+
+Find dual conic\footnote{\url{https://math.stackexchange.com/questions/460404/finding-dual-conic}}:
+
+Taking the quadratic form $p^TAp=0$ and remembering $A$ 
+is symmetric, we can also transform it:
+\begin{gather*}
+  p^T(AA^{-1})Ap=0 \\
+  p^TA^TA^{-1}Ap=0 \\
+  (Ap)^TA^{-1}(Ap)=0 
+\end{gather*}
+
+This modified form can be interpreted as the dual of the primal conic described by the quadratic form $l^𝑇𝐴^{−1}l=0$
+, where every $l=Ap$ that satisfies this equation is tangent to the primal conic.
+
+Additionally, the adjugate of $A$ can mostly be substituted for the inverse because $A^{-1}=adj(A)/det(A)$.

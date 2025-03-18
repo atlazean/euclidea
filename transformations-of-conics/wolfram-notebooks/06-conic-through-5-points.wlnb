@@ -1,0 +1,171 @@
+{
+ "cells": [
+  {
+   "kind": 1,
+   "value": "过五点的圆锥曲线\n\n设圆锥曲线的方程为: Ax^2 + Bxy + Cy^2 + Dx + Ey + F = 0\n已知五点的坐标 (x_i, y_i), i = 1,...,5 代入圆锥曲线的方程中, 有:\nAx_i^2 + Bx_iy_i + Cy_i^2 + Dx_i + Ey_i + F = 0, i = 1,...,5 \n设 (x,y) 是圆锥曲线上的点, 则也满足圆锥曲线的方程. 这样形成一个关于向量\n(A,B,C,D,E,F) 的线性方方程组. 而 (A,B,C,D,E,F)≠0, 则方程组的系数矩阵\n的行列式=0\n\n注意: Mathematica 的 Coefficient 有时候不能正确得到多项式的系数,\n可以采用求代数余子式的方法来求.",
+   "languageId": "markdown",
+   "outputs": [],
+   "metadata": {},
+   "executionSummary": {}
+  },
+  {
+   "kind": 2,
+   "value": "(* 加载应用模块, 注意文件路径需要根据实际情况修改 *)\nSetDirectory[\"~/Repos/euclidea/linear-algebra/wolfram-notebooks\"];\n<< Utils.m",
+   "languageId": "wolfram",
+   "outputs": [],
+   "metadata": {},
+   "executionSummary": {}
+  },
+  {
+   "kind": 2,
+   "value": "(* X = {x, 1, 2, -1, 1/2, -2};\nY = {y, 1, 1/2, -1, 2, -1/2};\nM = Table[{X[[i]]^2, X[[i]]*Y[[i]], Y[[i]]^2, X[[i]], Y[[i]], 1}, {i,1,6}]; *)\nX = {\n  {x,y},\n  {1,1},\n  {2,1/2},\n  {-1,-1},\n  {1/2,2},\n  {-2,-1/2}\n};\nM = Table[{X[[i,1]]^2, X[[i,1]]*X[[i,2]], X[[i,2]]^2, X[[i,1]], X[[i,2]], 1}, {i,1,6}];\nMatrixForm[M]\nDet[M]\nSimplify[% == 0]\nPolynomialForm[%, TraditionalOrder -> True]",
+   "languageId": "wolfram",
+   "outputs": [
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(6,max-content);\"><w><wsup><w></w><w>x</w><w><w>2</w></w></wsup></w><w><wrow><w></w><w>x</w><w></w><w>y</w></wrow></w><w><wsup><w></w><w>y</w><w><w>2</w></w></wsup></w><w><w>x</w></w><w><w>y</w></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><w>4</w></w><w><w>1</w></w><w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><w>2</w></w><w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><wrow><w></w><w>-</w><w>1</w></wrow></w><w><wrow><w></w><w>-</w><w>1</w></wrow></w><w><w>1</w></w><w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><w>1</w></w><w><w>4</w></w><w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac></w><w><w>2</w></w><w><w>1</w></w><w><w>4</w></w><w><w>1</w></w><w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><w>2</w></wrow></w><w><wrow><w></w><w>-</w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac></wrow></w><w><w>1</w></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{x^2, x*y, y^2, x, y, 1}, {1, 1, 1, 1, 1, 1}, {4, 1, 1/4, 2, 1/2, 1}, {1, 1, 1, -1, -1, 1}, {1/4, 1, 4, 1/2, 2, 1}, {4, 1, 1/4, -2, -1/2, 1}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "96d86489-03d6-417a-aaba-8168d1c114f0",
+     "metadata": {
+      "cellLabel": "Out[33]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>64</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>3240</w><w>-</w><wrow><w></w><w>3240</w><w></w><w>x</w><w></w><w>y</w></wrow></wrow><wb>)</wb></wrow></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "(3240 - 3240*x*y)/64",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "ac5b7744-2088-47a2-ad67-0eec5b5e3e0c",
+     "metadata": {
+      "cellLabel": "Out[34]= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wrow><w></w><w>x</w><w></w><w>y</w></wrow><w class=\"symbol\"></w><w>1</w></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "x*y == 1",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "ba515bfa-1f7d-4857-8896-914c2cd90569",
+     "metadata": {
+      "cellLabel": "Out[35]= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wrow><w></w><w>x</w><w></w><w>y</w></wrow><w class=\"symbol\"></w><w>1</w></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "PolynomialForm[x*y == 1, TraditionalOrder -> True]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "9bac489b-fa97-448c-bd2c-ae074bbb282d",
+     "metadata": {
+      "cellLabel": "Out[36]= ",
+      "isBoxData": false
+     }
+    }
+   ],
+   "metadata": {},
+   "executionSummary": {
+    "timing": {
+     "startTime": 1742298435874,
+     "endTime": 1742298436475
+    },
+    "executionOrder": 31,
+    "success": true
+   }
+  },
+  {
+   "kind": 2,
+   "value": "(* X = {x, 1, 2, -1, 1/2, -2};\nY = {y, 1, 1/2, -1, 2, -1/2};\nM = Table[{X[[i]]^2, X[[i]]*Y[[i]], Y[[i]]^2, X[[i]], Y[[i]], 1}, {i,1,6}]; *)\nX = {\n  {x,y},\n  {1,1},\n  {2,1/2},\n  {-1,-1},\n  {1/2,2},\n  {-2,-1/2}\n};\nM = Table[{X[[i,1]]^2, X[[i,1]]*X[[i,2]], X[[i,2]]^2, X[[i,1]], X[[i,2]], 1}, {i,1,6}];\nMatrixForm[M]\nDet[M]\ncofactors = Cofactors[M];\ncofactors[[1]]",
+   "languageId": "wolfram",
+   "outputs": [
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(6,max-content);\"><w><wsup><w></w><w>x</w><w><w>2</w></w></wsup></w><w><wrow><w></w><w>x</w><w></w><w>y</w></wrow></w><w><wsup><w></w><w>y</w><w><w>2</w></w></wsup></w><w><w>x</w></w><w><w>y</w></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><w>4</w></w><w><w>1</w></w><w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><w>2</w></w><w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><wrow><w></w><w>-</w><w>1</w></wrow></w><w><wrow><w></w><w>-</w><w>1</w></wrow></w><w><w>1</w></w><w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><w>1</w></w><w><w>4</w></w><w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac></w><w><w>2</w></w><w><w>1</w></w><w><w>4</w></w><w><w>1</w></w><w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><w>2</w></wrow></w><w><wrow><w></w><w>-</w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac></wrow></w><w><w>1</w></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{x^2, x*y, y^2, x, y, 1}, {1, 1, 1, 1, 1, 1}, {4, 1, 1/4, 2, 1/2, 1}, {1, 1, 1, -1, -1, 1}, {1/4, 1, 4, 1/2, 2, 1}, {4, 1, 1/4, -2, -1/2, 1}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "2b95c47f-6568-475c-af02-b9e86b389d51",
+     "metadata": {
+      "cellLabel": "Out[91]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>64</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>3240</w><w>-</w><wrow><w></w><w>3240</w><w></w><w>x</w><w></w><w>y</w></wrow></wrow><wb>)</wb></wrow></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "(3240 - 3240*x*y)/64",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "5fd14961-efbc-41bf-9d4b-e3e39ce500a7",
+     "metadata": {
+      "cellLabel": "Out[92]= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>{</wb><wrow><w></w><w>0</w><w>,</w><wrow><w></w><w>-</w><wfrac><w><w>405</w></w><w><w></w><w><w>8</w></w></w></wfrac></wrow><w>,</w><w>0</w><w>,</w><w>0</w><w>,</w><w>0</w><w>,</w><wfrac><w><w>405</w></w><w><w></w><w><w>8</w></w></w></wfrac></wrow><wb>}</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "{0, -405/8, 0, 0, 0, 405/8}",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "a6252ffd-75a9-4684-8072-94d9fd136d2f",
+     "metadata": {
+      "cellLabel": "Out[94]= ",
+      "isBoxData": false
+     }
+    }
+   ],
+   "metadata": {},
+   "executionSummary": {
+    "timing": {
+     "startTime": 1742298708502,
+     "endTime": 1742298709057
+    },
+    "executionOrder": 89,
+    "success": true
+   }
+  }
+ ]
+}

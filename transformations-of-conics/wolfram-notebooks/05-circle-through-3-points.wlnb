@@ -1,0 +1,171 @@
+{
+ "cells": [
+  {
+   "kind": 1,
+   "value": "过三点的圆\n\n设圆的方程为: Ax^2 + Ay^2 + Bx + Cy + D = 0\n已知三点的坐标 (x_i, y_i), i = 1,2,3 代入圆的方程中, 有:\nAx_i^2 + Ay_i^2 + Bx_i + Cy_i + D = 0, i = 1,2,3 \n设 (x,y) 是圆上的点, 则也满足圆的方程. 这样形成一个关于向量\n(A,B,C,D) 的线性方方程组. 而 (A,B,C,D)≠0, 则方程组的系数矩阵\n的行列式=0\n\n注意: Mathematica 的 Coefficient 有时候不能正确得到多项式的系数,\n可以采用求代数余子式的方法来求.",
+   "languageId": "markdown",
+   "outputs": [],
+   "metadata": {},
+   "executionSummary": {}
+  },
+  {
+   "kind": 2,
+   "value": "(* 加载应用模块, 注意文件路径需要根据实际情况修改 *)\nSetDirectory[\"~/Repos/euclidea/linear-algebra/wolfram-notebooks\"];\n<< Utils.m",
+   "languageId": "wolfram",
+   "outputs": [],
+   "metadata": {},
+   "executionSummary": {
+    "timing": {
+     "startTime": 1742298671027,
+     "endTime": 1742298671164
+    },
+    "executionOrder": 66,
+    "success": true
+   }
+  },
+  {
+   "kind": 2,
+   "value": "\nX = {x, 1, 0, -1};\nY = {y, 1, 1, 0};\nM = Table[{X[[i]]^2+Y[[i]]^2, X[[i]], Y[[i]], 1}, {i,1,4}];\nMatrixForm[M]\nDet[M]\nSimplify[% == 0]\nPolynomialForm[%, TraditionalOrder -> True]",
+   "languageId": "wolfram",
+   "outputs": [
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(4,max-content);\"><w><wrow><w></w><wsup><w></w><w>x</w><w><w>2</w></w></wsup><w>+</w><wsup><w></w><w>y</w><w><w>2</w></w></wsup></wrow></w><w><w>x</w></w><w><w>y</w></w><w><w>1</w></w><w><w>2</w></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><w>0</w></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><wrow><w></w><w>-</w><w>1</w></wrow></w><w><w>0</w></w><w><w>1</w></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{x^2 + y^2, x, y, 1}, {2, 1, 1, 1}, {1, 0, 1, 1}, {1, -1, 0, 1}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "0a4cebb0-e571-42ef-92f4-5d3bb722ec0f",
+     "metadata": {
+      "cellLabel": "Out[18]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wrow><w></w><w>-</w><w>2</w></wrow><w>-</w><w>x</w><w>+</w><wsup><w></w><w>x</w><w><w>2</w></w></wsup><w>+</w><w>y</w><w>+</w><wsup><w></w><w>y</w><w><w>2</w></w></wsup></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "-2 - x + x^2 + y + y^2",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "3b4db627-3514-4cfb-91e9-08051f80c48e",
+     "metadata": {
+      "cellLabel": "Out[19]= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wrow><w></w><wsup><w></w><w>x</w><w><w>2</w></w></wsup><w>+</w><w>y</w><w>+</w><wsup><w></w><w>y</w><w><w>2</w></w></wsup></wrow><w class=\"symbol\"></w><wrow><w></w><w>2</w><w>+</w><w>x</w></wrow></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "x^2 + y + y^2 == 2 + x",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "b1d4698e-8c38-4f1c-897f-02e423819bfd",
+     "metadata": {
+      "cellLabel": "Out[20]= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wrow><w></w><wsup><w></w><w>x</w><w><w>2</w></w></wsup><w>+</w><wsup><w></w><w>y</w><w><w>2</w></w></wsup><w>+</w><w>y</w></wrow><w class=\"symbol\"></w><wrow><w></w><w>x</w><w>+</w><w>2</w></wrow></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "PolynomialForm[x^2 + y + y^2 == 2 + x, TraditionalOrder -> True]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "8c74b1aa-820f-4ca7-811e-4a22202d5ed7",
+     "metadata": {
+      "cellLabel": "Out[21]= ",
+      "isBoxData": false
+     }
+    }
+   ],
+   "metadata": {},
+   "executionSummary": {}
+  },
+  {
+   "kind": 2,
+   "value": "X = {x, 1, 0, -1};\nY = {y, 1, 1, 0};\nM = Table[{X[[i]]^2+Y[[i]]^2, X[[i]], Y[[i]], 1}, {i,1,4}];\nMatrixForm[M]\nDet[M]\ncofactors = Cofactors[M];\ncofactors[[1]]",
+   "languageId": "wolfram",
+   "outputs": [
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(4,max-content);\"><w><wrow><w></w><wsup><w></w><w>x</w><w><w>2</w></w></wsup><w>+</w><wsup><w></w><w>y</w><w><w>2</w></w></wsup></wrow></w><w><w>x</w></w><w><w>y</w></w><w><w>1</w></w><w><w>2</w></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><w>0</w></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><wrow><w></w><w>-</w><w>1</w></wrow></w><w><w>0</w></w><w><w>1</w></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{x^2 + y^2, x, y, 1}, {2, 1, 1, 1}, {1, 0, 1, 1}, {1, -1, 0, 1}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "440c2afb-8134-4d2f-80fa-9054ebc7ce10",
+     "metadata": {
+      "cellLabel": "Out[78]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wrow><w></w><w>-</w><w>2</w></wrow><w>-</w><w>x</w><w>+</w><wsup><w></w><w>x</w><w><w>2</w></w></wsup><w>+</w><w>y</w><w>+</w><wsup><w></w><w>y</w><w><w>2</w></w></wsup></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "-2 - x + x^2 + y + y^2",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "9e4a56af-9016-4003-b988-5883b1c50861",
+     "metadata": {
+      "cellLabel": "Out[79]= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>{</wb><wrow><w></w><w>1</w><w>,</w><wrow><w></w><w>-</w><w>1</w></wrow><w>,</w><w>1</w><w>,</w><wrow><w></w><w>-</w><w>2</w></wrow></wrow><wb>}</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "{1, -1, 1, -2}",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "42a1d392-2673-4c81-9d23-db9623813b8e",
+     "metadata": {
+      "cellLabel": "Out[81]= ",
+      "isBoxData": false
+     }
+    }
+   ],
+   "metadata": {},
+   "executionSummary": {
+    "timing": {
+     "startTime": 1742298682719,
+     "endTime": 1742298683325
+    },
+    "executionOrder": 75,
+    "success": true
+   }
+  }
+ ]
+}

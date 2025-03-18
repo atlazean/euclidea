@@ -1,0 +1,81 @@
+{
+ "cells": [
+  {
+   "kind": 1,
+   "value": "求解线性方程组",
+   "languageId": "markdown",
+   "outputs": [],
+   "metadata": {},
+   "executionSummary": {}
+  },
+  {
+   "kind": 2,
+   "value": "A = {\n  {2,1,3,4},\n  {1,-2,2,3},\n  {3,4,-1,2},\n  {4,3,2,1}\n};\nB = {16,19,-1,4};\nLinearSolve[A,B]",
+   "languageId": "wolfram",
+   "outputs": [
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>{</wb><wrow><w></w><w>2</w><w>,</w><wrow><w></w><w>-</w><w>3</w></wrow><w>,</w><w>1</w><w>,</w><w>3</w></wrow><wb>}</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "{2, -3, 1, 3}",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "64c7e2d9-c734-4272-b991-eea91f45dd91",
+     "metadata": {
+      "cellLabel": "Out[13]= ",
+      "isBoxData": false
+     }
+    }
+   ],
+   "metadata": {},
+   "executionSummary": {}
+  },
+  {
+   "kind": 2,
+   "value": "A = {\n  {2,1,3,4},\n  {1,-2,2,3},\n  {3,4,-1,2},\n  {4,3,2,1}\n};\nB = Transpose[{{16,19,-1,4},{20,11,-3,5}}];\nLinearSolve[A,B]\n% // N",
+   "languageId": "wolfram",
+   "outputs": [
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>2</w><w>,</w><wrow><w></w><w>-</w><wfrac><w><w>323</w></w><w><w></w><w><w>108</w></w></w></wfrac></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>-</w><w>3</w></wrow><w>,</w><wfrac><w><w>167</w></w><w><w></w><w><w>108</w></w></w></wfrac></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><w>1</w><w>,</w><wfrac><w><w>179</w></w><w><w></w><w><w>36</w></w></w></wfrac></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><w>3</w><w>,</w><wfrac><w><w>257</w></w><w><w></w><w><w>108</w></w></w></wfrac></wrow><wb>}</wb></wrow></wrow><wb>}</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "{{2, -323/108}, {-3, 167/108}, {1, 179/36}, {3, 257/108}}",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "7c7dd1b1-9180-47de-a342-bd6fe19a6d06",
+     "metadata": {
+      "cellLabel": "Out[43]= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>2.</w><w>,</w><wrow><w></w><w>-</w><w>2.99074</w></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>-</w><w>3.</w></wrow><w>,</w><w>1.5463</w></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><w>1.</w><w>,</w><w>4.97222</w></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><w>3.</w><w>,</w><w>2.37963</w></wrow><wb>}</wb></wrow></wrow><wb>}</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "{{2., -2.990740740740741}, {-3., 1.5462962962962963}, {1., 4.972222222222222}, {3., 2.3796296296296298}}",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "cdb17824-b996-44ac-9aa9-064495dd2276",
+     "metadata": {
+      "cellLabel": "Out[44]= ",
+      "isBoxData": false
+     }
+    }
+   ],
+   "metadata": {},
+   "executionSummary": {}
+  }
+ ]
+}

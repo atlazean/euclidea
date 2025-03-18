@@ -26,9 +26,9 @@
   \coordinate (U) at ($(R)!(O1)!(S)$);
   \coordinate (V) at ($(R)!(O2)!(S)$);
   \coordinate (W) at ($(R)!(O3)!(S)$);
-  \coordinate[inverse={O1,A1,U}] (P1);
-  \coordinate[inverse={O2,A2,V}] (P2);
-  \coordinate[inverse={O3,A3,W}] (P3);
+  \coordinate[circle inverse={O1,A1,U}] (P1);
+  \coordinate[circle inverse={O2,A2,V}] (P2);
+  \coordinate[circle inverse={O3,A3,W}] (P3);
   % 5. 作直线 GP1 交圆 O1 于 U1, U2; 作直线 GP2 交圆 O2 于 V1, V2; 
   % 作直线 GP3 交圆于 W1, W2; 
   \draw[name path=l1,end modifier=4.5,parallel={G,P1,G}];

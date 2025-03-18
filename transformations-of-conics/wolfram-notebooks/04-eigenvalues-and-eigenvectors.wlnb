@@ -1,0 +1,162 @@
+{
+ "cells": [
+  {
+   "kind": 1,
+   "value": "特征值与特征向量",
+   "languageId": "markdown",
+   "outputs": [],
+   "metadata": {},
+   "executionSummary": {}
+  },
+  {
+   "kind": 2,
+   "value": "M = {\n  {4,-30,60,-35},\n  {-30,300,-675,420},\n  {60,-675,1620,-1050},\n  {-35,420,-1050,700}\n};\n{eigenvalues, eigenvectors} = Eigensystem[M];\neigenvalues = eigenvalues // N; \neigenvectors = Map[Normalize, eigenvectors] // N;\nNumberForm[eigenvalues, {0,6}]\nNumberForm[eigenvectors, {0,6}]",
+   "languageId": "wolfram",
+   "outputs": [
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>2585.250000</w></wrow><w>,</w><wrow><w></w><w>37.101500</w></wrow><w>,</w><wrow><w></w><w>1.478050</w></wrow><w>,</w><wrow><w></w><w>0.166643</w></wrow></wrow><wb>}</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "NumberForm[{2585.253810928922, 37.10149136512766, 1.478054844778137, 0.16664286117189045}, {0, 6}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "65183c3b-a3b2-4d92-9119-7576bbc0cafe",
+     "metadata": {
+      "cellLabel": "Out[399]//NumberForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>-0.029193</w></wrow><w>,</w><wrow><w></w><w>0.328712</w></wrow><w>,</w><wrow><w></w><w>-0.791411</w></wrow><w>,</w><wrow><w></w><w>0.514553</w></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>0.179186</w></wrow><w>,</w><wrow><w></w><w>-0.741918</w></wrow><w>,</w><wrow><w></w><w>0.100228</w></wrow><w>,</w><wrow><w></w><w>0.638283</w></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>-0.582076</w></wrow><w>,</w><wrow><w></w><w>0.370502</w></wrow><w>,</w><wrow><w></w><w>0.509579</w></wrow><w>,</w><wrow><w></w><w>0.514048</w></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>0.792608</w></wrow><w>,</w><wrow><w></w><w>0.451923</w></wrow><w>,</w><wrow><w></w><w>0.322416</w></wrow><w>,</w><wrow><w></w><w>0.252161</w></wrow></wrow><wb>}</wb></wrow></wrow><wb>}</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "NumberForm[{{-0.029193323164786063, 0.328712055763189, -0.7914111458331263, 0.514552749997153}, {0.17918629053545482, -0.7419177906284534, 0.1002281369471922, 0.6382825281936149}, {-0.5820756994972377, 0.3705021850670931, 0.5095786345017996, 0.5140482722221643}, {0.7926082911637636, 0.4519231209015999, 0.3224163985818251, 0.252161169688242}}, {0, 6}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "4ea8127f-f1aa-4fcf-8349-c5de8f8912fd",
+     "metadata": {
+      "cellLabel": "Out[400]//NumberForm= ",
+      "isBoxData": false
+     }
+    }
+   ],
+   "metadata": {},
+   "executionSummary": {
+    "timing": {
+     "startTime": 1742289893749,
+     "endTime": 1742289894439
+    },
+    "executionOrder": 395,
+    "success": true
+   }
+  },
+  {
+   "kind": 2,
+   "value": "M = {\n  {1,1,.5},\n  {1,1,.25},\n  {.5,.25,2}\n};\n{eigenvalues, eigenvectors} = Eigensystem[M];\neigenvalues = eigenvalues // N; \neigenvectors = Map[Normalize, eigenvectors] // N;\nNumberForm[eigenvalues, {0,6}]\nNumberForm[eigenvectors, {0,6}]",
+   "languageId": "wolfram",
+   "outputs": [
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>2.536530</w></wrow><w>,</w><wrow><w></w><w>1.480120</w></wrow><w>,</w><wrow><w></w><w>-0.016647</w></wrow></wrow><wb>}</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "NumberForm[{2.5365258604171803, 1.4801214231891309, -0.01664728360630896}, {0, 6}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "b8397ae5-0bf1-47e9-9cf5-bc577354b1af",
+     "metadata": {
+      "cellLabel": "Out[405]//NumberForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>0.531483</w></wrow><w>,</w><wrow><w></w><w>0.461473</w></wrow><w>,</w><wrow><w></w><w>0.710329</w></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>-0.444281</w></wrow><w>,</w><wrow><w></w><w>-0.562109</w></wrow><w>,</w><wrow><w></w><w>0.697601</w></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>0.721207</w></wrow><w>,</w><wrow><w></w><w>-0.686349</w></wrow><w>,</w><wrow><w></w><w>-0.093728</w></wrow></wrow><wb>}</wb></wrow></wrow><wb>}</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "NumberForm[{{0.5314834119864656, 0.4614733520957743, 0.7103293096083776}, {-0.4442810581885046, -0.5621094204558689, 0.6976011330048638}, {0.7212071298303474, -0.6863492877101691, -0.09372796349871304}}, {0, 6}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "a2f0d2de-2495-4f06-ae1c-b7c40e34e773",
+     "metadata": {
+      "cellLabel": "Out[406]//NumberForm= ",
+      "isBoxData": false
+     }
+    }
+   ],
+   "metadata": {},
+   "executionSummary": {
+    "timing": {
+     "startTime": 1742289914163,
+     "endTime": 1742289914686
+    },
+    "executionOrder": 401,
+    "success": true
+   }
+  },
+  {
+   "kind": 2,
+   "value": "M = {\n  {3.5,-6.0,5.0},\n  {-6.0,8.5,-9.0},\n  {5.0,-9.0,8.5}\n};\n{eigenvalues, eigenvectors} = Eigensystem[M];\neigenvalues = eigenvalues // N; \neigenvectors = Map[Normalize, eigenvectors] // N;\nNumberForm[eigenvalues, {0,6}]\nNumberForm[eigenvectors, {0,6}]",
+   "languageId": "wolfram",
+   "outputs": [
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>20.968100</w></wrow><w>,</w><wrow><w></w><w>-0.934014</w></wrow><w>,</w><wrow><w></w><w>0.465930</w></wrow></wrow><wb>}</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "NumberForm[{20.96808354055499, -0.9340137468008785, 0.4659302062458507}, {0, 6}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "d2f5e17f-f032-4537-8483-28e980c4234c",
+     "metadata": {
+      "cellLabel": "Out[411]//NumberForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>0.407192</w></wrow><w>,</w><wrow><w></w><w>-0.655245</w></wrow><w>,</w><wrow><w></w><w>0.636278</w></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>0.510815</w></wrow><w>,</w><wrow><w></w><w>0.740885</w></wrow><w>,</w><wrow><w></w><w>0.436070</w></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>-0.757141</w></wrow><w>,</w><wrow><w></w><w>0.147456</w></wrow><w>,</w><wrow><w></w><w>0.636391</w></wrow></wrow><wb>}</wb></wrow></wrow><wb>}</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "NumberForm[{{0.40719161190665043, -0.6552448728191972, 0.6362775713766893}, {0.5108148566189091, 0.7408852258135218, 0.4360702517125538}, {-0.7571414487731254, 0.14745588769323761, 0.6363910650962442}}, {0, 6}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "adaf4227-8e56-47c7-afa2-cea3e4cc15ae",
+     "metadata": {
+      "cellLabel": "Out[412]//NumberForm= ",
+      "isBoxData": false
+     }
+    }
+   ],
+   "metadata": {},
+   "executionSummary": {
+    "timing": {
+     "startTime": 1742289936445,
+     "endTime": 1742289936965
+    },
+    "executionOrder": 407,
+    "success": true
+   }
+  }
+ ]
+}

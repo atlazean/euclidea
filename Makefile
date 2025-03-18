@@ -27,7 +27,7 @@ all: $(TARGETS)
 
 clean:
 	rm -rf _minted* 
-	rm -f *.aux *.bbl *.blg *.idx *.ilg *.ind *.loa *.lof *.log *.lol *.lot *.out *.toc *.xdv
+	rm -f *.aux *.bbl *.blg *.dvi *.idx *.ilg *.ind *.loa *.lof *.log *.lol *.lot *.out *.toc *.xdv
 	rm -f *.synctex.gz
 	rm -f *.latexcode
 	rm -f *.fls *.fdb_latexmk

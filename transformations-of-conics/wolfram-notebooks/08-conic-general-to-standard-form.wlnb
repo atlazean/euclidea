@@ -1,0 +1,279 @@
+{
+ "cells": [
+  {
+   "kind": 1,
+   "value": "将二次曲线方程化简为标准形\n\n- https://www.cs.cornell.edu/courses/cs422/2008sp/A6/Ellipse.pdf\n- 梅向明等, 高等几何, 高等教育出版社\n- https://www.andrews.edu/~rwright/Precalculus-RLW/Text/07-05.html\n- https://courses.lumenlearning.com/csn-precalculusv2/chapter/rotation-of-axes/\n- https://www.anirdesh.com/math/algebra/rotation-of-conics.php",
+   "languageId": "markdown",
+   "outputs": [],
+   "metadata": {},
+   "executionSummary": {}
+  },
+  {
+   "kind": 2,
+   "value": "(* 加载应用模块, 注意文件路径需要根据实际情况修改 *)\nSetDirectory[\"~/Repos/euclidea/linear-algebra/wolfram-notebooks\"];\n<< Utils.m",
+   "languageId": "wolfram",
+   "outputs": [],
+   "metadata": {},
+   "executionSummary": {
+    "timing": {
+     "startTime": 1742286842446,
+     "endTime": 1742286842582
+    },
+    "executionOrder": 137,
+    "success": true
+   }
+  },
+  {
+   "kind": 2,
+   "value": "(* \n求圆锥曲线的中心, Q 为系数矩阵\n对于椭圆或双曲线, Q[[1,2]] 可以不为 0;\n对于抛物线, 为了避免重复消除交叉项的运算, Q 为消除交叉项后的系数矩阵\n对于抛物线, cofactors[[3,3]] = 0, 没有中心(中心在无穷远) \n*)\nQ = {\n  {1, 0, 2},\n  {0, 0, 1},\n  {2, 1, -1}\n};\n\nTranslationMatrix[Q]",
+   "languageId": "wolfram",
+   "outputs": [
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>1</w><w>,</w><w>0</w><w>,</w><wrow><w></w><w>-</w><w>2</w></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><w>0</w><w>,</w><w>1</w><w>,</w><wfrac><w><w>5</w></w><w><w></w><w><w>2</w></w></w></wfrac></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><w>0</w><w>,</w><w>0</w><w>,</w><w>1</w></wrow><wb>}</wb></wrow></wrow><wb>}</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "{{1, 0, -2}, {0, 1, 5/2}, {0, 0, 1}}",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "97627f0f-bfd2-4c51-9180-cfe5dbcc760d",
+     "metadata": {
+      "cellLabel": "Out[104]= ",
+      "isBoxData": false
+     }
+    }
+   ],
+   "metadata": {},
+   "executionSummary": {
+    "timing": {
+     "startTime": 1742286039071,
+     "endTime": 1742286039337
+    },
+    "executionOrder": 102,
+    "success": true
+   }
+  },
+  {
+   "kind": 2,
+   "value": "(* \n旋转变换: 将新坐标系的坐标轴与圆锥曲线的轴重合,\n旋转角度 theta, 则 tan(2theta) = Q[1,2]/(Q[1,1]-Q[2,2]) \n注意: 这里规定旋转角度 theta 的范围是 [-pi/4,pi/4]\n因为每次取 tan(theta) 为绝对值的最小的根\n*)\n\nQ = {\n  {1, 1, 2},\n  {1, 1, 1},\n  {2, 1, -1}\n};\n\nRevolutionMatrix[Q]",
+   "languageId": "wolfram",
+   "outputs": [
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><wsqrt><w><w>\\</w></w><w></w><w><w>2</w></w></wsqrt></w></w></wfrac><w>,</w><wrow><w></w><w>-</w><wfrac><w><w>1</w></w><w><w></w><w><wsqrt><w><w>\\</w></w><w></w><w><w>2</w></w></wsqrt></w></w></wfrac></wrow><w>,</w><w>0</w></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><wsqrt><w><w>\\</w></w><w></w><w><w>2</w></w></wsqrt></w></w></wfrac><w>,</w><wfrac><w><w>1</w></w><w><w></w><w><wsqrt><w><w>\\</w></w><w></w><w><w>2</w></w></wsqrt></w></w></wfrac><w>,</w><w>0</w></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><w>0</w><w>,</w><w>0</w><w>,</w><w>1</w></wrow><wb>}</wb></wrow></wrow><wb>}</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "{{1/Sqrt[2], -(1/Sqrt[2]), 0}, {1/Sqrt[2], 1/Sqrt[2], 0}, {0, 0, 1}}",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "aa1b3f60-524f-4684-80f8-f906dd3f84b0",
+     "metadata": {
+      "cellLabel": "Out[116]= ",
+      "isBoxData": false
+     }
+    }
+   ],
+   "metadata": {},
+   "executionSummary": {
+    "timing": {
+     "startTime": 1742286612390,
+     "endTime": 1742286612656
+    },
+    "executionOrder": 114,
+    "success": true
+   }
+  },
+  {
+   "kind": 2,
+   "value": "(* https://www.andrews.edu/~rwright/Precalculus-RLW/Text/07-05.html *)\n(* 圆锥曲线的系数矩阵 *)\n(* Q = QuadraticMatrix[{0, 1, 0, 0, 0, -1/2}]; *)\n(* Q = QuadraticMatrix[{0, 1, 0, 0, 0, -2}];  *)\n(* Q = QuadraticMatrix[{3, Sqrt[3], 2, 0, 0, -6}]; *)\n(* Q = QuadraticMatrix[{5, -6, 5, 0, 0, -32}]; *)\n(* Q = QuadraticMatrix[{3, -2*Sqrt[3], 1, -16, -16*Sqrt[3], 0}]; *)\n(* Q = QuadraticMatrix[{3, 2*Sqrt[3], 1, 8, -8*Sqrt[3], 0}]; *)\n(* Q = QuadraticMatrix[{5, 4, 2, 0, 0, -16}]; *)\nQ = QuadraticMatrix[{7, 5, -7, 0, 0, -30}];\nPrint[\"the coefficents matrix:\"]\nMatrixForm[Q]\n\n(* \n将圆锥曲线方程从一般形式化简为标准形式:\n第 1 步: 旋转变换\n通过旋转系数矩阵, 消除交叉项\n*)\nR = Simplify[RevolutionMatrix[Q]];\nQ = Simplify[Transpose[R] . Q . R];\nPrint[\"the rotation matrix:\"]\nMatrixForm[R]\nPrint[\"the coefficents matrix after rotation:\"]\nMatrixForm[Q]\n\n(* \n第 2 步: 平移变换\n平移坐标轴到圆锥曲线的中心或抛物线的顶点, \n注意: 抛物线没有中心(中心在无穷远) \n*)\nT = TranslationMatrix[Q];\nQ = Simplify[Transpose[T] . Q . T];\nPrint[\"the translation matrix:\"]\nMatrixForm[T]\nPrint[\"the coefficents matrix after translation:\"]\nMatrixForm[Q]",
+   "languageId": "wolfram",
+   "outputs": [
+    {
+     "items": [
+      {
+       "data": "<pre>the coefficents matrix:\n</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "\"the coefficents matrix:\\n\"",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "45b6d13a-2a8b-4293-802f-56b7b70f76d6",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><w>7</w></w><w><wfrac><w><w>5</w></w><w><w></w><w><w>2</w></w></w></wfrac></w><w><w>0</w></w><w><wfrac><w><w>5</w></w><w><w></w><w><w>2</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><w>7</w></wrow></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><wrow><w></w><w>-</w><w>30</w></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{7, 5/2, 0}, {5/2, -7, 0}, {0, 0, -30}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "5478c3d4-06d6-4e2b-81ef-ab9e303ce053",
+     "metadata": {
+      "cellLabel": "Out[318]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<pre>the rotation matrix:\n</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "\"the rotation matrix:\\n\"",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "98403eb1-abc3-415d-a34b-d459e4504f30",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wfrac><w><w>1</w></w><w><w></w><w><wsqrt><w><w>\\</w></w><w></w><w><wrow><w></w><w>1</w><w>+</w><wfrac class=\"script\"><w><w>25</w></w><w><w></w><w><wsup><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>14</w><w>+</w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow><wb>)</wb></wrow><w><w>2</w></w></wsup></w></w></wfrac></wrow></w></wsqrt></w></w></wfrac></w><w><wrow><w></w><w>-</w><wfrac><w><w>5</w></w><w><w></w><w><wsqrt><w><w>\\</w></w><w></w><w><wrow><w></w><w>442</w><w>+</w><wrow><w></w><w>28</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow></w></wsqrt></w></w></wfrac></wrow></w><w><w>0</w></w><w><wfrac><w><w>5</w></w><w><w></w><w><wsqrt><w><w>\\</w></w><w></w><w><wrow><w></w><w>442</w><w>+</w><wrow><w></w><w>28</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow></w></wsqrt></w></w></wfrac></w><w><wfrac><w><w>1</w></w><w><w></w><w><wsqrt><w><w>\\</w></w><w></w><w><wrow><w></w><w>1</w><w>+</w><wfrac class=\"script\"><w><w>25</w></w><w><w></w><w><wsup><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>14</w><w>+</w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow><wb>)</wb></wrow><w><w>2</w></w></wsup></w></w></wfrac></wrow></w></wsqrt></w></w></wfrac></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><w>1</w></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{1/Sqrt[1 + 25/(14 + Sqrt[221])^2], -5/Sqrt[442 + 28*Sqrt[221]], 0}, {5/Sqrt[442 + 28*Sqrt[221]], 1/Sqrt[1 + 25/(14 + Sqrt[221])^2], 0}, {0, 0, 1}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "130577b6-5bad-4238-a452-6fe9883c4c1c",
+     "metadata": {
+      "cellLabel": "Out[322]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<pre>the coefficents matrix after rotation:\n</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "\"the coefficents matrix after rotation:\\n\"",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "931c1561-92cc-4cfa-94fa-6c7bfa792e9b",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wfrac><w><wrow><w></w><w>35042644</w><w>+</w><wrow><w></w><w>2357096</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow><w>+</w><wrow><w></w><w>154700</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><wrow><w></w><w>417</w><w>+</w><wrow><w></w><w>28</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow></w></wsqrt></wrow><w>+</w><wrow><w></w><w>10425</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><wrow><w></w><w>221</w><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>417</w><w>+</w><wrow><w></w><w>28</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w></wsqrt></wrow></wrow></w><w><w></w><w><wrow><w></w><w>5315492</w><w>+</w><wrow><w></w><w>357578</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow></w></w></wfrac></w><w><wrow><w></w><w>-</w><wfrac><w><wrow><w></w><w>35</w><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>178789</w></wrow><w>-</w><wrow><w></w><w>12026</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow><w>+</w><wrow><w></w><w>6188</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><wrow><w></w><w>417</w><w>+</w><wrow><w></w><w>28</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow></w></wsqrt></wrow><w>+</w><wrow><w></w><w>417</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><wrow><w></w><w>221</w><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>417</w><w>+</w><wrow><w></w><w>28</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><w></w><w><wrow><w></w><w>221</w><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>12026</w><w>+</w><wrow><w></w><w>809</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w></w></wfrac></wrow></w><w><w>0</w></w><w><wrow><w></w><w>-</w><wfrac><w><wrow><w></w><w>35</w><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>178789</w></wrow><w>-</w><wrow><w></w><w>12026</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow><w>+</w><wrow><w></w><w>6188</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><wrow><w></w><w>417</w><w>+</w><wrow><w></w><w>28</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow></w></wsqrt></wrow><w>+</w><wrow><w></w><w>417</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><wrow><w></w><w>221</w><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>417</w><w>+</w><wrow><w></w><w>28</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><w></w><w><wrow><w></w><w>221</w><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>12026</w><w>+</w><wrow><w></w><w>809</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w></w></wfrac></wrow></w><w><wrow><w></w><w>-</w><wfrac><w><wrow><w></w><w>35042644</w><w>+</w><wrow><w></w><w>2357096</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow><w>+</w><wrow><w></w><w>154700</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><wrow><w></w><w>417</w><w>+</w><wrow><w></w><w>28</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow></w></wsqrt></wrow><w>+</w><wrow><w></w><w>10425</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><wrow><w></w><w>221</w><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>417</w><w>+</w><wrow><w></w><w>28</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w></wsqrt></wrow></wrow></w><w><w></w><w><wrow><w></w><w>442</w><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>12026</w><w>+</w><wrow><w></w><w>809</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w></w></wfrac></wrow></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><wrow><w></w><w>-</w><w>30</w></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{(35042644 + 2357096*Sqrt[221] + 154700*Sqrt[417 + 28*Sqrt[221]] + 10425*Sqrt[221*(417 + 28*Sqrt[221])])/(5315492 + 357578*Sqrt[221]), (-35*(-178789 - 12026*Sqrt[221] + 6188*Sqrt[417 + 28*Sqrt[221]] + 417*Sqrt[221*(417 + 28*Sqrt[221])]))/(221*(12026 + 809*Sqrt[221])), 0}, {(-35*(-178789 - 12026*Sqrt[221] + 6188*Sqrt[417 + 28*Sqrt[221]] + 417*Sqrt[221*(417 + 28*Sqrt[221])]))/(221*(12026 + 809*Sqrt[221])), -1/442*(35042644 + 2357096*Sqrt[221] + 154700*Sqrt[417 + 28*Sqrt[221]] + 10425*Sqrt[221*(417 + 28*Sqrt[221])])/(12026 + 809*Sqrt[221]), 0}, {0, 0, -30}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "c12f1766-a7a4-455b-ab6a-bd0208a66d1f",
+     "metadata": {
+      "cellLabel": "Out[324]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<pre>the translation matrix:\n</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "\"the translation matrix:\\n\"",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "6d7597f3-0747-4b5f-a60a-58e03b6c2f00",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><w>1</w></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><w>1</w></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><w>1</w></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "a1571b87-5fd6-4ab5-9130-1dbd9d4cc105",
+     "metadata": {
+      "cellLabel": "Out[328]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<pre>the coefficents matrix after translation:\n</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "\"the coefficents matrix after translation:\\n\"",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "887ab010-8de6-4245-928f-a04e74bc03a3",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wfrac><w><wrow><w></w><w>35042644</w><w>+</w><wrow><w></w><w>2357096</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow><w>+</w><wrow><w></w><w>154700</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><wrow><w></w><w>417</w><w>+</w><wrow><w></w><w>28</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow></w></wsqrt></wrow><w>+</w><wrow><w></w><w>10425</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><wrow><w></w><w>221</w><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>417</w><w>+</w><wrow><w></w><w>28</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w></wsqrt></wrow></wrow></w><w><w></w><w><wrow><w></w><w>5315492</w><w>+</w><wrow><w></w><w>357578</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow></w></w></wfrac></w><w><wrow><w></w><w>-</w><wfrac><w><wrow><w></w><w>35</w><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>178789</w></wrow><w>-</w><wrow><w></w><w>12026</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow><w>+</w><wrow><w></w><w>6188</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><wrow><w></w><w>417</w><w>+</w><wrow><w></w><w>28</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow></w></wsqrt></wrow><w>+</w><wrow><w></w><w>417</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><wrow><w></w><w>221</w><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>417</w><w>+</w><wrow><w></w><w>28</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><w></w><w><wrow><w></w><w>221</w><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>12026</w><w>+</w><wrow><w></w><w>809</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w></w></wfrac></wrow></w><w><w>0</w></w><w><wrow><w></w><w>-</w><wfrac><w><wrow><w></w><w>35</w><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>178789</w></wrow><w>-</w><wrow><w></w><w>12026</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow><w>+</w><wrow><w></w><w>6188</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><wrow><w></w><w>417</w><w>+</w><wrow><w></w><w>28</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow></w></wsqrt></wrow><w>+</w><wrow><w></w><w>417</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><wrow><w></w><w>221</w><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>417</w><w>+</w><wrow><w></w><w>28</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><w></w><w><wrow><w></w><w>221</w><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>12026</w><w>+</w><wrow><w></w><w>809</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w></w></wfrac></wrow></w><w><wrow><w></w><w>-</w><wfrac><w><wrow><w></w><w>35042644</w><w>+</w><wrow><w></w><w>2357096</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow><w>+</w><wrow><w></w><w>154700</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><wrow><w></w><w>417</w><w>+</w><wrow><w></w><w>28</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow></w></wsqrt></wrow><w>+</w><wrow><w></w><w>10425</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><wrow><w></w><w>221</w><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>417</w><w>+</w><wrow><w></w><w>28</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w></wsqrt></wrow></wrow></w><w><w></w><w><wrow><w></w><w>442</w><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>12026</w><w>+</w><wrow><w></w><w>809</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>221</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w></w></wfrac></wrow></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><wrow><w></w><w>-</w><w>30</w></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{(35042644 + 2357096*Sqrt[221] + 154700*Sqrt[417 + 28*Sqrt[221]] + 10425*Sqrt[221*(417 + 28*Sqrt[221])])/(5315492 + 357578*Sqrt[221]), (-35*(-178789 - 12026*Sqrt[221] + 6188*Sqrt[417 + 28*Sqrt[221]] + 417*Sqrt[221*(417 + 28*Sqrt[221])]))/(221*(12026 + 809*Sqrt[221])), 0}, {(-35*(-178789 - 12026*Sqrt[221] + 6188*Sqrt[417 + 28*Sqrt[221]] + 417*Sqrt[221*(417 + 28*Sqrt[221])]))/(221*(12026 + 809*Sqrt[221])), -1/442*(35042644 + 2357096*Sqrt[221] + 154700*Sqrt[417 + 28*Sqrt[221]] + 10425*Sqrt[221*(417 + 28*Sqrt[221])])/(12026 + 809*Sqrt[221]), 0}, {0, 0, -30}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "2dd76d54-69e9-4749-b66e-dc7477e83d30",
+     "metadata": {
+      "cellLabel": "Out[330]//MatrixForm= ",
+      "isBoxData": false
+     }
+    }
+   ],
+   "metadata": {},
+   "executionSummary": {
+    "timing": {
+     "startTime": 1742288367100,
+     "endTime": 1742288368899
+    },
+    "executionOrder": 316,
+    "success": true
+   }
+  }
+ ]
+}

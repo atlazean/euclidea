@@ -93,8 +93,8 @@
       int \i, \j, \k, \n;
       \n = #4;
       % max iterations
-      int \MaxIter;
-      \MaxIter = 3 * (\n-1)^2;
+      int \JacobiMaxIter;
+      \JacobiMaxIter = 3 * (\n-1)^2;
       % Convergence threshold
       \eps = 0.00001;
       int \stop;
@@ -111,7 +111,7 @@
       };
       showstep(\n);
       \stop = 0;
-      for \k in {1,...,\MaxIter} {
+      for \k in {1,...,\JacobiMaxIter} {
         % Performs a single Jacobi rotation to eliminate an off-diagonal element
         print{\\iteration: \k\\};
         if \stop == 1 then{
@@ -235,9 +235,9 @@
 \tikzset{verify={3},}
 
 \tikzmath{
-  \a{1,1} = 0; \a{1,2} = -1; \a{1,3} = 1;
-  \a{2,1} = -1; \a{2,2} = 0; \a{2,3} = 1;
-  \a{3,1} = 1; \a{3,2} = 1; \a{3,3} = 0;
+  \a{1,1} = 1; \a{1,2} = 0; \a{1,3} = -1;
+  \a{2,1} = 0; \a{2,2} = 1; \a{2,3} = -1;
+  \a{3,1} = -1; \a{3,2} = -1; \a{3,3} = 1;
 }
 
 \tikzset{jacobi={\a,\d,\v,3}}

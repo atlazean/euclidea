@@ -32,6 +32,12 @@
 % 13.Call tikzmath within the code, but note that this may generate 
 % some global variables; to avoid conflicts with user-defined variables, 
 % add the prefix mc@.
+% 14.Modifications of variables inside a foreach statement will vanish outside.
+% 15.Special attention should be paid to variables in tikzmath, as these 
+% variables are global. If they are used directly without declaration, 
+% it may pose risks. For example, \mc@c might be declared as an int in one 
+% place, but if it is assigned a floating-point number elsewhere without 
+% declaration, it will automatically be converted to an integer.
 %
 % 1. tikzmath 主要用于处理数值计算和变量赋值, 支持基本的数学运算和条件语句,
 % 但不支持数组或列表作为函数参数.
@@ -51,7 +57,9 @@
 % 为了避免与用户的变量冲突, 添加前缀 mc@
 % 14.foreach 中的修改在循环外面是失效的
 % https://tex.stackexchange.com/questions/196065/pgfkeys-computed-i-e-dynamically-defined-key
-% 
+% 15.要特别注意 tikzmath 中的变量, 这些变量是全局的, 如果不加声明就直接使用
+% 可能会带来风险, 如 \mc@c 可能在某处被声明为 int, 在另一处不声明就赋值浮点数时则会
+% 自动转换为整数
 
 \makeatletter
 
@@ -131,6 +139,21 @@
           print{[\mc@i,\mc@j]:\ #1{\mc@i,\mc@j}, \ \ };
         };
         print{\\};
+      };
+    }%tikzmath
+  },
+  % scalar multiplication: show={a,m,n,k,b}
+  % b = k * a
+  scalar/.code args={#1,#2,#3,#4,#5} {
+    \tikzmath{
+      int \mc@m, \mc@n;
+      \mc@m = #2;
+      \mc@n = #3;
+      int \mc@i, \mc@j;
+      for \mc@i in {1,...,\mc@m} {
+        for \mc@j in {1,...,\mc@n} {
+          #5{\mc@i,\mc@j} = #4 * #1{\mc@i,\mc@j};
+        };
       };
     }%tikzmath
   },
@@ -384,51 +407,51 @@
           };
         };
       };
+      % print{JacobiMaxIter: \JacobiMaxIter\\};
       int \mc@stop;
       \mc@stop = 0;
       for \mc@k in {1,...,\JacobiMaxIter} {
         % Performs a single Jacobi rotation to eliminate an off-diagonal element
         if \mc@stop == 0 then {
           % find the maximum off-diagnoal element
-          \mc@temp = 0.0;
           int \mc@p, \mc@q; % position p < q
+          real \mc@temp;
+          \mc@p = 1; \mc@q = 2; \mc@temp = 0.0;
           for \mc@i in {1,...,\mc@n-1} {
             for \mc@j in {\mc@i+1,...,\mc@n} {
               if abs(#2{\mc@i,\mc@j}) > \mc@temp then {
                 \mc@temp = abs(#2{\mc@i,\mc@j});
                 \mc@p = \mc@i;
                 \mc@q = \mc@j;
-                %print{p:\mc@p,q:\mc@q,a[p,q]:#2{\mc@p,\mc@q},\mc@temp\\};
               };
             };
           };
+          % print{abs max:[\mc@p,\mc@q]:\ #2{\mc@p,\mc@q}\\};
           if \mc@temp < \EPSILON then {
             % we cannot break for-loop in tikzmath
             \mc@stop = 1;
           }; 
           if \mc@stop == 0 then {
-            % As per the Angle Bisector theorem, the angle bisector of a 
-            % triangle bisects the opposite side in such a way that the 
-            % ratio of the two line segments is proportional to the ratio 
-            % of the other two sides. 
-            % In the △ABC, the angle bisector intersects side BC at point D.
-            % ∠C = 90°
-            % |CD| = |AC|/(|AB|+|AC|))*|BC|
-            % tan(2θ) = |BC|/|AC|
-            % tan(θ) = |CD|/|AC| = |BC|/(|AB|+|AC|))
-            \mc@BC = 2 * #2{\mc@p,\mc@q};
-            \mc@AC = #2{\mc@p,\mc@p} - #2{\mc@q,\mc@q};
-            \mc@AB = \fpeval{sqrt((\mc@BC)^2 + (\mc@AC)^2)};
-            % avoid overflow and improve stability
-            \mc@BC = \mc@BC / \mc@AB;
-            \mc@AC = \mc@AC / \mc@AB;
-            if \mc@BC * \mc@AC < 0 then {
-              \mc@t = \fpeval{- abs(\mc@BC) / (1 + abs(\mc@AC))};
+            % rotation angle: -pi/4 <= θ <= pi/4
+            % assuming tan(θ) = t, sin(θ) = s, cos(θ) = c
+            % tau = (a[pp]-a[qq])/(2a[pq]) = cot(2θ) = (1-tan(θ)^2)/2tan(θ)
+            % then t satisfies the quadratic equation:
+            % t^2 + 2 tau t - 1 = 0
+            % Choosing the root that is smaller in absolute value,
+            % we can compute all relevant quantities without 
+            % using trigonometric functions,
+            % t = sign(tau)/(abs(tau)+sqrt(1+tau^2)) 
+            % c = 1/sqrt(1+t^2), s = c*t
+            real \mc@c, \mc@s, \mc@t, \mc@tau;
+            \mc@tau = \fpeval{(#2{\mc@p,\mc@p}-#2{\mc@q,\mc@q})/(2*#2{\mc@p,\mc@q})};
+            if \mc@tau >= 0 then {
+              \mc@t = \fpeval{1/(\mc@tau + sqrt(1+(\mc@tau)^2))};
             } else {
-              \mc@t = \fpeval{abs(\mc@BC) / (1 + abs(\mc@AC))};
+              \mc@t = \fpeval{-1/(-\mc@tau + sqrt(1+(\mc@tau)^2))};
             };
-            \mc@c = \fpeval{1 / sqrt((\mc@t)^2 + 1)};
+            \mc@c = \fpeval{1 / sqrt(1+(\mc@t)^2)};
             \mc@s = \fpeval{\mc@t * \mc@c};
+            % print{$\tau:\mc@tau,\\ \tan\theta:\mc@t,\\ \cos\theta:\mc@c,\\ sin\theta:\mc@s$\\};
             % rotation matrix:
             % P = [
             %   {...  .  ...  .  ...},

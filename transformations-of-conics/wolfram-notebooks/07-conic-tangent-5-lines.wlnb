@@ -1,0 +1,96 @@
+{
+ "cells": [
+  {
+   "kind": 1,
+   "value": "与五条直线相切的圆锥曲线\n\n根据射影几何理论, 圆锥曲线的对偶图形仍为圆锥曲线, 即从线的观点来看, 圆锥曲线的\n切线(系数为 u, v, w, 即 ux+vy+w=0)满足方程: \nau^2 + buv + cv^2 + duw + evw + fw^2 = 0\n已知五条切线的线坐标 (u_i, v_i, w_i), i = 1,...,5 代入方程中, 有:\nau_i^2 + bu_iv_i + cv_i^2 + du_iw_i + ev_iw_i + fw_i^2 = 0, i = 1,...,5 \n设 (u,v,w) 是圆锥曲线的切线, 则也满足上述方程. 这样形成一个关于向量\n(a,b,c,d,e,f) 的线性方方程组. 而 (a,b,c,d,e,f)≠0, 则方程组的系数矩阵\n的行列式=0\n\n对偶曲线为:\n\nTranspose[U] * Q * U = 0\n\n则圆锥曲线为:\n\nTranspose[X] * Inverse[Q] * X = 0\n\n注意: Mathematica 的 Coefficient 有时候不能正确得到多项式的系数,\n可以采用求代数余子式的方法来求.",
+   "languageId": "markdown",
+   "outputs": [],
+   "metadata": {},
+   "executionSummary": {}
+  },
+  {
+   "kind": 2,
+   "value": "(* ux+vy+w=0 *)\nU = {u, 1, 1,  0, 0, 1};\nV = {v, 0, 0,  1, 1, 1};\nW = {w, 0, -2, 0, -2,-2-Sqrt[2]};\nM = Table[{U[[i]]^2, U[[i]]*V[[i]], V[[i]]^2, U[[i]]*W[[i]], V[[i]]*W[[i]], W[[i]]^2}, {i,1,6}];\nMatrixForm[M]\npoly = Det[M]\n\ncofactors = Cofactors[M];\n\nQ1 = QuadraticMatrix[cofactors[[1]]]\nQ = Inverse[Q1];\nMatrixForm[Q]",
+   "languageId": "wolfram",
+   "outputs": [
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(6,max-content);\"><w><wsup><w></w><w>u</w><w><w>2</w></w></wsup></w><w><wrow><w></w><w>u</w><w></w><w>v</w></wrow></w><w><wsup><w></w><w>v</w><w><w>2</w></w></wsup></w><w><wrow><w></w><w>u</w><w></w><w>w</w></wrow></w><w><wrow><w></w><w>v</w><w></w><w>w</w></wrow></w><w><wsup><w></w><w>w</w><w><w>2</w></w></wsup></w><w><w>1</w></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><w>1</w></w><w><w>0</w></w><w><w>0</w></w><w><wrow><w></w><w>-</w><w>2</w></wrow></w><w><w>0</w></w><w><w>4</w></w><w><w>0</w></w><w><w>0</w></w><w><w>1</w></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><w>1</w></w><w><w>0</w></w><w><wrow><w></w><w>-</w><w>2</w></wrow></w><w><w>4</w></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><wrow><w></w><wrow><w></w><w>-</w><w>2</w></wrow><w>-</w><wsqrt><w><w>\\</w></w><w></w><w><w>2</w></w></wsqrt></wrow></w><w><wrow><w></w><wrow><w></w><w>-</w><w>2</w></wrow><w>-</w><wsqrt><w><w>\\</w></w><w></w><w><w>2</w></w></wsqrt></wrow></w><w><wsup><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>2</w></wrow><w>-</w><wsqrt><w><w>\\</w></w><w></w><w><w>2</w></w></wsqrt></wrow><wb>)</wb></wrow><w><w>2</w></w></wsup></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{u^2, u*v, v^2, u*w, v*w, w^2}, {1, 0, 0, 0, 0, 0}, {1, 0, 0, -2, 0, 4}, {0, 0, 1, 0, 0, 0}, {0, 0, 1, 0, -2, 4}, {1, 1, 1, -2 - Sqrt[2], -2 - Sqrt[2], (-2 - Sqrt[2])^2}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "30f3ad1d-a7a0-4691-8ca6-4f4a438a0e6b",
+     "metadata": {
+      "cellLabel": "Out[368]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wrow><w></w><wrow><w></w><w>-</w><w>8</w></wrow><w></w><w>u</w><w></w><w>v</w></wrow><w>-</w><wrow><w></w><w>8</w><w></w><w>u</w><w></w><w>w</w></wrow><w>-</w><wrow><w></w><w>8</w><w></w><w>v</w><w></w><w>w</w></wrow><w>-</w><wrow><w></w><w>4</w><w></w><wsup><w></w><w>w</w><w><w>2</w></w></wsup></wrow></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "-8*u*v - 8*u*w - 8*v*w - 4*w^2",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "64332f6b-a638-42c1-938a-1dc4888ee4c7",
+     "metadata": {
+      "cellLabel": "Out[369]= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0</w><w>,</w><wrow><w></w><w>-</w><w>4</w></wrow><w>,</w><wrow><w></w><w>-</w><w>4</w></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>-</w><w>4</w></wrow><w>,</w><w>0</w><w>,</w><wrow><w></w><w>-</w><w>4</w></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>-</w><w>4</w></wrow><w>,</w><wrow><w></w><w>-</w><w>4</w></wrow><w>,</w><wrow><w></w><w>-</w><w>4</w></wrow></wrow><wb>}</wb></wrow></wrow><wb>}</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "{{0, -4, -4}, {-4, 0, -4}, {-4, -4, -4}}",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "4061a3d9-d751-46da-8b09-b6432822cc88",
+     "metadata": {
+      "cellLabel": "Out[371]= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><w>0</w></w><w><wrow><w></w><w>-</w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><w>0</w></w><w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wrow><w></w><w>-</w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wrow><w></w><w>-</w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{1/4, 0, -1/4}, {0, 1/4, -1/4}, {-1/4, -1/4, 1/4}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "daf1effd-a83b-4092-b273-5c4c27e81348",
+     "metadata": {
+      "cellLabel": "Out[373]//MatrixForm= ",
+      "isBoxData": false
+     }
+    }
+   ],
+   "metadata": {},
+   "executionSummary": {
+    "timing": {
+     "startTime": 1742289468286,
+     "endTime": 1742289469146
+    },
+    "executionOrder": 364,
+    "success": true
+   }
+  }
+ ]
+}

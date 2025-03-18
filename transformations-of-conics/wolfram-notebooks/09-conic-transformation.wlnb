@@ -1,0 +1,45 @@
+{
+ "cells": [
+  {
+   "kind": 1,
+   "value": "变换系数矩阵",
+   "languageId": "markdown",
+   "outputs": [],
+   "metadata": {},
+   "executionSummary": {}
+  },
+  {
+   "kind": 2,
+   "value": "Q = {\n  {a, b/2, d/2},\n  {b/2, c, e/2},\n  {d/2, e/2, f}\n};\n\n(* Q = {\n  {Subscript[a,1,1], Subscript[a,1,2], Subscript[a,1,3]},\n  {Subscript[a,1,2], Subscript[a,2,2], Subscript[a,2,3]},\n  {Subscript[a,1,3], Subscript[a,2,3], Subscript[a,3,3]}\n}; *)\n\nR = {\n  {Cos[theta], -Sin[theta], 0},\n  {Sin[theta], Cos[theta], 0},\n  {0, 0, 1}\n};\n\nSimplify[Transpose[R] . Q . R] // MatrixForm",
+   "languageId": "wolfram",
+   "outputs": [
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wrow><w></w><wrow><w></w><w>a</w><w></w><wsup><w></w><wrow><w></w><w>Cos</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow><w><w>2</w></w></wsup></wrow><w>+</w><wrow><w></w><w>b</w><w></w><wrow><w></w><w>Cos</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow><w></w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow></wrow><w>+</w><wrow><w></w><w>c</w><w></w><wsup><w></w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow><w><w>2</w></w></wsup></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>b</w><w></w><wrow><w></w><w>Cos</w><wrow><w></w><wb>[</wb><wrow><w></w><w>2</w><w></w><w>theta</w></wrow><wb>]</wb></wrow></wrow></wrow><w>+</w><wrow><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>a</w></wrow><w>+</w><w>c</w></wrow><wb>)</wb></wrow><w></w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><wrow><w></w><w>2</w><w></w><w>theta</w></wrow><wb>]</wb></wrow></wrow></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>d</w><w></w><wrow><w></w><w>Cos</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow></wrow><w>+</w><wrow><w></w><w>e</w><w></w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>b</w><w></w><wrow><w></w><w>Cos</w><wrow><w></w><wb>[</wb><wrow><w></w><w>2</w><w></w><w>theta</w></wrow><wb>]</wb></wrow></wrow></wrow><w>+</w><wrow><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>a</w></wrow><w>+</w><w>c</w></wrow><wb>)</wb></wrow><w></w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><wrow><w></w><w>2</w><w></w><w>theta</w></wrow><wb>]</wb></wrow></wrow></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wrow><w></w><w>c</w><w></w><wsup><w></w><wrow><w></w><w>Cos</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow><w><w>2</w></w></wsup></wrow><w>-</w><wrow><w></w><w>b</w><w></w><wrow><w></w><w>Cos</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow><w></w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow></wrow><w>+</w><wrow><w></w><w>a</w><w></w><wsup><w></w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow><w><w>2</w></w></wsup></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>e</w><w></w><wrow><w></w><w>Cos</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow></wrow><w>-</w><wrow><w></w><w>d</w><w></w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>d</w><w></w><wrow><w></w><w>Cos</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow></wrow><w>+</w><wrow><w></w><w>e</w><w></w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>e</w><w></w><wrow><w></w><w>Cos</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow></wrow><w>-</w><wrow><w></w><w>d</w><w></w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow></wrow></wrow><wb>)</wb></wrow></wrow></w><w><w>f</w></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{a*Cos[theta]^2 + b*Cos[theta]*Sin[theta] + c*Sin[theta]^2, (b*Cos[2*theta] + (-a + c)*Sin[2*theta])/2, (d*Cos[theta] + e*Sin[theta])/2}, {(b*Cos[2*theta] + (-a + c)*Sin[2*theta])/2, c*Cos[theta]^2 - b*Cos[theta]*Sin[theta] + a*Sin[theta]^2, (e*Cos[theta] - d*Sin[theta])/2}, {(d*Cos[theta] + e*Sin[theta])/2, (e*Cos[theta] - d*Sin[theta])/2, f}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "19ec6f80-23a2-4ea5-8b54-01cdef3c5dcf",
+     "metadata": {
+      "cellLabel": "Out[30]//MatrixForm= ",
+      "isBoxData": false
+     }
+    }
+   ],
+   "metadata": {},
+   "executionSummary": {
+    "timing": {
+     "startTime": 1742294949323,
+     "endTime": 1742294949673
+    },
+    "executionOrder": 28,
+    "success": true
+   }
+  }
+ ]
+}

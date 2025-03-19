@@ -1,4 +1,4 @@
-\ProvidesFile{tikzlibrarymc.code.tex}[2025/03/12 v1.1.0 A tikz library for matrix computations and linear algebra]
+\ProvidesFile{tikzlibrarymc.code.tex}[2025/03/19 v1.2.0 A tikz library for matrix computations and linear algebra]
 
 % 提高数值计算精度
 % https://tex.stackexchange.com/questions/521857/tikz-fpu-seems-to-be-inaccurate
@@ -65,7 +65,7 @@
 
 \tikzmath {
   % threshold, numbers not more than epsilon will be treated as zero.
-  \EPSILON = 0.00001;
+  \EPSILON = 0.00005;
   % Jacobi maximum number of iterations, default: 3*(n-1)^2
   % wherein, n is size of the symetric matrix, 
   % User can override it with a positive integer
@@ -419,6 +419,7 @@
           \mc@p = 1; \mc@q = 2; \mc@temp = 0.0;
           for \mc@i in {1,...,\mc@n-1} {
             for \mc@j in {\mc@i+1,...,\mc@n} {
+              % print{[\mc@i,\mc@j]:\ #2{\mc@i,\mc@j}\\};
               if abs(#2{\mc@i,\mc@j}) > \mc@temp then {
                 \mc@temp = abs(#2{\mc@i,\mc@j});
                 \mc@p = \mc@i;
@@ -441,13 +442,15 @@
             % we can compute all relevant quantities without 
             % using trigonometric functions,
             % t = sign(tau)/(abs(tau)+sqrt(1+tau^2)) 
+            % i.e. t = -tau + sqrt(1+tau^2), if tau >=0; 
+            %      t = -tau - sqrt(1+tau^2), otherwise.
             % c = 1/sqrt(1+t^2), s = c*t
             real \mc@c, \mc@s, \mc@t, \mc@tau;
             \mc@tau = \fpeval{(#2{\mc@p,\mc@p}-#2{\mc@q,\mc@q})/(2*#2{\mc@p,\mc@q})};
             if \mc@tau >= 0 then {
-              \mc@t = \fpeval{1/(\mc@tau + sqrt(1+(\mc@tau)^2))};
+              \mc@t = \fpeval{- \mc@tau + sqrt(1+(\mc@tau)^2)};
             } else {
-              \mc@t = \fpeval{-1/(-\mc@tau + sqrt(1+(\mc@tau)^2))};
+              \mc@t = \fpeval{- \mc@tau - sqrt(1+(\mc@tau)^2)};
             };
             \mc@c = \fpeval{1 / sqrt(1+(\mc@t)^2)};
             \mc@s = \fpeval{\mc@t * \mc@c};
@@ -481,6 +484,12 @@
               #3{\mc@i,\mc@q} = \mc@vq{\mc@i};
             };
             #2{\mc@q,\mc@p} = 0.0;
+            % for \mc@i in {1,...,\mc@n} {
+            %   for \mc@j in {1,...,\mc@n} {
+            %     print{[\mc@i,\mc@j]:\ #2{\mc@i,\mc@j}, \ };
+            %   };
+            %   print{\\};
+            % };
           };%if
         };%if
       };%for
@@ -489,6 +498,136 @@
       };
     }%tikzmath
   },%jacobi
+  % create the matrix of a quadratic form
+  % conic/matrix={\q,a,b,c,d,e,f}
+  conic/matrix/.code args = {#1,#2,#3,#4,#5,#6,#7} {
+    \tikzmath {
+      #1{1,1} = #2;     #1{1,2} = #3 / 2; #1{1,3} = #5 / 2; 
+      #1{2,1} = #3 / 2; #1{2,2} = #4;     #1{2,3} = #6 / 2; 
+      #1{3,1} = #5 / 2; #1{3,2} = #6 / 2; #1{3,3} = #7; 
+    }
+  },
+  % eliminate the cross term in a quadratic form by rotation
+  % conic/rotate={\q,\qr,\angle}
+  % \qr: the quadratic matrix after rotation 
+  % \angle: rotation angle
+  conic/rotate/.code args = {#1,#2,#3} {
+    \tikzmath {
+      if abs(#1{1,2}) > \EPSILON then {
+        real \mc@c, \mc@s, \mc@t, \mc@tau;
+        \mc@tau = \fpeval{(#1{1,1}-#1{2,2})/(2*#1{1,2})};
+        if \mc@tau >= 0 then {
+          \mc@t = \fpeval{- \mc@tau + sqrt(1+(\mc@tau)^2)};
+        } else {
+          \mc@t = \fpeval{- \mc@tau - sqrt(1+(\mc@tau)^2)};
+        };
+        \mc@c = \fpeval{1 / sqrt(1+(\mc@t)^2)};
+        \mc@s = \fpeval{\mc@t * \mc@c};
+        #3 = atan(\mc@t);
+        % print{\mc@c, \mc@s, angle:#3\\};
+        % perform rotation
+        #2{1,1} = #1{1,1}*(\mc@c)^2 + #1{1,2}*2*\mc@s*\mc@c + #1{2,2}*(\mc@s)^2;
+        #2{1,2} = 0.0;
+        #2{1,3} = #1{1,3}*\mc@c + #1{2,3}*\mc@s;
+        #2{2,2} = #1{1,1}*(\mc@s)^2 - #1{1,2}*2*\mc@s*\mc@c + #1{2,2}*(\mc@c)^2;
+        #2{2,3} = -#1{1,3}*\mc@s + #1{2,3}*\mc@c;
+        #2{3,3} = #1{3,3};
+        % symetric
+        #2{2,1} = #2{1,2};
+        #2{3,1} = #2{1,3};
+        #2{3,2} = #2{2,3};
+      } else {
+        % unchanged
+        #3 = 0;
+        int \mc@i, \mc@j;
+        for \mc@i in {1,2,3} {
+          for \mc@j in {1,2,3} {
+            #2{\mc@i,\mc@j} = #1{\mc@i,\mc@j};
+          };
+        };
+      };
+    }
+  },
+  % translate the origin of axes to the center(of ellipse or hyperbola)
+  % or vertex (of parabola)
+  % conic/translate={\q,\qt,\xshift,\yshift}
+  % \qt : the quadratic matrix after translation 
+  % \xshift,\yshift: the center or vertex
+  conic/translate/.code args = {#1,#2,#3,#4} {
+    \tikzset{
+      cofactors={#1,\mc@cofactors,3},
+    }
+    \tikzmath{
+      if abs(\mc@cofactors{3,3}) > \EPSILON then {
+        % ellipse or hyperbola
+        #3 = \fpeval{\mc@cofactors{3,1} / \mc@cofactors{3,3}};
+        #4 = \fpeval{\mc@cofactors{3,2} / \mc@cofactors{3,3}};
+      } else {
+        % parabola
+        if abs(#1{1,1}) > \EPSILON then {
+          #3 = \fpeval{- #1{1,3} / #1{1,1}};
+          #4 = \fpeval{((#1{1,3})^2-#1{1,1}*#1{3,3})/(2*#1{1,1}*#1{2,3})};
+        } else {
+          #3 = \fpeval{((#1{2,3})^2-#1{2,2}*#1{3,3})/(2*#1{2,2}*#1{1,3})};
+          #4 = \fpeval{- #1{2,3} / #1{2,2}};
+        };%if
+      };%if
+      % perform translation
+      #2{1,1} = #1{1,1}; #2{1,2} = #1{1,2};
+      #2{2,1} = #1{2,1}; #2{2,2} = #1{2,2};
+      #2{1,3} = #1{1,1}*#3 + #1{1,2}*#4 + #1{1,3};
+      #2{2,3} = #1{1,2}*#3 + #1{2,2}*#4 + #1{2,3};
+      #2{3,3} = (#3)^2*#1{1,1} + 2*#3*#4*#1{1,2} + 2*#3*#1{1,3} + (#4)^2*#1{2,2} + 2*#4*#1{2,3} + #1{3,3};
+      % symetric
+      #2{3,1} = #2{1,3};
+      #2{3,2} = #2{2,3};
+    }%tikzmath
+  },
+  % reduce conic matrix from general to standard form
+  % conic/reduce={\q,\qs,\angle,\xshift,\yshift,\q}
+  % \q: the quadratic matrix in a general form
+  % \qs: the quadratic matrix in a standard form
+  % \angle: rotation angle
+  % \xshift,\yshift: new origin 
+  conic/reduce/.code args = {#1,#2,#3,#4,#5} {
+    \tikzset {
+      conic/rotate={#1,\conic@qr,#3},
+      conic/translate={\conic@qr,\conic@qt,\conic@xshift,\conic@yshift},
+    }
+    \tikzmath {
+      if abs(\conic@qt{1,1}) > \EPSILON && abs(\conic@qt{2,2}) > \EPSILON then {
+        % ellipse or hyperbola
+        \conic@qt{1,1} = \fpeval{-\conic@qt{1,1} / \conic@qt{3,3}};
+        \conic@qt{2,2} = \fpeval{-\conic@qt{2,2} / \conic@qt{3,3}};
+        \conic@qt{3,3} = -1.0;
+      } else {
+        % parabola
+        if abs(\conic@qt{1,1}) < \EPSILON then {
+          \conic@qt{1,3} = \fpeval{\conic@qt{1,3} / \conic@qt{2,2}};
+          \conic@qt{3,1} = \conic@qt{1,3};
+          \conic@qt{2,2} = 1.0;
+        } else {
+          \conic@qt{2,3} = \fpeval{\conic@qt{2,3} / \conic@qt{1,1}};
+          \conic@qt{3,2} = \conic@qt{2,3};
+          \conic@qt{1,1} = 1.0;      
+        };%if
+      };%if
+      int \mc@i, \mc@j;
+      for \mc@i in {1,2,3} {
+        for \mc@j in {1,2,3} {
+          #2{\mc@i,\mc@j} = \conic@qt{\mc@i,\mc@j};
+        };
+      };
+      % restore xshift and yshift in the original coordinate system
+      if abs(\conic@qt{1,1}) < \EPSILON || abs(\conic@qt{2,2}) < \EPSILON then {
+        #4 = \conic@xshift * cos(#3) - \conic@yshift * sin(#3);
+        #5 = \conic@xshift * sin(#3) + \conic@yshift * cos(#3);
+      } else {
+        #4 = \conic@xshift;
+        #5 = \conic@yshift;
+      };
+    }%tikzmath
+  },
 }
 
 \makeatother

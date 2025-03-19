@@ -2,7 +2,7 @@
  "cells": [
   {
    "kind": 1,
-   "value": "变换系数矩阵",
+   "value": "变换系数矩阵\n\n坐标变换可以是变换坐标轴或变换点的坐标, 两者正好相反\n\n逆时针旋转坐标轴 theta\n令 \nR = {\n  {c, -s, 0}, \n  {s, c, 0}},\n  {0, 0, 1}\n};\n则: X' = R . X\n注意： Inverse[R] = TransRose[R]\nX = TransRose[R] . X'\n代入 TransRose[X] . Q . X  = 0\nTransRose[X'] . TransRose[R] . Q . R . X'  = 0\n即 新的系数矩阵为\nQ' = TransRose[R] . Q . R;\n\n同理, 平移坐标轴 到 (r,s), 变换矩阵为 T:\nT = {\n  {1, 0, r},\n  {0, 1, s},\n  {0, 0, 1}\n};\n新的系数矩阵为\nQ' = TransRose[T] . Q . T;",
    "languageId": "markdown",
    "outputs": [],
    "metadata": {},
@@ -32,14 +32,7 @@
     }
    ],
    "metadata": {},
-   "executionSummary": {
-    "timing": {
-     "startTime": 1742322371067,
-     "endTime": 1742322371487
-    },
-    "executionOrder": 1,
-    "success": true
-   }
+   "executionSummary": {}
   },
   {
    "kind": 2,
@@ -65,14 +58,7 @@
     }
    ],
    "metadata": {},
-   "executionSummary": {
-    "timing": {
-     "startTime": 1742322887781,
-     "endTime": 1742322888074
-    },
-    "executionOrder": 7,
-    "success": true
-   }
+   "executionSummary": {}
   },
   {
    "kind": 2,
@@ -115,14 +101,7 @@
     }
    ],
    "metadata": {},
-   "executionSummary": {
-    "timing": {
-     "startTime": 1742323548554,
-     "endTime": 1742323548989
-    },
-    "executionOrder": 20,
-    "success": true
-   }
+   "executionSummary": {}
   },
   {
    "kind": 2,
@@ -165,12 +144,170 @@
     }
    ],
    "metadata": {},
+   "executionSummary": {}
+  },
+  {
+   "kind": 2,
+   "value": "(* \n  先逆时针旋转图形, 再平移图形 \n  与前面平移坐标轴不同\n*)\ntheta = Pi/3; (* 逆时针旋转角度 *)\nr = 1; s = 2; (* 点在水平和垂直方向的平移量*)\nQ = {{1/16, 0, 0},{0,1/9,0},{0,0,-1}};\nR = {\n  {Cos[-theta], -Sin[-theta], 0},\n  {Sin[-theta], Cos[-theta], 0},\n  {0, 0, 1}\n};\nT = {\n  {1, 0, -r},\n  {0, 1, -s},\n  {0, 0, 1}\n};\nQ = Simplify[Transpose[T] . Transpose[R] . Q . R . T];\n144*Q // MatrixForm",
+   "languageId": "wolfram",
+   "outputs": [
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wfrac><w><w>57</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><wfrac><w><wrow><w></w><w>7</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>57</w></wrow><w>+</w><wrow><w></w><w>14</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><w>-</w><wfrac><w><wrow><w></w><w>7</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wfrac><w><w>43</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>86</w></wrow><w>+</w><wrow><w></w><w>7</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>57</w></wrow><w>+</w><wrow><w></w><w>14</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>86</w></wrow><w>+</w><wrow><w></w><w>7</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>347</w></wrow><w>-</w><wrow><w></w><w>28</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{57/4, (-7*Sqrt[3])/4, (-57 + 14*Sqrt[3])/4}, {(-7*Sqrt[3])/4, 43/4, (-86 + 7*Sqrt[3])/4}, {(-57 + 14*Sqrt[3])/4, (-86 + 7*Sqrt[3])/4, (-347 - 28*Sqrt[3])/4}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "8394a203-e99c-466a-8f1e-b6e9a2e4e9b9",
+     "metadata": {
+      "cellLabel": "Out[167]//MatrixForm= ",
+      "isBoxData": false
+     }
+    }
+   ],
+   "metadata": {},
    "executionSummary": {
     "timing": {
-     "startTime": 1742324120092,
-     "endTime": 1742324120536
+     "startTime": 1742412848616,
+     "endTime": 1742412849206
     },
-    "executionOrder": 25,
+    "executionOrder": 161,
+    "success": true
+   }
+  },
+  {
+   "kind": 2,
+   "value": "(* \n  先逆时针旋转图形, 再平移图形 \n  与前面平移坐标轴不同\n*)\ntheta = Pi/3; (* 逆时针旋转角度 *)\nr = 1; s = 2; (* 点在水平和垂直方向的平移量*)\nQ = {{-1/16, 0, 0},{0,1/9,0},{0,0,-1}};\nR = {\n  {Cos[-theta], -Sin[-theta], 0},\n  {Sin[-theta], Cos[-theta], 0},\n  {0, 0, 1}\n};\nT = {\n  {1, 0, -r},\n  {0, 1, -s},\n  {0, 0, 1}\n};\nQ = Simplify[Transpose[T] . Transpose[R] . Q . R . T];\n144*Q // MatrixForm",
+   "languageId": "wolfram",
+   "outputs": [
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wfrac><w><w>39</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><wfrac><w><wrow><w></w><w>25</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>39</w></wrow><w>+</w><wrow><w></w><w>50</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><w>-</w><wfrac><w><wrow><w></w><w>25</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wrow><w></w><w>-</w><wfrac><w><w>11</w></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>22</w><w>+</w><wrow><w></w><w>25</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>39</w></wrow><w>+</w><wrow><w></w><w>50</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>22</w><w>+</w><wrow><w></w><w>25</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>581</w></wrow><w>-</w><wrow><w></w><w>100</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{39/4, (-25*Sqrt[3])/4, (-39 + 50*Sqrt[3])/4}, {(-25*Sqrt[3])/4, -11/4, (22 + 25*Sqrt[3])/4}, {(-39 + 50*Sqrt[3])/4, (22 + 25*Sqrt[3])/4, (-581 - 100*Sqrt[3])/4}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "f8ebbbe0-567b-4d25-a378-53b60be0cabb",
+     "metadata": {
+      "cellLabel": "Out[218]//MatrixForm= ",
+      "isBoxData": false
+     }
+    }
+   ],
+   "metadata": {},
+   "executionSummary": {
+    "timing": {
+     "startTime": 1742422571493,
+     "endTime": 1742422572069
+    },
+    "executionOrder": 212,
+    "success": true
+   }
+  },
+  {
+   "kind": 2,
+   "value": "(* \n  先逆时针旋转图形, 再平移图形 \n  与前面平移坐标轴不同\n*)\ntheta = Pi/3; (* 逆时针旋转角度 *)\nr = 1; s = 2; (* 点在水平和垂直方向的平移量*)\nQ = {{1, 0, 0},{0,0,-2},{0,-2,0}};\nR = {\n  {Cos[-theta], -Sin[-theta], 0},\n  {Sin[-theta], Cos[-theta], 0},\n  {0, 0, 1}\n};\nT = {\n  {1, 0, -r},\n  {0, 1, -s},\n  {0, 0, 1}\n};\nQ = Simplify[Transpose[T] . Transpose[R] . Q . R . T];\nQ // MatrixForm",
+   "languageId": "wolfram",
+   "outputs": [
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wfrac><w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>1</w></wrow><w>+</w><wrow><w></w><w>2</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wfrac><w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wfrac><w><w>3</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wrow><w></w><wrow><w></w><w>-</w><wfrac><w><w>5</w></w><w><w></w><w><w>2</w></w></w></wfrac></wrow><w>-</w><wfrac><w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>1</w></wrow><w>+</w><wrow><w></w><w>2</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wrow><w></w><w>-</w><wfrac><w><w>5</w></w><w><w></w><w><w>2</w></w></w></wfrac></wrow><w>-</w><wfrac><w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wrow><w></w><wfrac><w><w>29</w></w><w><w></w><w><w>4</w></w></w></wfrac><w>-</w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{1/4, Sqrt[3]/4, (-1 + 2*Sqrt[3])/4}, {Sqrt[3]/4, 3/4, -5/2 - Sqrt[3]/4}, {(-1 + 2*Sqrt[3])/4, -5/2 - Sqrt[3]/4, 29/4 - Sqrt[3]}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "2d5de6bb-e022-4905-904f-787dae7f173a",
+     "metadata": {
+      "cellLabel": "Out[253]//MatrixForm= ",
+      "isBoxData": false
+     }
+    }
+   ],
+   "metadata": {},
+   "executionSummary": {
+    "timing": {
+     "startTime": 1742423253817,
+     "endTime": 1742423254405
+    },
+    "executionOrder": 247,
+    "success": true
+   }
+  },
+  {
+   "kind": 2,
+   "value": "(* \n  先逆时针旋转图形, 再平移图形 \n  与前面平移坐标轴不同\n*)\ntheta = Pi/3; (* 逆时针旋转角度 *)\nr = 1; s = 2; (* 点在水平和垂直方向的平移量*)\nQ = {{0, 0, -2},{0,1,0},{-2,0,0}};\nR = {\n  {Cos[-theta], -Sin[-theta], 0},\n  {Sin[-theta], Cos[-theta], 0},\n  {0, 0, 1}\n};\nT = {\n  {1, 0, -r},\n  {0, 1, -s},\n  {0, 0, 1}\n};\nQ = Simplify[Transpose[T] . Transpose[R] . Q . R . T];\nQ // MatrixForm",
+   "languageId": "wolfram",
+   "outputs": [
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wfrac><w><w>3</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><wfrac><w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>7</w></wrow><w>+</w><wrow><w></w><w>2</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><w>-</w><wfrac><w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>2</w></wrow><w>-</w><wrow><w></w><w>3</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>7</w></wrow><w>+</w><wrow><w></w><w>2</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>2</w></wrow><w>-</w><wrow><w></w><w>3</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>15</w></w><w><w></w><w><w>4</w></w></w></wfrac><w>+</w><wrow><w></w><w>3</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{3/4, -1/4*Sqrt[3], (-7 + 2*Sqrt[3])/4}, {-1/4*Sqrt[3], 1/4, (-2 - 3*Sqrt[3])/4}, {(-7 + 2*Sqrt[3])/4, (-2 - 3*Sqrt[3])/4, 15/4 + 3*Sqrt[3]}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "ef3910ed-e754-4ea0-b76a-40e0f0189394",
+     "metadata": {
+      "cellLabel": "Out[274]//MatrixForm= ",
+      "isBoxData": false
+     }
+    }
+   ],
+   "metadata": {},
+   "executionSummary": {
+    "timing": {
+     "startTime": 1742423588178,
+     "endTime": 1742423588769
+    },
+    "executionOrder": 268,
+    "success": true
+   }
+  },
+  {
+   "kind": 2,
+   "value": "T = {\n  {1, 0, a},\n  {0, 1, b},\n  {0, 0, 1}\n};\nInverse[T]",
+   "languageId": "wolfram",
+   "outputs": [
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>1</w><w>,</w><w>0</w><w>,</w><wrow><w></w><w>-</w><w>a</w></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><w>0</w><w>,</w><w>1</w><w>,</w><wrow><w></w><w>-</w><w>b</w></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><w>0</w><w>,</w><w>0</w><w>,</w><w>1</w></wrow><wb>}</wb></wrow></wrow><wb>}</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "{{1, 0, -a}, {0, 1, -b}, {0, 0, 1}}",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "1e5a9722-5a2f-40f5-be30-c51a2bf41377",
+     "metadata": {
+      "cellLabel": "Out[169]= ",
+      "isBoxData": false
+     }
+    }
+   ],
+   "metadata": {},
+   "executionSummary": {
+    "timing": {
+     "startTime": 1742413514763,
+     "endTime": 1742413514966
+    },
+    "executionOrder": 168,
     "success": true
    }
   }

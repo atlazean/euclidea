@@ -2,9 +2,11 @@
 
 \section{坐标变换 Coordinate Transformations}
 
+\subsection{Transformations on Axes}
+
 下面讨论坐标轴平移和旋转后坐标的变化.
 
-\subsection{Translation}
+\subsubsection{Translation of Axes}
 
 \begin{center}
 \begin{tikzpicture}
@@ -77,7 +79,7 @@
   \end{pmatrix}
 \]
 
-\subsection{Rotation}
+\subsubsection{Rotation of Axes}
 
 \begin{center}
 \begin{tikzpicture}
@@ -172,6 +174,171 @@
   \end{pmatrix}
 \]
 
+\subsection{Transformations on Coordinates}
+
+\subsubsection{Translation of Coordinates}
+
+\begin{center}
+\begin{tikzpicture}
+  \tikzmath{
+    \xmin = 0;
+    \xmax = 3;
+    \ymin = 0;
+    \ymax = 3;
+    \dx = 1.5;
+    \dy = 1;
+  }
+  % original coordinate system
+  \draw[-latex] ({(\xmin)-0.5},0) -- ({(\xmax)+0.5},0) node[below] {$x$};
+  \draw[-latex] (0,{(\ymin)-0.5}) -- (0,{(\ymax)+0.5}) node[left] {$y$};
+  \draw (0,0) node[below left] {$O$};
+
+  \coordinate (P) at (1.5,0.5);
+  \coordinate (P') at ($(P)+(\dx,\dy)$);
+
+  \fill[teal] (P) circle (2pt);
+  \draw (P) node[above] {$P(x,y)$};
+  \fill[red] (P') circle (2pt);
+  \draw (P') node[above] {$P'(x',y')$};
+\end{tikzpicture}
+\end{center}
+
+\[
+  \begin{cases}
+    x' = x + dx\\
+    y' = y + dy
+  \end{cases}
+\]
+
+\[
+  \begin{pmatrix}
+    x'\\
+    y'\\
+    1
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    1 & 0 & d_x\\
+    0 & 1 & d_y\\
+    0 & 0 & 1
+  \end{pmatrix}
+  \begin{pmatrix}
+    x\\
+    y\\
+    1
+  \end{pmatrix}
+\]
+
+\[
+  \begin{pmatrix}
+    x\\
+    y\\
+    1
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    1 & 0 & -d_x\\
+    0 & 1 & -d_y\\
+    0 & 0 & 1
+  \end{pmatrix}
+  \begin{pmatrix}
+    x'\\
+    y'\\
+    1
+  \end{pmatrix}
+\]
+
+\subsubsection{Rotation of Coordinates}
+
+\begin{center}
+\begin{tikzpicture}
+  \tikzmath{
+    \xmin = 0;
+    \xmax = 3;
+    \ymin = 0;
+    \ymax = 3;
+    \a = 15;
+  }
+  % original coordinate system
+  \draw[-latex] ({(\xmin)-0.5},0) -- ({(\xmax)+0.5},0) node[below] {$x$};
+  \draw[-latex] (0,{(\ymin)-0.5}) -- (0,{(\ymax)+0.5}) node[left] {$y$};
+  \draw (0,0) node[below left] {$O$};
+
+  \coordinate (O) at (0,0);
+  \coordinate (X) at (1,0);
+  \coordinate (P) at (2.5,1.5);
+  \coordinate (P') at($(O)!1.0!\a:(P)$); % rotate P around O by \a degrees
+
+  \pic[draw,teal,"$\phi$",angle eccentricity=1.25,angle radius=8mm] {angle=X--O--P};
+  \pic[draw,red,"$\theta$",angle eccentricity=1.25,angle radius=10mm] {angle=P--O--P'};
+
+  \draw[teal] (O) -- (P) (O) -- (P');
+  \fill[teal] (P) circle (2pt);
+  \draw (P) node[right] {$P(x,y)$};
+  \fill[red] (P') circle (2pt);
+  \draw (P') node[above] {$P'(x',y')$};
+\end{tikzpicture}
+\end{center}
+
+\[
+  \begin{cases}
+    x = r\cos\phi\\
+    y = r\sin\phi
+  \end{cases}
+\]
+
+\[
+  \begin{cases}
+    x' = r\cos(\phi+\theta)\\
+    y' = r\sin(\phi+\theta)
+  \end{cases}
+\]
+
+\[
+  \begin{cases}
+    x' = x\cos\theta-y\sin\theta\\
+    y' = y\cos\theta+x\sin\theta
+  \end{cases}
+\]
+
+\[
+  \begin{pmatrix}
+    x'\\
+    y'\\
+    1
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    \cos\theta & -\sin\theta & 0\\
+    \sin\theta & \cos\theta & 0\\
+    0 & 0 & 1
+  \end{pmatrix}
+  \begin{pmatrix}
+    x\\
+    y\\
+    1
+  \end{pmatrix}
+\]
+
+\[
+  \begin{pmatrix}
+    x\\
+    y\\
+    1
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    \cos\theta & \sin\theta & 0\\
+    -\sin\theta & \cos\theta & 0\\
+    0 & 0 & 1
+  \end{pmatrix}
+  \begin{pmatrix}
+    x'\\
+    y'\\
+    1
+  \end{pmatrix}
+\]
+
 \section{圆锥曲线的变换}
 
 \subsection{圆锥曲线方程的一般形式}
@@ -212,8 +379,8 @@
 
 \subsection{圆锥曲线的中心}
 
-设 $Q_{31},Q_{32},Q_{33}$ 是 矩阵 Q 的代数余子式, 如果 $Q_{33} = 0$, 则曲线是抛物线, 其中心在无穷远处;
-否则曲线的中心是$\left(\dfrac{Q_{31}}{Q_{33}}, \dfrac{Q_{32}}{Q_{33}}\right)$.
+设 $A$ 是 矩阵 $Q$ 的代数余子式, 如果 $A_{33} = 0$, 则曲线是抛物线, 其中心在无穷远处;
+否则曲线的中心是$\left(\dfrac{A_{31}}{A_{33}}, \dfrac{A_{32}}{A_{33}}\right)$.
 
 
 \subsection{将圆锥曲线方程从一般形式化为标准形式}
@@ -286,6 +453,29 @@
 
 则抛物线的顶点为: $\left(-\dfrac{e}{2c},\dfrac{e^2-4cf}{4cd}\right)$.
 
+对于椭圆和双曲线, 计算其代数余子式 $A$,
+中心为: $\left(\dfrac{A_{31}}{A_{33}},\dfrac{A_{32}}{A_{33}}\right)$.
+
+构造平移矩阵:
+
+\[
+  T =
+  \begin{pmatrix}
+    1 & 0 & d_x\\
+    0 & 1 & d_y\\
+    0 & 0 & 1
+  \end{pmatrix}
+\]
+
+其中,
+
+\begin{gather*}
+  d_x = \dfrac{A_{31}}{A_{33}},\\
+  d_y = \dfrac{A_{32}}{A_{33}}.
+\end{gather*}
+
+
+计算 $\hat{Q}=T^T\tilde{Q}T$ 就得到化为标准形式的系数矩阵.
 
 \subsection{五点确定圆锥曲线}
 

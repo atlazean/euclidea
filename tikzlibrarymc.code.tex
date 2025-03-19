@@ -619,13 +619,8 @@
         };
       };
       % restore xshift and yshift in the original coordinate system
-      if abs(\conic@qt{1,1}) < \EPSILON || abs(\conic@qt{2,2}) < \EPSILON then {
-        #4 = \conic@xshift * cos(#3) - \conic@yshift * sin(#3);
-        #5 = \conic@xshift * sin(#3) + \conic@yshift * cos(#3);
-      } else {
-        #4 = \conic@xshift;
-        #5 = \conic@yshift;
-      };
+      #4 = \conic@xshift * cos(#3) - \conic@yshift * sin(#3);
+      #5 = \conic@xshift * sin(#3) + \conic@yshift * cos(#3);
     }%tikzmath
   },
 }

@@ -1,4 +1,4 @@
-\ProvidesFile{tikzlibraryeuclidea.code.tex}[2025/03/12 v1.5.2 A tikz library for Euclidean geometry constructions]
+\ProvidesFile{tikzlibraryeuclidea.code.tex}[2025/03/19 v1.6.0 A tikz library for Euclidean geometry constructions]
 
 % \RequirePackage{xfp}
 
@@ -1029,6 +1029,66 @@
         \n{ycenter} = {\pgfkeysvalueof{/tikz/parabola/@yvertex}},
       in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
         (-2*\n{a}, 0) -- (\n{scale}^2*\n{a},0)
+    }
+  },
+  conic/define/.code args = {#1,#2,#3,#4,#5,#6}{
+    \tikzset {
+      conic/matrix={\cs@Q,#1,#2,#3,#4,#5,#6},
+      conic/reduce={\cs@Q,\cs@R,\cs@angle,\cs@xshift,\cs@yshift},
+    }
+    \tikzmath {
+      % \xshift = - \xshift;
+      % \yshift = - \yshift;
+      real \cs@a, \cs@b;
+      \cs@a = 0.0; \cs@b = 0.0;
+      if \cs@R{1,1} > \EPSILON  && \cs@R{2,2} > \EPSILON then {%ellipse
+        \cs@type = 1;
+        \cs@a = sqrt(1/\cs@R{1,1});
+        \cs@b = sqrt(1/\cs@R{2,2});
+      }; 
+      if abs(\cs@R{1,1}) <= \EPSILON then {%parabola: y^2 = 4ax
+        \cs@type = 2;
+        \cs@a = -\cs@R{1,3}/2;
+      };
+      if abs(\cs@R{2,2}) <= \EPSILON then {%parabola: x^2 = 4ay
+        \cs@type = 2;
+        \cs@angle = \cs@angle + 90;
+        \cs@a = -\cs@R{2,3}/2;
+      };
+      if \cs@R{1,1} > \EPSILON  && \cs@R{2,2} < -\EPSILON then {%hyperbola
+        \cs@type = 3;
+        \cs@a = sqrt( 1/\cs@R{1,1});
+        \cs@b = sqrt(-1/\cs@R{2,2});
+      }; 
+      if \cs@R{1,1} < -\EPSILON  && \cs@R{2,2} > \EPSILON then {%hyperbola
+        \cs@type = 3;
+        \cs@angle = \cs@angle + 90;
+        \cs@b = sqrt(-1/\cs@R{1,1});
+        \cs@a = sqrt( 1/\cs@R{2,2});
+      }; 
+    }
+    \typeout{=========================}
+    \typeout{a: \cs@a, b: \cs@b}
+    \typeout{type: \cs@type}
+    \typeout{transform: \cs@angle:(\cs@xshift,\cs@yshift)}
+    \typeout{=========================}
+  },
+  conic/.style = {
+    insert path = {
+      \ifnum \cs@type = 1 %ellipse
+        [transform={\cs@angle:(\cs@xshift,\cs@yshift)}]
+        (0,0) ellipse [x radius=\cs@a,y radius=\cs@b]
+      \else\ifnum \cs@type = 2%parabola
+        [smooth,domain=\pgfkeysvalueof{/tikz/parabola/domain},
+        variable=\euclidea@var,
+        transform={\cs@angle:(\cs@xshift,\cs@yshift)}]
+        plot({\cs@a*(\euclidea@var)^2},{2*\cs@a*(\euclidea@var)}) 
+      \else\ifnum \cs@type = 3%hyperbola
+        [smooth,domain=\pgfkeysvalueof{/tikz/hyperbola/domain},
+        variable=\euclidea@var,transform={\cs@angle:(\cs@xshift,\cs@yshift)}]
+        plot({-\cs@a*cosh(\euclidea@var)},{\cs@b*sinh(\euclidea@var)})  % right branch
+        plot({ \cs@a*cosh(\euclidea@var)},{\cs@b*sinh(\euclidea@var)})  % left branch
+      \fi\fi\fi
     }
   },
 }

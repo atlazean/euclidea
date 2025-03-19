@@ -223,6 +223,21 @@ $t$ 是射线,双曲线和 $x$ 轴围成的面积的二倍. 对于双曲线上�
 \showcode{snippets/conics/hyperbola4.tex}
 
 % ---------------------------------
+\section{根据圆锥曲线方程绘制图形}
+
+\emph{调用方式}
+
+\begin{minted}{latex}
+  `conic/define = {a,b,c,d,e,f}`: defines a conic with equation coefficients, i.e. ax^2 + bxy + cy^2 + dx + ey + f = 0.
+  `conic`: creates the conic path.
+\end{minted}
+
+\emph{示例}
+
+% \inputminted[latex]{snippets/conics/conic-in-general.tex}
+\showcode{snippets/conics/conic-in-general.tex}
+
+% ---------------------------------
 \section{过椭圆外一点作椭圆的切线 Tangents to an Ellipse}
 
 过椭圆外一点作椭圆的切线的方法有: 利用椭圆的光学性质作图; 
@@ -285,5 +300,7 @@ Braikenridge-Maclaurin 定理指出，如果通过六边形的相对侧的三对
 \emph{示例}
 
 \showcode{snippets/conics/five-tangents-determine-a-conic.tex}
+
+
 
 

@@ -60,35 +60,40 @@ Euclidea is a tikz library designed for enchancing tikz in Euclidean geometry dr
 
 - Ellipse
 
-  - `ellipse/define = {F1,F2,P}`: define an ellipse with two foci and a point.
+  - `ellipse/define = {F1,F2,P}`: defines an ellipse with two foci and a point.
   - `ellipse`: creates the ellipse path.
   - `ellipse/directrix/scale=k`: set the scale of directrices.
-  - `ellipse/directrix`: create the directrices.
+  - `ellipse/directrix`: creates the directrices.
   - `ellipse/axis/scale=k`: set the scale of axes.
-  - `ellipse/axis`: create the axes.
+  - `ellipse/axis`: creates the axes.
   - `ellipse/a`, `ellipse/b`, `ellipse/c`, `ellipse/e`: ellipse semimajor-axis, semiminor-axis, linear eccentricity, eccentricity.
 
 - Hyperbola
 
-  - `hyperbola/define = {F1,F2,P}`: define a hyperbola with two foci and a point.
+  - `hyperbola/define = {F1,F2,P}`: defines a hyperbola with two foci and a point.
   - `hyperbola/domain=t1:t2`: set the domain for parametric equation: x = a*cosh(t), y = b*sinh(t).
   - `hyperbola`: creates the hyperbola path.
   - `hyperbola/directrix/scale=k`: set the scale of directrices.
-  - `hyperbola/directrix`: create the directrices.
+  - `hyperbola/directrix`: creates the directrices.
   - `hyperbola/axis/scale=k`: set the scale of axes.
-  - `hyperbola/axis`: create the axes.
+  - `hyperbola/axis`: creates the axes.
   - `hyperbola/a`, `hyperbola/b`, `hyperbola/c`, `hyperbola/e`: hyperbola semimajor-axis, semiminor-axis, linear eccentricity, eccentricity.
 
 - Parabola
 
-  - `parabola/define = {F,V}`: define a parabola with the focus and vertex.
+  - `parabola/define = {F,V}`: defines a parabola with the focus and vertex.
   - `parabola/domain=t1:t2`: set the domain for parametric equation: x = a*t^2, y = 2a*t, where `a` is the distance from the focus to the vertex.
   - `parabola`: creates the parabola path.
   - `parabola/directrix/scale=k`: set the scale of directrix.
-  - `parabola/directrix`: create the directrix.
+  - `parabola/directrix`: creates the directrix.
   - `parabola/axis/scale=k`: set the scale of axis.
-  - `parabola/axis`: create the axis.
+  - `parabola/axis`: creates the axis.
   - `parabola/a`, `parabola/e`: 1/4 parabola latus rectum, eccentricity (1.0).
+
+- General Conics
+
+  - `conic/define = {a,b,c,d,e,f}`: defines a conic with equation coefficients, i.e. ax^2 + bxy + cy^2 + dx + ey + f = 0.
+  - `conic`: creates the conic path.
 
 ## Example
 

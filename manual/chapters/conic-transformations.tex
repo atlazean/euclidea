@@ -36,8 +36,8 @@
 
 \[
   \begin{cases}
-    x' = x - dx\\
-    y' = y - dy
+    x' = x - d_x\\
+    y' = y - d_y
   \end{cases}
 \]
 
@@ -205,8 +205,8 @@
 
 \[
   \begin{cases}
-    x' = x + dx\\
-    y' = y + dy
+    x' = x + d_x\\
+    y' = y + d_y
   \end{cases}
 \]
 
@@ -474,82 +474,5 @@
   d_y = \dfrac{A_{32}}{A_{33}}.
 \end{gather*}
 
-
 计算 $\hat{Q}=T^T\tilde{Q}T$ 就得到化为标准形式的系数矩阵.
 
-\subsection{五点确定圆锥曲线}
-
-设二次曲线的方程为:
-
-\[
-  ax^2 + bxy + cy^2 + dx + ey + f = 0
-\]
-
-将 $(x_i,y_i) (i=1,2,\cdots,5)$ 代入上式, 并组成线性方程组.
-由于 $(a, b, c, d, e, f) \neq \mathbf{0}$, 该方程组的系数矩阵的行列式为 0, 即:
-
-\[
-\det \begin{pmatrix}
-x^2 & xy & y^2 & x & y & 1 \\
-x^2_1 & x_1y_1 & y^2_1 & x_1 & y_1 & 1 \\
-x^2_2 & x_2y_2 & y^2_2 & x_2 & y_2 & 1 \\
-x^2_3 & x_3y_3 & y^2_3 & x_3 & y_3 & 1 \\
-x^2_4 & x_4y_4 & y^2_4 & x_4 & y_4 & 1 \\
-x^2_5 & x_5y_5 & y^2_5 & x_5 & y_5 & 1 \\
-\end{pmatrix} = 0
-\]
-
-化简该行列式即得到二次曲线的方程.
-
-\subsection{与五条直线相切的圆锥曲线}
-
-根据对偶原理, 二次曲线可以用两种方式定义, 点形式和直线形式:
-
-点形式定义: 由点集满足的二次方程定义, 例如:
-  \[
-  ax^2 + bxy + cy^2 + dxz + eyz + fz^2 = 0
-  \]
-  
-用矩阵形式表示为:
-  \[
-  (x, y, z) \begin{pmatrix} a & b/2 & d/2 \\ b/2 & c & e/2 \\ d/2 & e/2 & f \end{pmatrix} \begin{pmatrix} x \\ y \\ z \end{pmatrix} = 0
-  \]
-称该矩阵为 \( Q \).
-
-设 $(x_0,y_0,z_0)$ 是曲线上的点,  则过该点的切线方程为:
-
-\[
-  (x_0,y_0,z_0) \begin{pmatrix} a & b/2 & d/2 \\ b/2 & c & e/2 \\ d/2 & e/2 & f \end{pmatrix} \begin{pmatrix} x \\ y \\ z \end{pmatrix} = 0
-\]
-
-
-直线形式定义: 由所有与原曲线相切的直线的包络定义，用直线坐标 \( (l, m, n) \) 的二次方程表示:
-  \[
-  Al^2 + Blm + Cm^2 + Dlm + Emn + Fn^2 = 0
-  \]
-同样用矩阵形式：
-  \[
-  (l, m, n) \begin{pmatrix} A & B/2 & D/2 \\ B/2 & C & E/2 \\ D/2 & E/2 & F \end{pmatrix} \begin{pmatrix} l \\ m \\ n \end{pmatrix} = 0
-  \]
-称该矩阵为 $Q^*$. $Q^*$ 是 $Q$ 的伴随矩阵:
-
-\[
-  Q^{-1} = \dfrac{Q^*}{\det(Q)}.
-\]
-
-我们可以根据 5 条直线的方程求出 $Q^*$, 再求其逆矩阵, 从而得到曲线的方程.
-
-Find dual conic\footnote{\url{https://math.stackexchange.com/questions/460404/finding-dual-conic}}:
-
-Taking the quadratic form $p^TAp=0$ and remembering $A$ 
-is symmetric, we can also transform it:
-\begin{gather*}
-  p^T(AA^{-1})Ap=0 \\
-  p^TA^TA^{-1}Ap=0 \\
-  (Ap)^TA^{-1}(Ap)=0 
-\end{gather*}
-
-This modified form can be interpreted as the dual of the primal conic described by the quadratic form $l^𝑇𝐴^{−1}l=0$
-, where every $l=Ap$ that satisfies this equation is tangent to the primal conic.
-
-Additionally, the adjugate of $A$ can mostly be substituted for the inverse because $A^{-1}=adj(A)/det(A)$.

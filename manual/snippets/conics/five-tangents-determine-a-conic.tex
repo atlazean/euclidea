@@ -38,6 +38,15 @@
     \draw (A\i) node[\placement] {$A\i$};
   }
 
+  \tikzset {
+    conic/five tangents/once={A1,A2},
+    conic/five tangents/once={A2,A3},
+    conic/five tangents/once={A3,A4},
+    conic/five tangents/once={A4,A5},
+    conic/five tangents/once={A5,A1},
+  }
+  \draw[purple,thick,conic];
+
   \foreach \i/\placement in {1/above right,2/above left,3/left,4/below,5/below right}{
     \fill[teal] (T\i) circle (2pt);
     \draw (T\i) node[\placement] {$T\i$};

@@ -1,4 +1,4 @@
-\ProvidesFile{tikzlibraryeuclidea.code.tex}[2025/03/19 v1.6.0 A tikz library for Euclidean geometry constructions]
+\ProvidesFile{tikzlibraryeuclidea.code.tex}[2025/03/28 v1.8.0 A tikz library for Euclidean geometry constructions]
 
 % \RequirePackage{xfp}
 
@@ -20,7 +20,7 @@
 % Caveats
 % ===============================================
 
-% function 'intersectll' conflicts with siunitx package
+% function 'intersect/eqs' conflicts with siunitx package
 
 % 在 TikZ 中，函数本身并没有直接的“返回多个值”的机制，因为 TikZ 是一种基于 TeX 的绘图语言，主要用于描述图形，
 % 而不是像编程语言那样处理多返回值逻辑。不过，通过一些技巧，你可以在 TikZ 中模拟类似“返回多个值”的效果。
@@ -36,6 +36,11 @@
 % 注意此处的变量不要和 tikzpicture 环境重名, 否则被替换掉
 % triangle centers: 
 % https://mathworld.wolfram.com/BarycentricCoordinates.html
+
+\tikzmath {
+  int \cs@TanCnt;
+  \cs@TanCnt = 0;
+}
 
 \tikzset{
   % specifying start and end with modifiers(see tikz manual 13.5) 
@@ -219,7 +224,27 @@
   % intersect={A,B,C,D}: returns the intersection coordinate 
   % of line AB and line CD. 
   % https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
-  intersectll/.code args = {#1,#2,#3,#4}{
+  % system of linear equations in two variables
+  % intersect/eqs={a1,b1,c1,a2,b2,c2}: intersection of two lines defined by equations
+  % i.e. solving a1x+b1y+c1=0 and a2x+b2y+c2=0 
+  intersect/eqs/.code args = {#1,#2,#3,#4,#5,#6} {
+    \tikzmath{
+      \intersect@a{1,1} = #1; \intersect@a{1,2} = #2; \intersect@b{1,1} = -(#3);
+      \intersect@a{2,1} = #4; \intersect@a{2,2} = #5; \intersect@b{2,1} = -(#6);
+    }
+    \tikzset{solve={\intersect@a,\intersect@b,2,1,\intersect@ans},}
+    \typeout{=========================}
+    \typeout{Line-Line Intersection:}
+    \tikzset{
+      stdout={\intersect@a,2,2},
+      stdout={\intersect@b,2,1},
+      stdout={\intersect@ans,2,1},
+    }
+    \typeout{=========================}
+    % \coordinate (ll) at (\c{1,1},\c{2,1});
+  },
+  % intersect/pts={A,B,C,D}: intersection of two lines defined by points
+  intersect/pts/.code args = {#1,#2,#3,#4}{
     \newdimen\xA
     \newdimen\yA
     \newdimen\xB
@@ -244,24 +269,17 @@
     \pgfmathsetmacro{\yc}{\yC / 1cm}
     \pgfmathsetmacro{\xd}{\xD / 1cm}
     \pgfmathsetmacro{\yd}{\yD / 1cm}
-    \tikzmath{
-      \a{1,1} = \yb - \ya; \a{1,2} = \xa - \xb; 
-      \a{2,1} = \yd - \yc; \a{2,2} = \xc - \xd; 
-      \b{1,1} = \xa * (\yb-\ya) - \ya * (\xb - \xa);
-      \b{2,1} = \xc * (\yd-\yc) - \yc * (\xd - \xc);
+    \tikzset{
+      intersect/eqs={
+        \yb-\ya, -(\xb-\xa), -\xa*(\yb-\ya)+\ya*(\xb-\xa),
+        \yd-\yc, -(\xd-\xc), -\xc*(\yd-\yc)+\yc*(\xd-\xc)
+      }    
     }
-    \tikzset{solve={\a,\b,\c,2,1},}
-    % \typeout{=========================}
-    % \typeout{\a{1,1},\a{1,2}, \b{1,1}}
-    % \typeout{\a{2,1},\a{2,2}, \b{2,1}}
-    % \typeout{\c{1,1},\c{2,1}}
-    % \typeout{=========================}
-    % \coordinate (ll) at (\c{1,1},\c{2,1});
   },
   intersect/.style args = {#1,#2,#3,#4}{
-    intersectll={#1,#2,#3,#4},%invoke code defined above
+    intersect/pts={#1,#2,#3,#4},%invoke code defined above
     insert path = {
-      (\c{1,1},\c{2,1})
+      (\intersect@ans{1,1},\intersect@ans{2,1})
     }
   },
   % ========== Triangle Centers ==========
@@ -475,11 +493,49 @@
   },
   % circle-line instersections (named: cl1, cl2) of circle (O, A) 
   % and line (P, Q)
-  % 1. find solutions to equations:
-  %    x^2 + y^2 = ra^2 and x = a
-  %    wherein a = the (signed) distance from circle center to line
-  % 2. rotate and then shift the intersections to get the 
-  %    solutions to original coordinates
+  % circle-line/eqs={xo,yo,r,a,b,c}: intersections of circle and line 
+  % defined by equations, 
+  % (x-xo)^2+(y-yo)^2=r^2 and ax+by+c=0
+  circle-line/eqs/.code args = {#1,#2,#3,#4,#5,#6} {
+    \tikzmath {
+      % x sinθ - y cosθ + C = 0
+      % θ: angle between the line and x-axis, [0,pi)
+      \cl@temp = sqrt((#4)^2+(#5)^2);
+      if (#4) >=0 then {
+        \cl@a = (#4)/\cl@temp; % sin theta
+        \cl@b = (#5)/\cl@temp; % - cos theta
+        \cl@c = (#6)/\cl@temp;
+      } else {
+        \cl@a = -(#4)/\cl@temp;
+        \cl@b = -(#5)/\cl@temp;
+        \cl@c = -(#6)/\cl@temp;
+      };
+      \cl@dist = abs(\cl@a*#1+\cl@b*#2+\cl@c);
+      if \cl@dist <= #3 then {
+        \cl@offset = sqrt((#3)^2-(\cl@dist)^2);
+      } else {
+        \cl@offset = 0.0;% no intersection
+      };
+    } 
+    % foot of the perpendicular from the center of a circle to a line
+    \tikzset{
+      intersect/eqs={
+        -(#5),#4,(#5)*(#1)-(#4)*(#2),% 如果 #n 本身是表达式, 则应加上括号
+        #4,#5,#6
+      }
+    };
+
+    \typeout{=========================}
+    \typeout{Circle: center (#1, #2) radius #3}
+    \typeout{Line coefficients(normalized): \cl@a, \cl@b, \cl@c}
+    \typeout{Circle-line distance: \cl@dist}
+    \typeout{Offset: \cl@offset}
+    \typeout{=========================}
+
+    % circle-line intersections
+    \coordinate (cl1) at (\intersect@ans{1,1}-\cl@b*\cl@offset,\intersect@ans{2,1}+\cl@a*\cl@offset);
+    \coordinate (cl2) at (\intersect@ans{1,1}+\cl@b*\cl@offset,\intersect@ans{2,1}-\cl@a*\cl@offset);
+  },
   circle-line/.code args = {#1,#2,#3,#4}{% 
     \newdimen\xO
     \newdimen\yO
@@ -497,53 +553,27 @@
     \pgfextracty{\yP}{\pgfpointanchor{#3}{center}}
     \pgfextractx{\xQ}{\pgfpointanchor{#4}{center}}
     \pgfextracty{\yQ}{\pgfpointanchor{#4}{center}}
-    \pgfmathsetmacro{\xa}{\xO / 1cm}
-    \pgfmathsetmacro{\ya}{\yO / 1cm}
+    \pgfmathsetmacro{\xo}{\xO / 1cm}
+    \pgfmathsetmacro{\yo}{\yO / 1cm}
+    \pgfmathsetmacro{\xa}{\xA / 1cm}
+    \pgfmathsetmacro{\ya}{\yA / 1cm}
     \pgfmathsetmacro{\xp}{\xP / 1cm}
     \pgfmathsetmacro{\yp}{\yP / 1cm}
     \pgfmathsetmacro{\xq}{\xQ / 1cm}
     \pgfmathsetmacro{\yq}{\yQ / 1cm}
-    \pgfmathsetmacro{\ra}{veclen(\xA-\xO, \yA-\yO) / 1cm}
-    % 考虑向量 (xq-xp, yq-yp) 和 (x-xp, y-yp) 的叉乘
-    % C = (xq-xp)*(y-yp)-(x-xp)(yq-yp)
-    % C = 0: (x,y) 在 PQ 直线上
-    % C > 0: (x,y) 在 PQ 左侧
-    % C < 0: (x,y) 在 PQ 右侧
-    % 设 C = u*x+v*y+w, 则:
-    \pgfmathsetmacro{\u}{-(\yq-\yp)}
-    \pgfmathsetmacro{\v}{\xq-\xp}
-    \pgfmathsetmacro{\w}{\xp*(\yq-\yp)-\yp*(\xq-\xp)}
 
-    \pgfmathsetmacro{\temp}{sqrt((\u)^2+(\v)^2)}%\u \v 可能为-, 需加括号
-    % 计算变换坐标系后的交点坐标 (a,b), 此时 PQ 方向是 y 轴正方向
-    % 计算圆与直线之间的距离 a, a > 0 时, 圆心在 PQ 左侧; a < 0 时, 圆心在 PQ 右侧 
-    \pgfmathsetmacro{\a}{(\u*\xa+\v*\ya+\w)/\temp}
-    % 计算垂直偏移 b (PQ方向为正方向)
-    \pgfmathsetmacro{\b}{sqrt(\ra^2-(\a)^2)}% 注意加括号
-    % 将 (\a, \b) 逆旋转和逆平移变换, 得到原坐标系的坐标
-    % 计算单位向量（PQ 方向顺时针 90）：
-    \pgfmathsetmacro{\c}{-\u/\temp}% cos theta
-    \pgfmathsetmacro{\s}{-\v/\temp}% sin theta
-    
-    \typeout{=========================}
-    \typeout{Circle: center (\xa, \ya) radius \ra}
-    \typeout{Line coefficients: \u, \v, \w}
-    \typeout{Circle-line intersection(simplified): a:\a, b:\b}
-    % 旋转矩阵[c -s; s c] 
-    \typeout{theta: [cos(theta) sin(theta): \c, \s]}
-    \typeout{=========================}
-
-    % 两圆交点的坐标
-    \coordinate (cl1) at (\xa+\a*\c-\b*\s,\ya+\a*\s+\b*\c);
-    \coordinate (cl2) at (\xa+\a*\c+\b*\s,\ya+\a*\s-\b*\c);
+    \tikzmath {
+      \cl@ra = veclen(\xa-\xo,\ya-\yo);
+    } 
+    \tikzset {
+      circle-line/eqs={
+        \xo,\yo,\cl@ra,
+        \yq-\yp,-(\xq-\xp),-\xp*(\yq-\yp)+\yp*(\xq-\xp)
+      }
+    }
   },
   % circle-circle instersections (named: cc1, cc2) of circle 
   % O1(A, B) and circle O2(C, D)
-  % 1. find solutions to equations:
-  %    x^2 + y^2 = ra^2 and (x-d)^2 + y^2 = rb^2
-  %    wherein d = the distance of two centers
-  % 2. rotate and then shift the intersections to get the 
-  %    solutions to original coordinates
   circle-circle/.code args = {#1,#2,#3,#4}{% 
     \newdimen\xA% center 1
     \newdimen\yA
@@ -567,34 +597,17 @@
     \pgfmathsetmacro{\xb}{\xC / 1cm}
     \pgfmathsetmacro{\yb}{\yC / 1cm}
     \pgfmathsetmacro{\rb}{veclen(\xD-\xC, \yD-\yC) / 1cm}
-    % 计算圆心之间的距离 d
-    \pgfmathsetmacro{\d}{sqrt((\xb-\xa)^2+(\yb-\ya)^2)}
-    % 计算中间值 a (沿圆心连线方向的距离), 可能为 - 
-    \pgfmathsetmacro{\a}{(\ra^2-\rb^2+\d^2)/(2*\d)}
-    % 计算垂直偏移 b(交点到圆心连线的垂直距离)
-    % 注意 : \a 可能为-, 应加括号
-    \pgfmathsetmacro{\b}{sqrt(\ra^2-(\a)^2)}
     
-    % 将 (\a, \b) 逆旋转和逆平移变换, 得到原坐标系的坐标
-    % 计算单位向量（从第一圆心指向第二圆心的方向）：
-    \pgfmathsetmacro{\c}{(\xb-\xa)/\d}% cos theta
-    \pgfmathsetmacro{\s}{(\yb-\ya)/\d}% sin theta
+    \tikzset {
+      circle-line/eqs={
+        \xa,\ya,\ra,
+        2*(\xb-\xa),2*(\yb-\ya),(\xa)^2+(\ya)^2-(\ra)^2-(\xb)^2-(\yb)^2+(\rb)^2
+      }
+    }
 
-    \typeout{=========================}
-    \typeout{Distance: \d}
-    \typeout{Circle-circle intersection(simplified): a:\a, b:\b}
-    % 旋转矩阵[c -s; s c] 
-    \typeout{theta: [cos(theta) sin(theta): \c, \s]}
-    \typeout{=========================}
-
-    % 两圆交点的坐标
-    % \pgfkeysalso{/tikz/cc 1={\xa+\a*\c-\b*\s,\ya+\a*\s+\b*\c}}% 
-    % \pgfkeysalso{/tikz/cc 2={\xa+\a*\c+\b*\s,\ya+\a*\s-\b*\c}}%
-    % 可以显示只是算式, 未算出结果 在 coordinate 中再计算出
-    % \typeout{Point 1: (\xa+\a*\c-\b*\s,\ya+\a*\s+\b*\c)}
-    % \typeout{Point 2: (\xa+\a*\c+\b*\s,\ya+\a*\s-\b*\c)} 
-    \coordinate (cc1) at (\xa+\a*\c-\b*\s,\ya+\a*\s+\b*\c);
-    \coordinate (cc2) at (\xa+\a*\c+\b*\s,\ya+\a*\s-\b*\c);
+    % circle-circle intersections
+    \coordinate (cc1) at (cl1);
+    \coordinate (cc2) at (cl2);
   },
   % tangent lines to circle: circle-tagent = {O,A,P}, create 
   % tangent points (named: tp1, tp2, tp1 is on the left side of OP )
@@ -658,9 +671,15 @@
   },
   % rotate around the origin by `angle` and then 
   % shift by (`xshift`,`yshift`)
-  % tansform = {angle:(xshift,yshift)}
-  transform/.style args = {#1:(#2,#3)} {
+  % rotate-translate = {angle:(xshift,yshift)}
+  % {x',y'} = {{cosθ,-sinθ},{sinθ,cosθ}}*{x,y}+{xshift,yshift}
+  rotate-translate/.style args = {#1:(#2,#3)} {
     cm={cos(#1), sin(#1), -sin(#1), cos(#1), (#2,#3)}
+  },
+  % {x',y'} = {{cosθ,-sinθ},{sinθ,cosθ}}*{x+xshift, y+yshift}
+  translate-rotate/.style args = {#1:(#2,#3)} {
+    cm={cos(#1), sin(#1), -sin(#1), cos(#1), 
+    ({(#2)*cos(#1)-(#3)*sin(#1)},{(#2)*sin(#1)+(#3)*cos(#1)})}
   },
   % ========== Conics Definitions ==========
   % ellipse with foci and a point
@@ -691,7 +710,7 @@
     % semimajor axis: a = |PF1 - PF2| / 2
     \pgfmathsetmacro{\PFLeft}{veclen(\xP-\xFL, \yP-\yFL)} % 计算 PF1
     \pgfmathsetmacro{\PFRight}{veclen(\xP-\xFR, \yP-\yFR)} % 计算 PF2
-    \pgfmathsetmacro{\a}{abs(\PFLeft + \PFRight)/2cm} % 计算 a 并转换单位
+    \pgfmathsetmacro{\a}{abs(\PFLeft + \PFRight) / 2cm} % 计算 a 并转换单位
 
     % the distance from the center to a focus: c = |F1F2| / 2
     \pgfmathsetmacro{\c}{veclen(\xFL-\xFR, \yFL-\yFR) / 2cm} 
@@ -737,7 +756,7 @@
         \n{angle} = {\pgfkeysvalueof{/tikz/ellipse/angle}},
         \n{xcenter} = {\pgfkeysvalueof{/tikz/ellipse/xcenter}},
         \n{ycenter} = {\pgfkeysvalueof{/tikz/ellipse/ycenter}},
-      in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
+      in [rotate-translate={\n{angle}:(\n{xcenter},\n{ycenter})}]
         (0,0) ellipse [x radius=\n{a},y radius=\n{b}]
     }
   },
@@ -759,7 +778,7 @@
         \n{angle} = {\pgfkeysvalueof{/tikz/ellipse/angle}},
         \n{xcenter} = {\pgfkeysvalueof{/tikz/ellipse/xcenter}},
         \n{ycenter} = {\pgfkeysvalueof{/tikz/ellipse/ycenter}},
-      in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
+      in [rotate-translate={\n{angle}:(\n{xcenter},\n{ycenter})}]
         (-\n{d}, -\n{b}*\n{scale}) -- (-\n{d}, \n{b}*\n{scale})
         ( \n{d}, -\n{b}*\n{scale}) -- ( \n{d}, \n{b}*\n{scale})
     }
@@ -780,7 +799,7 @@
         \n{angle} = {\pgfkeysvalueof{/tikz/ellipse/angle}},
         \n{xcenter} = {\pgfkeysvalueof{/tikz/ellipse/xcenter}},
         \n{ycenter} = {\pgfkeysvalueof{/tikz/ellipse/ycenter}},
-      in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
+      in [rotate-translate={\n{angle}:(\n{xcenter},\n{ycenter})}]
         (-\n{scale}*\n{a}, 0) -- (\n{scale}*\n{a}, 0)
         (0, -\n{scale}*\n{b}) -- (0, \n{scale}*\n{b})
     }
@@ -865,7 +884,7 @@
         \n{xcenter} = {\pgfkeysvalueof{/tikz/hyperbola/xcenter}},
         \n{ycenter} = {\pgfkeysvalueof{/tikz/hyperbola/ycenter}},
       in [smooth,domain=\pgfkeysvalueof{/tikz/hyperbola/domain},
-      variable=\euclidea@var,transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
+      variable=\euclidea@var,rotate-translate={\n{angle}:(\n{xcenter},\n{ycenter})}]
         plot({-\n{a}*cosh(\euclidea@var)},{\n{b}*sinh(\euclidea@var)})  % right branch
         plot({ \n{a}*cosh(\euclidea@var)},{\n{b}*sinh(\euclidea@var)})  % left branch
     }
@@ -880,7 +899,7 @@
         \n{xcenter} = {\pgfkeysvalueof{/tikz/hyperbola/xcenter}},
         \n{ycenter} = {\pgfkeysvalueof{/tikz/hyperbola/ycenter}},
       in [smooth,domain=\pgfkeysvalueof{/tikz/hyperbola/domain},
-      variable=\euclidea@var,transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
+      variable=\euclidea@var,rotate-translate={\n{angle}:(\n{xcenter},\n{ycenter})}]
         plot({-\n{a}*sinh(\euclidea@var)},{\n{b}*sinh(\euclidea@var)})  
         plot({ \n{a}*sinh(\euclidea@var)},{\n{b}*sinh(\euclidea@var)})  
     }
@@ -903,7 +922,7 @@
         \n{angle} = {\pgfkeysvalueof{/tikz/hyperbola/angle}},
         \n{xcenter} = {\pgfkeysvalueof{/tikz/hyperbola/xcenter}},
         \n{ycenter} = {\pgfkeysvalueof{/tikz/hyperbola/ycenter}},
-      in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
+      in [rotate-translate={\n{angle}:(\n{xcenter},\n{ycenter})}]
         (-\n{d}, -\n{scale}*\n{b}) -- (-\n{d}, \n{scale}*\n{b})
         ( \n{d}, -\n{scale}*\n{b}) -- ( \n{d}, \n{scale}*\n{b})
     }
@@ -924,7 +943,7 @@
         \n{angle} = {\pgfkeysvalueof{/tikz/hyperbola/angle}},
         \n{xcenter} = {\pgfkeysvalueof{/tikz/hyperbola/xcenter}},
         \n{ycenter} = {\pgfkeysvalueof{/tikz/hyperbola/ycenter}},
-      in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
+      in [rotate-translate={\n{angle}:(\n{xcenter},\n{ycenter})}]
         (-\n{scale}*\n{c}, 0) -- (\n{scale}*\n{c}, 0)
         (0, -\n{scale}*\n{b}) -- (0, \n{scale}*\n{b})
     }
@@ -933,7 +952,7 @@
   % parabola parametric equation: 
   % y^2 = 4a*x, x = a*t^2, y= 2a*t
   % The quantity 4a is known as the latus rectum.
-  parabola/domain/.initial=-2:2,
+  parabola/domain/.initial=-3:3,
   % parabola/doamin/.code args = {#1}{
   %   \pgfkeysalso{/tikz/parabola/domain = #1}
   % },
@@ -958,7 +977,7 @@
     % latus rectum 4a
     % 注意: semi-latus rectum 通常表示为 p (=2a), 
     % macro 不要定义为 \p, \p 有表示向量的含义
-    \pgfmathsetmacro{\a}{veclen(\xV-\xF, \yV-\yF)/1cm} % 计算 PF
+    \pgfmathsetmacro{\a}{veclen(\xV-\xF, \yV-\yF) / 1cm} % 计算 PF
     
     % parabola vertex
     \pgfmathsetmacro{\xvertex}{(\xV) / 1cm} 
@@ -991,7 +1010,7 @@
         \n{yvertex} = {\pgfkeysvalueof{/tikz/parabola/@yvertex}},
       in [smooth,domain=\pgfkeysvalueof{/tikz/parabola/domain},
       variable=\euclidea@var,
-      transform={\n{angle}:(\n{xvertex},\n{yvertex})}]
+      rotate-translate={\n{angle}:(\n{xvertex},\n{yvertex})}]
         plot({\n{a}*(\euclidea@var)^2},{2*\n{a}*(\euclidea@var)}) 
     }
   },
@@ -1009,7 +1028,7 @@
         \n{angle} = {\pgfkeysvalueof{/tikz/parabola/angle}},
         \n{xcenter} = {\pgfkeysvalueof{/tikz/parabola/@xvertex}},
         \n{ycenter} = {\pgfkeysvalueof{/tikz/parabola/@yvertex}},
-      in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
+      in [rotate-translate={\n{angle}:(\n{xcenter},\n{ycenter})}]
         (-\n{a}, -2*\n{scale}*\n{a}) -- (-\n{a}, 2*\n{scale}*\n{a})
     }
   },
@@ -1027,73 +1046,356 @@
         \n{angle} = {\pgfkeysvalueof{/tikz/parabola/angle}},
         \n{xcenter} = {\pgfkeysvalueof{/tikz/parabola/@xvertex}},
         \n{ycenter} = {\pgfkeysvalueof{/tikz/parabola/@yvertex}},
-      in [transform={\n{angle}:(\n{xcenter},\n{ycenter})}]
+      in [rotate-translate={\n{angle}:(\n{xcenter},\n{ycenter})}]
         (-2*\n{a}, 0) -- (\n{scale}^2*\n{a},0)
     }
   },
-  conic/define/.code args = {#1,#2,#3,#4,#5,#6}{
+  % ========== Conics Transformaitons ==========
+  % create the matrix of a quadratic form
+  % conic/matrix={\q,a,b,c,d,e,f}
+  conic/matrix/.code args = {#1,#2,#3,#4,#5,#6,#7} {
+    \tikzmath {
+      #1{1,1} = (#2);     #1{1,2} = (#3) / 2; #1{1,3} = (#5) / 2; 
+      #1{2,1} = (#3) / 2; #1{2,2} = (#4);     #1{2,3} = (#6) / 2; 
+      #1{3,1} = (#5) / 2; #1{3,2} = (#6) / 2; #1{3,3} = (#7); 
+    }
+  },
+  % eliminate the cross term in a quadratic form by rotation
+  % conic/rotate={\q,\qr,\angle}
+  % \qr: the quadratic matrix after rotation 
+  % \angle: rotation angle
+  conic/rotate/.code args = {#1,#2,#3} {
+    \tikzmath {
+      if abs(#1{1,2}) > \EPSILON then {
+        real \cs@c, \cs@s, \cs@t, \cs@tau;
+        \cs@tau = \fpeval{(#1{1,1}-#1{2,2})/(2*#1{1,2})};
+        if \cs@tau >= 0 then {
+          \cs@t = \fpeval{- \cs@tau + sqrt(1+(\cs@tau)^2)};
+        } else {
+          \cs@t = \fpeval{- \cs@tau - sqrt(1+(\cs@tau)^2)};
+        };
+        \cs@c = \fpeval{1 / sqrt(1+(\cs@t)^2)};
+        \cs@s = \fpeval{\cs@t * \cs@c};
+        #3 = atan(\cs@t);
+        % print{\cs@c, \cs@s, angle:#3\\};
+        % perform rotation
+        #2{1,1} = #1{1,1}*(\cs@c)^2 + #1{1,2}*2*\cs@s*\cs@c + #1{2,2}*(\cs@s)^2;
+        #2{1,2} = 0.0;
+        #2{1,3} = #1{1,3}*\cs@c + #1{2,3}*\cs@s;
+        #2{2,2} = #1{1,1}*(\cs@s)^2 - #1{1,2}*2*\cs@s*\cs@c + #1{2,2}*(\cs@c)^2;
+        #2{2,3} = -#1{1,3}*\cs@s + #1{2,3}*\cs@c;
+        #2{3,3} = #1{3,3};
+        % symetric
+        #2{2,1} = #2{1,2};
+        #2{3,1} = #2{1,3};
+        #2{3,2} = #2{2,3};
+      } else {
+        % unchanged
+        #3 = 0;
+        int \cs@i, \cs@j;
+        for \cs@i in {1,2,3} {
+          for \cs@j in {1,2,3} {
+            #2{\cs@i,\cs@j} = #1{\cs@i,\cs@j};
+          };
+        };
+      };
+    }
+  },
+  % translate the origin of axes to the center(of ellipse or hyperbola)
+  % or vertex (of parabola)
+  % conic/translate={\q,\qt,\xshift,\yshift}
+  % \qt : the quadratic matrix after translation 
+  % \xshift,\yshift: the center or vertex
+  conic/translate/.code args = {#1,#2,#3,#4} {
+    \tikzset{
+      cofactors={#1,3,\cs@cofactors},
+    }
+    \tikzmath{
+      if abs(\cs@cofactors{3,3}) > \EPSILON then {
+        % ellipse or hyperbola
+        #3 = \fpeval{\cs@cofactors{3,1} / \cs@cofactors{3,3}};
+        #4 = \fpeval{\cs@cofactors{3,2} / \cs@cofactors{3,3}};
+      } else {
+        % parabola
+        if abs(#1{1,1}) > \EPSILON then {
+          #3 = \fpeval{- #1{1,3} / #1{1,1}};
+          #4 = \fpeval{((#1{1,3})^2 - #1{1,1}*#1{3,3})/(2*#1{1,1}*#1{2,3})};
+        } else {
+          #3 = \fpeval{((#1{2,3})^2 - #1{2,2}*#1{3,3})/(2*#1{2,2}*#1{1,3})};
+          #4 = \fpeval{- #1{2,3} / #1{2,2}};
+        };%if
+      };%if
+      % perform translation
+      #2{1,1} = #1{1,1}; #2{1,2} = #1{1,2};
+      #2{2,1} = #1{2,1}; #2{2,2} = #1{2,2};
+      #2{1,3} = \fpeval{#1{1,1}*#3 + #1{1,2}*#4 + #1{1,3}};
+      #2{2,3} = \fpeval{#1{1,2}*#3 + #1{2,2}*#4 + #1{2,3}};
+      #2{3,3} = \fpeval{(#3)^2*#1{1,1} + 2*#3*#4*#1{1,2} + (#4)^2*#1{2,2} + 
+                         2*#3*#1{1,3} + 2*#4*#1{2,3} + #1{3,3}};
+      % symetric
+      #2{3,1} = #2{1,3};
+      #2{3,2} = #2{2,3};
+    }%tikzmath
+  },
+  % reduce conic matrix from general to standard form
+  % conic/reduce={\q,\qs,\angle,\xshift,\yshift,\q}
+  % \q: the quadratic matrix in a general form
+  % \qs: the quadratic matrix in a standard form
+  % \angle: rotation angle
+  % \xshift,\yshift: new origin 
+  conic/reduce/.code args = {#1,#2,#3,#4,#5} {
     \tikzset {
-      conic/matrix={\cs@Q,#1,#2,#3,#4,#5,#6},
-      conic/reduce={\cs@Q,\cs@R,\cs@angle,\cs@xshift,\cs@yshift},
+      conic/rotate={#1,\cs@qr,#3},
+      % xshift yshift names should not conflict with those of conic/define
+      conic/translate={\cs@qr,\cs@qt,\conic@xshift,\conic@yshift},
     }
     \tikzmath {
-      % \xshift = - \xshift;
-      % \yshift = - \yshift;
+      if abs(\cs@qt{1,1}) > \EPSILON && abs(\cs@qt{2,2}) > \EPSILON then {
+        % ellipse or hyperbola
+        \cs@qt{1,1} = \fpeval{-\cs@qt{1,1} / \cs@qt{3,3}};
+        \cs@qt{2,2} = \fpeval{-\cs@qt{2,2} / \cs@qt{3,3}};
+        \cs@qt{3,3} = -1.0;
+      } else {
+        % parabola
+        if abs(\cs@qt{1,1}) < \EPSILON then {
+          \cs@qt{1,3} = \fpeval{\cs@qt{1,3} / \cs@qt{2,2}};
+          \cs@qt{3,1} = \cs@qt{1,3};
+          \cs@qt{2,2} = 1.0;
+        } else {
+          \cs@qt{2,3} = \fpeval{\cs@qt{2,3} / \cs@qt{1,1}};
+          \cs@qt{3,2} = \cs@qt{2,3};
+          \cs@qt{1,1} = 1.0;      
+        };%if
+      };%if
+      int \cs@i, \cs@j;
+      for \cs@i in {1,2,3} {
+        for \cs@j in {1,2,3} {
+          #2{\cs@i,\cs@j} = \cs@qt{\cs@i,\cs@j};
+        };
+      };
+      % restore xshift and yshift in the original coordinate system
+      #4 = \conic@xshift * cos(#3) - \conic@yshift * sin(#3);
+      #5 = \conic@xshift * sin(#3) + \conic@yshift * cos(#3);
+    }%tikzmath
+  },
+  conic/define/.code args = {#1,#2,#3,#4,#5,#6}{
+    \tikzset {
+      conic/matrix={\cs@q,#1,#2,#3,#4,#5,#6},
+      conic/reduce={\cs@q,\cs@r,\cs@angle,\cs@xshift,\cs@yshift},
+    }
+    \tikzmath {
       real \cs@a, \cs@b;
       \cs@a = 0.0; \cs@b = 0.0;
-      if \cs@R{1,1} > \EPSILON  && \cs@R{2,2} > \EPSILON then {%ellipse
+      if \cs@r{1,1} > \EPSILON  && \cs@r{2,2} > \EPSILON then {%ellipse
         \cs@type = 1;
-        \cs@a = sqrt(1/\cs@R{1,1});
-        \cs@b = sqrt(1/\cs@R{2,2});
+        \cs@a = sqrt(1/\cs@r{1,1});
+        \cs@b = sqrt(1/\cs@r{2,2});
       }; 
-      if abs(\cs@R{1,1}) <= \EPSILON then {%parabola: y^2 = 4ax
+      if abs(\cs@r{1,1}) <= \EPSILON then {%parabola: y^2 = 4ax
         \cs@type = 2;
-        \cs@a = -\cs@R{1,3}/2;
+        \cs@a = -\cs@r{1,3}/2;
       };
-      if abs(\cs@R{2,2}) <= \EPSILON then {%parabola: x^2 = 4ay
+      if abs(\cs@r{2,2}) <= \EPSILON then {%parabola: x^2 = 4ay
         \cs@type = 2;
         \cs@angle = \cs@angle + 90;
-        \cs@a = -\cs@R{2,3}/2;
+        \cs@a = -\cs@r{2,3}/2;
       };
-      if \cs@R{1,1} > \EPSILON  && \cs@R{2,2} < -\EPSILON then {%hyperbola
+      if \cs@r{1,1} > \EPSILON  && \cs@r{2,2} < -\EPSILON then {%hyperbola
         \cs@type = 3;
-        \cs@a = sqrt( 1/\cs@R{1,1});
-        \cs@b = sqrt(-1/\cs@R{2,2});
+        \cs@a = sqrt( 1/\cs@r{1,1});
+        \cs@b = sqrt(-1/\cs@r{2,2});
       }; 
-      if \cs@R{1,1} < -\EPSILON  && \cs@R{2,2} > \EPSILON then {%hyperbola
+      if \cs@r{1,1} < -\EPSILON  && \cs@r{2,2} > \EPSILON then {%hyperbola
         \cs@type = 3;
         \cs@angle = \cs@angle + 90;
-        \cs@b = sqrt(-1/\cs@R{1,1});
-        \cs@a = sqrt( 1/\cs@R{2,2});
+        \cs@b = sqrt(-1/\cs@r{1,1});
+        \cs@a = sqrt( 1/\cs@r{2,2});
       }; 
     }
     \typeout{=========================}
     \typeout{the matrix of the quadratic equation in general form:}
-    \typeout{[\cs@Q{1,1}, \cs@Q{1,2}, \cs@Q{1,3}]}
-    \typeout{[\cs@Q{2,1}, \cs@Q{2,2}, \cs@Q{2,3}]}
-    \typeout{[\cs@Q{3,1}, \cs@Q{3,2}, \cs@Q{3,3}]}
+    \tikzset{stdout={\cs@q,3,3},}
     \typeout{the matrix of the quadratic equation in standard form:}
-    \typeout{[\cs@R{1,1}, \cs@R{1,2}, \cs@R{1,3}]}
-    \typeout{[\cs@R{2,1}, \cs@R{2,2}, \cs@R{2,3}]}
-    \typeout{[\cs@R{3,1}, \cs@R{3,2}, \cs@R{3,3}]}
+    \tikzset{stdout={\cs@r,3,3},}
     \typeout{a: \cs@a, b: \cs@b}
     \typeout{type: \cs@type}
     \typeout{transform: \cs@angle:(\cs@xshift,\cs@yshift)}
     \typeout{=========================}
   },
+  % conic through 5 points
+  conic/five points/.code args = {#1,#2,#3,#4,#5}{
+    \newdimen\cs@xa
+    \newdimen\cs@ya
+    \newdimen\cs@xb
+    \newdimen\cs@yb
+    \newdimen\cs@xc
+    \newdimen\cs@yc
+    \newdimen\cs@xd
+    \newdimen\cs@yd
+    \newdimen\cs@xe
+    \newdimen\cs@ye
+    \pgfextractx{\cs@xa}{\pgfpointanchor{#1}{center}}
+    \pgfextracty{\cs@ya}{\pgfpointanchor{#1}{center}}
+    \pgfextractx{\cs@xb}{\pgfpointanchor{#2}{center}}
+    \pgfextracty{\cs@yb}{\pgfpointanchor{#2}{center}}
+    \pgfextractx{\cs@xc}{\pgfpointanchor{#3}{center}}
+    \pgfextracty{\cs@yc}{\pgfpointanchor{#3}{center}}
+    \pgfextractx{\cs@xd}{\pgfpointanchor{#4}{center}}
+    \pgfextracty{\cs@yd}{\pgfpointanchor{#4}{center}}
+    \pgfextractx{\cs@xe}{\pgfpointanchor{#5}{center}}
+    \pgfextracty{\cs@ye}{\pgfpointanchor{#5}{center}}
+    \pgfmathsetmacro{\cs@xa}{(\cs@xa) / 1cm} 
+    \pgfmathsetmacro{\cs@ya}{(\cs@ya) / 1cm} 
+    \pgfmathsetmacro{\cs@xb}{(\cs@xb) / 1cm} 
+    \pgfmathsetmacro{\cs@yb}{(\cs@yb) / 1cm} 
+    \pgfmathsetmacro{\cs@xc}{(\cs@xc) / 1cm} 
+    \pgfmathsetmacro{\cs@yc}{(\cs@yc) / 1cm} 
+    \pgfmathsetmacro{\cs@xd}{(\cs@xd) / 1cm} 
+    \pgfmathsetmacro{\cs@yd}{(\cs@yd) / 1cm} 
+    \pgfmathsetmacro{\cs@xe}{(\cs@xe) / 1cm} 
+    \pgfmathsetmacro{\cs@ye}{(\cs@ye) / 1cm} 
+
+    \tikzmath{
+      \cs@x{1} = \cs@xa; \cs@y{1} = \cs@ya;
+      \cs@x{2} = \cs@xb; \cs@y{2} = \cs@yb;
+      \cs@x{3} = \cs@xc; \cs@y{3} = \cs@yc;
+      \cs@x{4} = \cs@xd; \cs@y{4} = \cs@yd;
+      \cs@x{5} = \cs@xe; \cs@y{5} = \cs@ye;
+      % 'Dimension too large' error will likely occurrs, because the value 
+      % is too large when calculating the cofactor. The coordinates will be
+      % normalized to resolve this error.
+      \cs@max = 0.0;
+      int \i;
+      for \i in {1,...,5}{
+        if \cs@max < abs(\cs@x{\i}) then {
+          \cs@max = abs(\cs@x{\i});
+        };
+        if \cs@max < abs(\cs@y{\i}) then {
+          \cs@max = abs(\cs@y{\i});
+        };
+      };
+      % \cs@max = \fpeval{sqrt(\cs@max)};
+      for \i in {1,...,5}{
+        \cs@x{\i} = \fpeval{\cs@x{\i}/\cs@max};%normalized
+        \cs@y{\i} = \fpeval{\cs@y{\i}/\cs@max};%normalized
+        \cs@a{\i,1} = \fpeval{(\cs@x{\i})^2};
+        \cs@a{\i,2} = \fpeval{\cs@x{\i}*\cs@y{\i}};
+        \cs@a{\i,3} = \fpeval{(\cs@y{\i})^2}; 
+        \cs@a{\i,4} = \cs@x{\i}; 
+        \cs@a{\i,5} = \cs@y{\i};
+        \cs@a{\i,6} = 1.0;
+      };
+      % placeholder
+      \cs@a{6,1} = 0.0; \cs@a{6,2} = 0.0; \cs@a{6,3} = 0.0; 
+      \cs@a{6,4} = 0.0; \cs@a{6,5} = 0.0; \cs@a{6,6} = 0.0; 
+    }
+    \tikzset{
+      cofactors={\cs@a,6,\cs@b},
+      conic/define={\cs@b{6,1},\cs@b{6,2},\cs@b{6,3},\cs@max*\cs@b{6,4},\cs@max*\cs@b{6,5},\cs@max*\cs@max*\cs@b{6,6}}
+    }
+  },
+  % conic tagent to 5 lines
+  % maximum paramters: 9 
+  % aq tangent step by step
+  % normalize all points and lines in order to resolve 'Dimension too large' and
+  % numerical overflow or underflow in calculating cofactors
+  conic/five tangents/once/.code args = {#1,#2}{
+    \newdimen\cs@xa
+    \newdimen\cs@ya
+    \newdimen\cs@xb
+    \newdimen\cs@yb
+    \pgfextractx{\cs@xa}{\pgfpointanchor{#1}{center}}
+    \pgfextracty{\cs@ya}{\pgfpointanchor{#1}{center}}
+    \pgfextractx{\cs@xb}{\pgfpointanchor{#2}{center}}
+    \pgfextracty{\cs@yb}{\pgfpointanchor{#2}{center}}
+    \pgfmathsetmacro{\cs@xa}{(\cs@xa) / 1cm} 
+    \pgfmathsetmacro{\cs@ya}{(\cs@ya) / 1cm} 
+    \pgfmathsetmacro{\cs@xb}{(\cs@xb) / 1cm} 
+    \pgfmathsetmacro{\cs@yb}{(\cs@yb) / 1cm} 
+    \tikzmath {
+      \cs@TanCnt = \cs@TanCnt + 1;
+      \cs@tangents{\cs@TanCnt,1} = \cs@xa;
+      \cs@tangents{\cs@TanCnt,2} = \cs@ya;
+      \cs@tangents{\cs@TanCnt,3} = \cs@xb;
+      \cs@tangents{\cs@TanCnt,4} = \cs@yb;
+      if \cs@TanCnt == 5 then {
+        int \cs@i, \cs@j;
+        \cs@max = 0.0;
+        for \cs@i in {1,...,5} {
+          for \cs@j in {1,...,4} {
+            if \cs@max < abs(\cs@tangents{\cs@i,\cs@j}) then {
+              \cs@max = abs(\cs@tangents{\cs@i,\cs@j});
+            };
+          };
+        };
+        % improve numerical precision
+        \cs@max = \fpeval{sqrt(\cs@max)};
+        for \cs@i in {1,...,5} {
+          for \cs@j in {1,...,4} {
+            \cs@tangents{\cs@i,\cs@j} = \fpeval{\cs@tangents{\cs@i,\cs@j} / \cs@max};
+          };
+        };
+        for \cs@i in {1,...,5} {
+          \cs@u = \fpeval{\cs@tangents{\cs@i,4} - \cs@tangents{\cs@i,2}};
+          \cs@v = \fpeval{-(\cs@tangents{\cs@i,3} - \cs@tangents{\cs@i,1})};
+          \cs@w = \fpeval{
+            -(\cs@tangents{\cs@i,4} - \cs@tangents{\cs@i,2})*\cs@tangents{\cs@i,1} 
+            +(\cs@tangents{\cs@i,3} - \cs@tangents{\cs@i,1})*\cs@tangents{\cs@i,2}
+          };
+          \cs@temp = \fpeval{sqrt((\cs@u)^2+(\cs@v)^2)};
+          \cs@u = \fpeval{\cs@u / \cs@temp};
+          \cs@v = \fpeval{\cs@v / \cs@temp};
+          \cs@w = \fpeval{\cs@w / \cs@temp};
+          \cs@a{\cs@i,1} = \fpeval{(\cs@u)^2};
+          \cs@a{\cs@i,2} = \fpeval{\cs@u*\cs@v};
+          \cs@a{\cs@i,3} = \fpeval{(\cs@v)^2};
+          \cs@a{\cs@i,4} = \fpeval{\cs@u*\cs@w};
+          \cs@a{\cs@i,5} = \fpeval{\cs@v*\cs@w};
+          \cs@a{\cs@i,6} = \fpeval{(\cs@w)^2};
+        };
+        % placeholder
+        \cs@a{6,1} = 0.0; \cs@a{6,2} = 0.0; \cs@a{6,3} = 0.0; 
+        \cs@a{6,4} = 0.0; \cs@a{6,5} = 0.0; \cs@a{6,6} = 0.0; 
+      };
+    }
+    \ifnum \cs@TanCnt = 5
+    \tikzset{
+      % stdout={\cs@tangents,5,4},
+      cofactors={\cs@a,6,\cs@c},
+      % stdout={\cs@a,6,6},
+      % stdout={\cs@c,6,6},
+      % maxabs={\cs@c,6,6,\cs@max},
+      normalize={\cs@c,6,6,\cs@b},
+      % stdout={\cs@b,6,6},
+      % find the dual conic
+      conic/matrix={\cs@dual,\cs@b{6,1},\cs@b{6,2},\cs@b{6,3},\cs@b{6,4},\cs@b{6,5},\cs@b{6,6}},
+      % stdout={\cs@dual,3,3},
+      % for non-degraded conic, the matrix is invertible
+      inverse={\cs@dual,3,\cs@q},
+      % stdout={\cs@q,3,3},
+      % conic/define={\cs@q{1,1},2*\cs@q{1,2},\cs@q{2,2},2*\cs@max*\cs@q{1,3},2*\cs@max*\cs@q{2,3},\cs@max*\cs@max*\cs@q{3,3}},
+      conic/define={\cs@q{1,1}/\cs@max,2*\cs@q{1,2}/\cs@max,\cs@q{2,2}/\cs@max,2*\cs@q{1,3},2*\cs@q{2,3},\cs@max*\cs@q{3,3}},
+    }
+    \tikzmath {
+      % reset tangents count
+      \cs@TanCnt = 0;
+    }
+    \fi
+  },
   conic/.style = {
     insert path = {
       \ifnum \cs@type = 1 %ellipse
-        [transform={\cs@angle:(\cs@xshift,\cs@yshift)}]
+        [rotate-translate={\cs@angle:(\cs@xshift,\cs@yshift)}]
         (0,0) ellipse [x radius=\cs@a,y radius=\cs@b]
       \else\ifnum \cs@type = 2%parabola
         [smooth,domain=\pgfkeysvalueof{/tikz/parabola/domain},
         variable=\euclidea@var,
-        transform={\cs@angle:(\cs@xshift,\cs@yshift)}]
+        rotate-translate={\cs@angle:(\cs@xshift,\cs@yshift)}]
         plot({\cs@a*(\euclidea@var)^2},{2*\cs@a*(\euclidea@var)}) 
       \else\ifnum \cs@type = 3%hyperbola
         [smooth,domain=\pgfkeysvalueof{/tikz/hyperbola/domain},
-        variable=\euclidea@var,transform={\cs@angle:(\cs@xshift,\cs@yshift)}]
+        variable=\euclidea@var,
+        rotate-translate={\cs@angle:(\cs@xshift,\cs@yshift)}]
         plot({-\cs@a*cosh(\euclidea@var)},{\cs@b*sinh(\euclidea@var)})  % right branch
         plot({ \cs@a*cosh(\euclidea@var)},{\cs@b*sinh(\euclidea@var)})  % left branch
       \fi\fi\fi

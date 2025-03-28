@@ -10,22 +10,22 @@
   },
   {
    "kind": 2,
-   "value": "(* 加载应用模块, 注意文件路径需要根据实际情况修改 *)\nSetDirectory[\"~/Repos/euclidea/linear-algebra/wolfram-notebooks\"];\n<< Utils.m",
+   "value": "(* 加载应用模块, 注意文件路径需要根据实际情况修改 *)\nSetDirectory[\"~/Repos/euclidea/transformations-of-conics/wolfram-notebooks\"];\n<< Utils.m",
    "languageId": "wolfram",
    "outputs": [],
    "metadata": {},
    "executionSummary": {
     "timing": {
-     "startTime": 1742286842446,
-     "endTime": 1742286842582
+     "startTime": 1743108619564,
+     "endTime": 1743108619700
     },
-    "executionOrder": 137,
+    "executionOrder": 7,
     "success": true
    }
   },
   {
    "kind": 2,
-   "value": "(* \n求圆锥曲线的中心, Q 为系数矩阵\n对于椭圆或双曲线, Q[[1,2]] 可以不为 0;\n对于抛物线, 为了避免重复消除交叉项的运算, Q 为消除交叉项后的系数矩阵\n对于抛物线, cofactors[[3,3]] = 0, 没有中心(中心在无穷远) \n*)\nQ = {\n  {1, 0, 2},\n  {0, 0, 1},\n  {2, 1, -1}\n};\n\nTranslationMatrix[Q]",
+   "value": "(* \n求圆锥曲线的中心, Q 为系数矩阵\n对于椭圆或双曲线, Q[[1,2]] 可以不为 0;\n对于抛物线, 为了避免重复消除交叉项的运算, Q 为消除交叉项后的系数矩阵\n对于抛物线, cofactors[[3,3]] = 0, 没有中心(中心在无穷远) \n*)\nQ = {\n  {1, 0, 2},\n  {0, 0, 1},\n  {2, 1, -1}\n};\n\nConicTranslationMatrix[Q]",
    "languageId": "wolfram",
    "outputs": [
     {
@@ -47,18 +47,11 @@
     }
    ],
    "metadata": {},
-   "executionSummary": {
-    "timing": {
-     "startTime": 1742286039071,
-     "endTime": 1742286039337
-    },
-    "executionOrder": 102,
-    "success": true
-   }
+   "executionSummary": {}
   },
   {
    "kind": 2,
-   "value": "(* \n旋转变换: 将新坐标系的坐标轴与圆锥曲线的轴重合,\n旋转角度 theta, 则 tan(2theta) = Q[1,2]/(Q[1,1]-Q[2,2]) \n注意: 这里规定旋转角度 theta 的范围是 [-pi/4,pi/4]\n因为每次取 tan(theta) 为绝对值的最小的根\n*)\n\nQ = {\n  {1, 1, 2},\n  {1, 1, 1},\n  {2, 1, -1}\n};\n\nRevolutionMatrix[Q]",
+   "value": "(* \n旋转变换: 将新坐标系的坐标轴与圆锥曲线的轴重合,\n旋转角度 theta, 则 tan(2theta) = Q[1,2]/(Q[1,1]-Q[2,2]) \n注意: 这里规定旋转角度 theta 的范围是 [-pi/4,pi/4]\n因为每次取 tan(theta) 为绝对值的最小的根\n*)\n\nQ = {\n  {1, 1, 2},\n  {1, 1, 1},\n  {2, 1, -1}\n};\n\nConicRotationMatrix[Q]",
    "languageId": "wolfram",
    "outputs": [
     {
@@ -80,18 +73,11 @@
     }
    ],
    "metadata": {},
-   "executionSummary": {
-    "timing": {
-     "startTime": 1742286612390,
-     "endTime": 1742286612656
-    },
-    "executionOrder": 114,
-    "success": true
-   }
+   "executionSummary": {}
   },
   {
    "kind": 2,
-   "value": "(* https://www.andrews.edu/~rwright/Precalculus-RLW/Text/07-05.html *)\n(* 圆锥曲线的系数矩阵 *)\n(* Q = QuadraticMatrix[{0, 1, 0, 0, 0, -1/2}]; *)\n(* Q = QuadraticMatrix[{0, 1, 0, 0, 0, -2}];  *)\n(* Q = QuadraticMatrix[{3, Sqrt[3], 2, 0, 0, -6}]; *)\n(* Q = QuadraticMatrix[{5, -6, 5, 0, 0, -32}]; *)\n(* Q = QuadraticMatrix[{3, -2*Sqrt[3], 1, -16, -16*Sqrt[3], 0}]; *)\n(* Q = QuadraticMatrix[{3, 2*Sqrt[3], 1, 8, -8*Sqrt[3], 0}]; *)\n(* Q = QuadraticMatrix[{5, 4, 2, 0, 0, -16}]; *)\nQ = QuadraticMatrix[{7, 5, -7, 0, 0, -30}];\nPrint[\"the coefficents matrix:\"]\nMatrixForm[Q]\n\n(* \n将圆锥曲线方程从一般形式化简为标准形式:\n第 1 步: 旋转变换\n通过旋转系数矩阵, 消除交叉项\n*)\nR = Simplify[RevolutionMatrix[Q]];\nQ = Simplify[Transpose[R] . Q . R];\nPrint[\"the rotation matrix:\"]\nMatrixForm[R]\nPrint[\"the coefficents matrix after rotation:\"]\nMatrixForm[Q]\n\n(* \n第 2 步: 平移变换\n平移坐标轴到圆锥曲线的中心或抛物线的顶点, \n注意: 抛物线没有中心(中心在无穷远) \n*)\nT = TranslationMatrix[Q];\nQ = Simplify[Transpose[T] . Q . T];\nPrint[\"the translation matrix:\"]\nMatrixForm[T]\nPrint[\"the coefficents matrix after translation:\"]\nMatrixForm[Q]",
+   "value": "(* https://www.andrews.edu/~rwright/Precalculus-RLW/Text/07-05.html *)\n(* 圆锥曲线的系数矩阵 *)\n(* Q = QuadraticMatrix[{0, 1, 0, 0, 0, -1/2}]; *)\n(* Q = QuadraticMatrix[{0, 1, 0, 0, 0, -2}];  *)\n(* Q = QuadraticMatrix[{3, Sqrt[3], 2, 0, 0, -6}]; *)\n(* Q = QuadraticMatrix[{5, -6, 5, 0, 0, -32}]; *)\n(* Q = QuadraticMatrix[{3, -2*Sqrt[3], 1, -16, -16*Sqrt[3], 0}]; *)\n(* Q = QuadraticMatrix[{3, 2*Sqrt[3], 1, 8, -8*Sqrt[3], 0}]; *)\n(* Q = QuadraticMatrix[{5, 4, 2, 0, 0, -16}]; *)\nQ = QuadraticMatrix[{7, 5, -7, 0, 0, -30}];\nPrint[\"the coefficents matrix:\"]\nMatrixForm[Q]\n\n(* \n将圆锥曲线方程从一般形式化简为标准形式:\n第 1 步: 旋转变换\n通过旋转系数矩阵, 消除交叉项\n*)\nR = Simplify[ConicRotationMatrix[Q]];\nQ = Simplify[Transpose[R] . Q . R];\nPrint[\"the rotation matrix:\"]\nMatrixForm[R]\nPrint[\"the coefficents matrix after rotation:\"]\nMatrixForm[Q]\n\n(* \n第 2 步: 平移变换\n平移坐标轴到圆锥曲线的中心或抛物线的顶点, \n注意: 抛物线没有中心(中心在无穷远) \n*)\nT = ConicTranslationMatrix[Q];\nQ = Simplify[Transpose[T] . Q . T];\nPrint[\"the translation matrix:\"]\nMatrixForm[T]\nPrint[\"the coefficents matrix after translation:\"]\nMatrixForm[Q]",
    "languageId": "wolfram",
    "outputs": [
     {
@@ -266,14 +252,7 @@
     }
    ],
    "metadata": {},
-   "executionSummary": {
-    "timing": {
-     "startTime": 1742288367100,
-     "endTime": 1742288368899
-    },
-    "executionOrder": 316,
-    "success": true
-   }
+   "executionSummary": {}
   }
  ]
 }

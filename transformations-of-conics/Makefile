@@ -7,6 +7,8 @@ SOURCES = 01-solving-linear-systems-with-gaussian-jordan-elimination.tex \
           conic-general-to-standard-form.tex \
           standard-form-of-conics.tex \
           plotting-conic-in-general-form-1.tex \
-          plotting-conic-in-general-form-2.tex
+          plotting-conic-in-general-form-2.tex \
+          five-points-define-a-conic.tex \
+          five-tangents-define-a-conic.tex
 
 include ../Makefile

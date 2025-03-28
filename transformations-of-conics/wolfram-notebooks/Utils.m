@@ -4,9 +4,11 @@ Cofactors::usage = "Cofactors[m] gives the cofactors of a matrix m.";
 
 QuadraticMatrix::usage = "QuadraticMatrix[coeffs] gives the matrix of a quadratic form.";
 
-TranslationMatrix::usage = "TranslationMatrix[Q] gives the translation matrix of a quadratic form Q.";
+ConicTranslationMatrix::usage = "ConicTranslationMatrix[Q] gives the translation matrix of a quadratic form Q.";
 
-RevolutionMatrix::usage = "RevolutionMatrix[Q] gives the rotation matrix of a quadratic form Q.";
+ConicRotationMatrix::usage = "ConicRotationMatrix[Q] gives the rotation matrix of a quadratic form Q.";
+
+ReduceConicMatrix::usage = "ReduceConicMatrix[Q] gives the standard form matrix of a quadratic form Q.";
 
 Begin["Private`"];
 
@@ -36,7 +38,7 @@ QuadraticMatrix[Coeffs_] := Module[
 对于抛物线, 为了避免重复消除交叉项的运算, Q 为消除交叉项后的系数矩阵
 对于抛物线, cofactors[[3,3]] = 0, 没有中心(中心在无穷远) 
 *)
-TranslationMatrix[Q_] := Module[
+ConicTranslationMatrix[Q_] := Module[
   {cofactors,xshift,yshift},
   (* 定义代数余子式函数 *)
   cofactors = Cofactors[Q];
@@ -71,7 +73,7 @@ TranslationMatrix[Q_] := Module[
 因为每次取 tan(theta) 为绝对值的最小的根
 *)
 (* RotationMatrix is protected. *)
-RevolutionMatrix[Q_] := Module[
+ConicRotationMatrix[Q_] := Module[
   {tau,cos,sin},
   If[Q[[1,2]]==0,
     {
@@ -87,6 +89,37 @@ RevolutionMatrix[Q_] := Module[
   ]; 
   (* 返回坐标轴旋转矩阵 *)
   {{cos, -sin, 0},{sin, cos, 0},{0, 0, 1}}
+];
+
+(* 将圆锥曲线方程从一般形式化简为标准形式: *)
+ReduceConicMatrix[Q_] := Module[
+  {R,T},
+  (* 
+  第 1 步: 旋转变换
+  通过旋转系数矩阵, 消除交叉项
+  *)
+  R = Simplify[ConicRotationMatrix[Q]];
+  (* 不要写成下面的形式, 否则出现   Set::setraw: Cannot assign to raw object ...
+  Q = Simplify[Transpose[R] . Q . R]; *)
+  QR = Simplify[Transpose[R] . Q . R];
+  (* Print["the rotation matrix:"]
+  MatrixForm[R]
+  Print["the coefficents matrix after rotation:"]
+  MatrixForm[QR] *)
+
+  (* 
+  第 2 步: 平移变换
+  平移坐标轴到圆锥曲线的中心或抛物线的顶点, 
+  注意: 抛物线没有中心(中心在无穷远) 
+  *)
+  Unprotect[T];
+  T = ConicTranslationMatrix[QR];
+  QT = Simplify[Transpose[T] . QR . T];
+  (* Print["the translation matrix:"]
+  MatrixForm[T]
+  Print["the coefficents matrix after translation:"]
+  MatrixForm[QT] *)
+  QT
 ];
 
 End[];

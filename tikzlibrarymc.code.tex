@@ -1,4 +1,4 @@
-\ProvidesFile{tikzlibrarymc.code.tex}[2025/03/19 v1.2.0 A tikz library for matrix computations and linear algebra]
+\ProvidesFile{tikzlibrarymc.code.tex}[2025/03/28 v1.2.1 A tikz library for matrix computations and linear algebra]
 
 % 提高数值计算精度
 % https://tex.stackexchange.com/questions/521857/tikz-fpu-seems-to-be-inaccurate
@@ -59,18 +59,22 @@
 % https://tex.stackexchange.com/questions/196065/pgfkeys-computed-i-e-dynamically-defined-key
 % 15.要特别注意 tikzmath 中的变量, 这些变量是全局的, 如果不加声明就直接使用
 % 可能会带来风险, 如 \mc@c 可能在某处被声明为 int, 在另一处不声明就赋值浮点数时则会
-% 自动转换为整数
+% 自动转换为整数, 
+% 16.此外重名可能导致一些计算结果被误修改
+% 17.当.code args 或 .style args 中的参数本身是一个算式时, 必须加括号以保证计算的正确性.
 
 \makeatletter
 
 \tikzmath {
   % threshold, numbers not more than epsilon will be treated as zero.
-  \EPSILON = 0.00005;
+  \EPSILON = 0.00001;
   % Jacobi maximum number of iterations, default: 3*(n-1)^2
   % wherein, n is size of the symetric matrix, 
   % User can override it with a positive integer
   % -1 means using the default value
   \JacobiMaxIter = -1; 
+  % Jacobi precision, too small a value can cause iteration oscillation
+  \JacobiEpsilon = 0.00005;
   % status of solving linear systems, inversing matrices, and
   % Jacobi eigenvalue algorithm
   % 1 for success and 0 for failure
@@ -78,7 +82,7 @@
   % Determinant calculation using Gaussian elimination
   % In order to calculate determinant, user should initialize the matrix 
   % \mc@mat, and then call this function. This function is reused in 
-  % calcuate minors of a matrix.
+  % calcuating minors of a matrix.
   function det(\n) {
     \result = 1.0;
     int \i, \j, \k;
@@ -95,7 +99,7 @@
             \pivot = abs(\mc@mat{\i,\k});
           };
         };
-        if \pivot < 0.00001 then { 
+        if \pivot < \EPSILON then { 
           \stop = 1;
           \result = 0.0;
         };
@@ -126,105 +130,98 @@
 }
 
 \tikzset {
-  % display matrix: show={a,m,n}
+  % display matrix: show={\a,m,n}
   show/.code args={#1,#2,#3} {
     \tikzmath{
       print{\ \\\detokenize{#1}\\};% convert to string
-      int \mc@m, \mc@n;
-      \mc@m = #2;
-      \mc@n = #3;
       int \mc@i, \mc@j;
-      for \mc@i in {1,...,\mc@m} {
-        for \mc@j in {1,...,\mc@n} {
+      for \mc@i in {1,...,(#2)} {
+        for \mc@j in {1,...,(#3)} {
           print{[\mc@i,\mc@j]:\ #1{\mc@i,\mc@j}, \ \ };
         };
         print{\\};
       };
     }%tikzmath
   },
-  % scalar multiplication: show={a,m,n,k,b}
+  % display matrix: stdout={\a,m,n}
+  stdout/.code args={#1,#2,#3} {
+    \message{matrix \detokenize{#1}:^^J}% convert to string
+    \foreach \i in {1,...,#2} {
+      \foreach \j in {1,...,#3} {
+        \message{[\i,\j]: #1{\i,\j} }
+      }
+      \message{^^J}%line break
+    }
+  },
+  % scalar multiplication: show={\a,m,n,k,\b}
   % b = k * a
   scalar/.code args={#1,#2,#3,#4,#5} {
     \tikzmath{
-      int \mc@m, \mc@n;
-      \mc@m = #2;
-      \mc@n = #3;
       int \mc@i, \mc@j;
-      for \mc@i in {1,...,\mc@m} {
-        for \mc@j in {1,...,\mc@n} {
-          #5{\mc@i,\mc@j} = #4 * #1{\mc@i,\mc@j};
+      for \mc@i in {1,...,(#2)} {
+        for \mc@j in {1,...,(#3)} {
+          #5{\mc@i,\mc@j} = (#4)*(#1{\mc@i,\mc@j});
         };
       };
     }%tikzmath
   },
-  % transpose matrix: transpose={\A,\B,\mc@row,\mc@col}
-  % B = transpose(A)
+  % transpose matrix: transpose={\a,m,m,\b}
+  % b = transpose(a)
   transpose/.code args={#1,#2,#3,#4} {
     \tikzmath{
-      int \mc@m, \mc@n;
-      \mc@m = #3;
-      \mc@n = #4;
       int \mc@i, \mc@j;
-      for \mc@i in {1,...,\mc@n} {
-        for \mc@j in {1,...,\mc@m} {
-          #2{\mc@i,\mc@j} = #1{\mc@j,\mc@i};
+      for \mc@i in {1,...,(#2)} {
+        for \mc@j in {1,...,(#3)} {
+          #4{\mc@j,\mc@i} = #1{\mc@i,\mc@j};
         };
       };
     }%tikzmath
   },
-  % matrix multiplication: product={a,b,c,row1,col1,col2}
+  % matrix multiplication: product={\a,\b,row1,col1,col2,\c}
   % returns the matrix product of two matrices: c = a * b
   % size(a) = row1 x col1, size(b) = row2 x col2
   % col1 = row2
   product/.code args={#1,#2,#3,#4,#5,#6} {
     \tikzmath{
-      int \mc@row1, \mc@col1, \mc@col2;
-      \mc@row1 = #4;
-      \mc@col1 = #5;
-      \mc@col2 = #6;
       int \mc@i, \mc@j, \mc@k;
-      for \mc@i in {1,...,\mc@row1} {
-        for \mc@j in {1,...,\mc@col2} {
-          #3{\mc@i,\mc@j} = 0.0;
-          for \mc@k in {1,...,\mc@col1} {
-            #3{\mc@i,\mc@j} = #3{\mc@i,\mc@j} + 
-                #1{\mc@i,\mc@k} * #2{\mc@k,\mc@j};
+      for \mc@i in {1,...,(#3)} {
+        for \mc@j in {1,...,(#5)} {
+          #6{\mc@i,\mc@j} = 0.0;
+          for \mc@k in {1,...,(#4)} {
+            #6{\mc@i,\mc@j} = \fpeval{#6{\mc@i,\mc@j} + 
+                              #1{\mc@i,\mc@k} * #2{\mc@k,\mc@j}};
           };
         };
       };
     }%tikzmath
   },
   % Determinant calculation using Gaussian elimination with partial pivoting
-  % det={\a,\n,\det}
-  % the result is stored in \det, 
-  % the original matrix is not modified.
+  % det={\a,n,d}
+  % the result is stored in d, the original matrix is not modified.
   det/.code args={#1,#2,#3} {
     \tikzmath{
-      int \mc@i, \mc@j, \mc@k, \mc@n;
-      \mc@n = #2;
-      int \mc@stop;
-      \mc@stop = 0;
+      int \mc@i, \mc@j;
       % keep the original matrix
-      for \mc@i in {1,...,\mc@n}{
-        for \mc@j in {1,...,\mc@n}{
+      for \mc@i in {1,...,(#2)}{
+        for \mc@j in {1,...,(#2)}{
           \mc@mat{\mc@i,\mc@j} = #1{\mc@i,\mc@j};
         };
       };
-      #3 = det(\mc@n);
+      #3 = det(#2);
     }%tikzmath
   },
   % The (i, j) minor is the det of the submatrix formed 
   % by deleting the i-th row and j-th column. 
   % The (i, j) cofactor is obtained by multiplying 
   % the minor by (−1)^(i + j).
-  % minors={\a,\b,\n}
+  % minors={\a,\n,\b}
   % the result is stored in \minor, 
   % the original matrix is not modified.
   minors/.code args={#1,#2,#3}{
     \tikzmath{
       int \mc@r, \mc@c, \mc@n;
       int \mc@i, \mc@j;
-      \mc@n = #3;
+      \mc@n = #2;
       for \mc@r in {1,...,\mc@n}{
         for \mc@c in {1,...,\mc@n}{
           % initalize \mc@mat
@@ -250,7 +247,7 @@
           % #2{\mc@r,\mc@c} = det(\mc@n-1);
           int \mc@dim;
           \mc@dim = \mc@n - 1;
-          #2{\mc@r,\mc@c} = det(\mc@dim);
+          #3{\mc@r,\mc@c} = det(\mc@dim);
         };
       };
     }% No commas after it
@@ -261,16 +258,16 @@
     }
     \tikzmath{
       int \mc@r, \mc@c, \mc@n;
-      \mc@n = #3;
+      \mc@n = #2;
       for \mc@r in {1,...,\mc@n}{
         for \mc@c in {1,...,\mc@n}{
-          #2{\mc@r,\mc@c} = (-1)^(\mc@r+\mc@c) * #2{\mc@r,\mc@c};
+          #3{\mc@r,\mc@c} = (-1)^(\mc@r+\mc@c) * #3{\mc@r,\mc@c};
         };
       };
     }%tikzmath
   },
   % Solving linear systems using Gaussian-Jordan elimination with partial pivoting
-  % solve={a,b,c,row1,col2}
+  % solve={\a,\b,row1,col2,\c}
   % solve ax=b, size(a) = row1 x row1, size(b) = row1 x col2, size(c) = row1 x col2
   % if the system is solvable, \status is 1; otherwise 0.
   solve/.code args={#1,#2,#3,#4,#5}{
@@ -279,15 +276,15 @@
       \status = 1; % succeed
       int \mc@i, \mc@j, \mc@k;
       int \mc@row1, \mc@col2;
-      \mc@row1 = #4;
-      \mc@col2 = #5;
+      \mc@row1 = #3;
+      \mc@col2 = #4;
       % keep the original matrices
       for \mc@i in {1,...,\mc@row1} {
         for \mc@j in {1,...,\mc@row1} {
           \mc@a{\mc@i,\mc@j} = #1{\mc@i,\mc@j};
         };
         for \mc@j in {1,...,\mc@col2} {
-          #3{\mc@i,\mc@j} = #2{\mc@i,\mc@j};
+          #5{\mc@i,\mc@j} = #2{\mc@i,\mc@j};
         };
       };
       int \mc@stop;
@@ -321,9 +318,9 @@
               };
               % swap B
               for \mc@j in {1,...,\mc@col2}{
-                \mc@temp = #3{\mc@k,\mc@j};
-                #3{\mc@k,\mc@j} = #3{\mc@pivotRow,\mc@j};
-                #3{\mc@pivotRow,\mc@j} = \mc@temp;
+                \mc@temp = #5{\mc@k,\mc@j};
+                #5{\mc@k,\mc@j} = #5{\mc@pivotRow,\mc@j};
+                #5{\mc@pivotRow,\mc@j} = \mc@temp;
               };
             };
             % eliminate
@@ -340,15 +337,17 @@
                 if \mc@i == \mc@k then {
                   \mc@a{\mc@i,\mc@j} = \fpeval{\mc@a{\mc@i,\mc@j} / \mc@temp};
                 } else {%注意不能少else
-                  \mc@a{\mc@i,\mc@j} = \fpeval{\mc@a{\mc@i,\mc@j} - \mc@temp * \mc@a{\mc@k,\mc@j}};
+                  \mc@a{\mc@i,\mc@j} = \fpeval{\mc@a{\mc@i,\mc@j} 
+                                       - \mc@temp * \mc@a{\mc@k,\mc@j}};
                 };
               };
               % eliminate B
               for \mc@j in {1,...,\mc@col2}{
                 if \mc@i == \mc@k then {
-                  #3{\mc@i,\mc@j} = \fpeval{#3{\mc@i,\mc@j} / \mc@temp};
+                  #5{\mc@i,\mc@j} = \fpeval{#5{\mc@i,\mc@j} / \mc@temp};
                 } else {%注意不能少else
-                #3{\mc@i,\mc@j} = \fpeval{#3{\mc@i,\mc@j} - \mc@temp * #3{\mc@k,\mc@j}};
+                #5{\mc@i,\mc@j} = \fpeval{#5{\mc@i,\mc@j} 
+                                  - \mc@temp * #5{\mc@k,\mc@j}};
                 };
               };
             };
@@ -357,29 +356,29 @@
       };%for
     }%tikzmath
   },
-  % inverse matrix: inverse={a,b,n}
+  % inverse matrix: inverse={\a,n,\b}
   % b = inverse(a)
   inverse/.code args={#1,#2,#3}{
     \tikzmath{
       int \mc@n;
-      \mc@n = #3;
+      \mc@n = #2;
       % initialize
       for \mc@i in {1,...,\mc@n} {
         for \mc@j in {1,...,\mc@n} {
           if \mc@i == \mc@j then {
-            #2{\mc@i,\mc@j} = 1.0;
+            \mc@temp{\mc@i,\mc@j} = 1.0;
           } else {
-            #2{\mc@i,\mc@j} = 0.0;
+            \mc@temp{\mc@i,\mc@j} = 0.0;
           };
         };
       };
     }%tikzmath
     \tikzset {
-      solve={#1,#2,#2,#3,#3},
+      solve={#1,\mc@temp,\mc@n,\mc@n,#3},
     }
   },
   % Egienvalues and Egienvectors of a symetric matrix
-  % jacobi={\a,\d,\v,n}
+  % jacobi={\a,n,\d,\v}
   % \a: a symetric matrix
   % \d: returns a diagnoalized matrix with eigenvalues on diagonal
   % \v: returns the eigenvector matrix
@@ -390,7 +389,7 @@
     \tikzmath{
       \status = 1;
       int \mc@i, \mc@j, \mc@k, \mc@n;
-      \mc@n = #4;
+      \mc@n = #2;
       % max iterations
       int \JacobiMaxIter;
       if \JacobiMaxIter < 0 then {% not overriden by user
@@ -399,11 +398,11 @@
       % Initialize eigenvector matrix as identity
       for \mc@i in {1,...,\mc@n} {
         for \mc@j in {1,...,\mc@n} {
-          #2{\mc@i,\mc@j} = #1{\mc@i,\mc@j};
+          #3{\mc@i,\mc@j} = #1{\mc@i,\mc@j};
           if \mc@i == \mc@j then {
-            #3{\mc@i,\mc@j} = 1.0;
+            #4{\mc@i,\mc@j} = 1.0;
           } else {
-            #3{\mc@i,\mc@j} = 0.0;
+            #4{\mc@i,\mc@j} = 0.0;
           };
         };
       };
@@ -420,15 +419,15 @@
           for \mc@i in {1,...,\mc@n-1} {
             for \mc@j in {\mc@i+1,...,\mc@n} {
               % print{[\mc@i,\mc@j]:\ #2{\mc@i,\mc@j}\\};
-              if abs(#2{\mc@i,\mc@j}) > \mc@temp then {
-                \mc@temp = abs(#2{\mc@i,\mc@j});
+              if abs(#3{\mc@i,\mc@j}) > \mc@temp then {
+                \mc@temp = abs(#3{\mc@i,\mc@j});
                 \mc@p = \mc@i;
                 \mc@q = \mc@j;
               };
             };
           };
           % print{abs max:[\mc@p,\mc@q]:\ #2{\mc@p,\mc@q}\\};
-          if \mc@temp < \EPSILON then {
+          if \mc@temp < \JacobiEpsilon then {
             % we cannot break for-loop in tikzmath
             \mc@stop = 1;
           }; 
@@ -446,7 +445,7 @@
             %      t = -tau - sqrt(1+tau^2), otherwise.
             % c = 1/sqrt(1+t^2), s = c*t
             real \mc@c, \mc@s, \mc@t, \mc@tau;
-            \mc@tau = \fpeval{(#2{\mc@p,\mc@p}-#2{\mc@q,\mc@q})/(2*#2{\mc@p,\mc@q})};
+            \mc@tau = \fpeval{(#3{\mc@p,\mc@p}-#3{\mc@q,\mc@q})/(2*#3{\mc@p,\mc@q})};
             if \mc@tau >= 0 then {
               \mc@t = \fpeval{- \mc@tau + sqrt(1+(\mc@tau)^2)};
             } else {
@@ -456,7 +455,7 @@
             \mc@s = \fpeval{\mc@t * \mc@c};
             % print{$\tau:\mc@tau,\\ \tan\theta:\mc@t,\\ \cos\theta:\mc@c,\\ sin\theta:\mc@s$\\};
             % rotation matrix:
-            % P = [
+            % R = [
             %   {...  .  ...  .  ...},
             %   {...  c  ... -s  ...},
             %   {...  s  ...  c  ...},
@@ -464,26 +463,28 @@
             % ], 
             % perform Jacobi rotation
             for \mc@i in {1,...,\mc@n}{
-              \mc@ap{\mc@i} = \fpeval{  #2{\mc@i,\mc@p} * \mc@c + #2{\mc@i,\mc@q} * \mc@s};
-              \mc@aq{\mc@i} = \fpeval{- #2{\mc@i,\mc@p} * \mc@s + #2{\mc@i,\mc@q} * \mc@c};
-              \mc@vp{\mc@i} = \fpeval{  #3{\mc@i,\mc@p} * \mc@c + #3{\mc@i,\mc@q} * \mc@s};
-              \mc@vq{\mc@i} = \fpeval{- #3{\mc@i,\mc@p} * \mc@s + #3{\mc@i,\mc@q} * \mc@c};
+              \mc@ap{\mc@i} = \fpeval{  #3{\mc@i,\mc@p} * \mc@c + #3{\mc@i,\mc@q} * \mc@s};
+              \mc@aq{\mc@i} = \fpeval{- #3{\mc@i,\mc@p} * \mc@s + #3{\mc@i,\mc@q} * \mc@c};
+              \mc@vp{\mc@i} = \fpeval{  #4{\mc@i,\mc@p} * \mc@c + #4{\mc@i,\mc@q} * \mc@s};
+              \mc@vq{\mc@i} = \fpeval{- #4{\mc@i,\mc@p} * \mc@s + #4{\mc@i,\mc@q} * \mc@c};
             };
-            \mc@ap{\mc@p} = #2{\mc@p,\mc@p}*(\mc@c)^2 + #2{\mc@q,\mc@q}*(\mc@s)^2 + 2*#2{\mc@p,\mc@q}*\mc@s*\mc@c;
-            \mc@aq{\mc@q} = #2{\mc@p,\mc@p}*(\mc@s)^2 + #2{\mc@q,\mc@q}*(\mc@c)^2 - 2*#2{\mc@p,\mc@q}*\mc@s*\mc@c;
+            \mc@ap{\mc@p} = \fpeval{#3{\mc@p,\mc@p}*(\mc@c)^2 + 
+                            #3{\mc@q,\mc@q}*(\mc@s)^2 + 2*#3{\mc@p,\mc@q}*\mc@s*\mc@c};
+            \mc@aq{\mc@q} = \fpeval{#3{\mc@p,\mc@p}*(\mc@s)^2 + 
+                            #3{\mc@q,\mc@q}*(\mc@c)^2 - 2*#3{\mc@p,\mc@q}*\mc@s*\mc@c};
             \mc@ap{\mc@q} = 0.0;
             \mc@aq{\mc@p} = 0.0;
             for \mc@i in {1,...,\mc@n}{
               % Update matrix
-              #2{\mc@i,\mc@p} = \mc@ap{\mc@i};
-              #2{\mc@i,\mc@q} = \mc@aq{\mc@i};
-              #2{\mc@p,\mc@i} = \mc@ap{\mc@i};
-              #2{\mc@q,\mc@i} = \mc@aq{\mc@i};
+              #3{\mc@i,\mc@p} = \mc@ap{\mc@i};
+              #3{\mc@i,\mc@q} = \mc@aq{\mc@i};
+              #3{\mc@p,\mc@i} = \mc@ap{\mc@i};
+              #3{\mc@q,\mc@i} = \mc@aq{\mc@i};
               % Update eigenvectors
-              #3{\mc@i,\mc@p} = \mc@vp{\mc@i};
-              #3{\mc@i,\mc@q} = \mc@vq{\mc@i};
+              #4{\mc@i,\mc@p} = \mc@vp{\mc@i};
+              #4{\mc@i,\mc@q} = \mc@vq{\mc@i};
             };
-            #2{\mc@q,\mc@p} = 0.0;
+            #3{\mc@q,\mc@p} = 0.0;
             % for \mc@i in {1,...,\mc@n} {
             %   for \mc@j in {1,...,\mc@n} {
             %     print{[\mc@i,\mc@j]:\ #2{\mc@i,\mc@j}, \ };
@@ -498,129 +499,32 @@
       };
     }%tikzmath
   },%jacobi
-  % create the matrix of a quadratic form
-  % conic/matrix={\q,a,b,c,d,e,f}
-  conic/matrix/.code args = {#1,#2,#3,#4,#5,#6,#7} {
-    \tikzmath {
-      #1{1,1} = #2;     #1{1,2} = #3 / 2; #1{1,3} = #5 / 2; 
-      #1{2,1} = #3 / 2; #1{2,2} = #4;     #1{2,3} = #6 / 2; 
-      #1{3,1} = #5 / 2; #1{3,2} = #6 / 2; #1{3,3} = #7; 
-    }
-  },
-  % eliminate the cross term in a quadratic form by rotation
-  % conic/rotate={\q,\qr,\angle}
-  % \qr: the quadratic matrix after rotation 
-  % \angle: rotation angle
-  conic/rotate/.code args = {#1,#2,#3} {
-    \tikzmath {
-      if abs(#1{1,2}) > \EPSILON then {
-        real \mc@c, \mc@s, \mc@t, \mc@tau;
-        \mc@tau = \fpeval{(#1{1,1}-#1{2,2})/(2*#1{1,2})};
-        if \mc@tau >= 0 then {
-          \mc@t = \fpeval{- \mc@tau + sqrt(1+(\mc@tau)^2)};
-        } else {
-          \mc@t = \fpeval{- \mc@tau - sqrt(1+(\mc@tau)^2)};
-        };
-        \mc@c = \fpeval{1 / sqrt(1+(\mc@t)^2)};
-        \mc@s = \fpeval{\mc@t * \mc@c};
-        #3 = atan(\mc@t);
-        % print{\mc@c, \mc@s, angle:#3\\};
-        % perform rotation
-        #2{1,1} = #1{1,1}*(\mc@c)^2 + #1{1,2}*2*\mc@s*\mc@c + #1{2,2}*(\mc@s)^2;
-        #2{1,2} = 0.0;
-        #2{1,3} = #1{1,3}*\mc@c + #1{2,3}*\mc@s;
-        #2{2,2} = #1{1,1}*(\mc@s)^2 - #1{1,2}*2*\mc@s*\mc@c + #1{2,2}*(\mc@c)^2;
-        #2{2,3} = -#1{1,3}*\mc@s + #1{2,3}*\mc@c;
-        #2{3,3} = #1{3,3};
-        % symetric
-        #2{2,1} = #2{1,2};
-        #2{3,1} = #2{1,3};
-        #2{3,2} = #2{2,3};
-      } else {
-        % unchanged
-        #3 = 0;
-        int \mc@i, \mc@j;
-        for \mc@i in {1,2,3} {
-          for \mc@j in {1,2,3} {
-            #2{\mc@i,\mc@j} = #1{\mc@i,\mc@j};
+  % maximum in absolute value
+  % maxabs={\a,m,n,\max}
+  maxabs/.code args = {#1,#2,#3,#4} {
+    \tikzmath {  
+      int \mc@i, \mc@j;
+      \mc@max = 0.0;
+      for \mc@i in {1,...,(#2)} {
+        for \mc@j in {1,...,(#3)} {
+          if \mc@max < abs(#1{\mc@i,\mc@j}) then {
+            \mc@max = abs(#1{\mc@i,\mc@j});
           };
         };
       };
+      #4 = \mc@max;
     }
   },
-  % translate the origin of axes to the center(of ellipse or hyperbola)
-  % or vertex (of parabola)
-  % conic/translate={\q,\qt,\xshift,\yshift}
-  % \qt : the quadratic matrix after translation 
-  % \xshift,\yshift: the center or vertex
-  conic/translate/.code args = {#1,#2,#3,#4} {
-    \tikzset{
-      cofactors={#1,\mc@cofactors,3},
-    }
+  % normalize={\a,m,n,\b}
+  normalize/.code args = {#1,#2,#3,#4} {
+    \tikzset{maxabs={#1,#2,#3,\mc@max},}
     \tikzmath{
-      if abs(\mc@cofactors{3,3}) > \EPSILON then {
-        % ellipse or hyperbola
-        #3 = \fpeval{\mc@cofactors{3,1} / \mc@cofactors{3,3}};
-        #4 = \fpeval{\mc@cofactors{3,2} / \mc@cofactors{3,3}};
-      } else {
-        % parabola
-        if abs(#1{1,1}) > \EPSILON then {
-          #3 = \fpeval{- #1{1,3} / #1{1,1}};
-          #4 = \fpeval{((#1{1,3})^2-#1{1,1}*#1{3,3})/(2*#1{1,1}*#1{2,3})};
-        } else {
-          #3 = \fpeval{((#1{2,3})^2-#1{2,2}*#1{3,3})/(2*#1{2,2}*#1{1,3})};
-          #4 = \fpeval{- #1{2,3} / #1{2,2}};
-        };%if
-      };%if
-      % perform translation
-      #2{1,1} = #1{1,1}; #2{1,2} = #1{1,2};
-      #2{2,1} = #1{2,1}; #2{2,2} = #1{2,2};
-      #2{1,3} = #1{1,1}*#3 + #1{1,2}*#4 + #1{1,3};
-      #2{2,3} = #1{1,2}*#3 + #1{2,2}*#4 + #1{2,3};
-      #2{3,3} = (#3)^2*#1{1,1} + 2*#3*#4*#1{1,2} + 2*#3*#1{1,3} + (#4)^2*#1{2,2} + 2*#4*#1{2,3} + #1{3,3};
-      % symetric
-      #2{3,1} = #2{1,3};
-      #2{3,2} = #2{2,3};
-    }%tikzmath
-  },
-  % reduce conic matrix from general to standard form
-  % conic/reduce={\q,\qs,\angle,\xshift,\yshift,\q}
-  % \q: the quadratic matrix in a general form
-  % \qs: the quadratic matrix in a standard form
-  % \angle: rotation angle
-  % \xshift,\yshift: new origin 
-  conic/reduce/.code args = {#1,#2,#3,#4,#5} {
-    \tikzset {
-      conic/rotate={#1,\conic@qr,#3},
-      conic/translate={\conic@qr,\conic@qt,\conic@xshift,\conic@yshift},
-    }
-    \tikzmath {
-      if abs(\conic@qt{1,1}) > \EPSILON && abs(\conic@qt{2,2}) > \EPSILON then {
-        % ellipse or hyperbola
-        \conic@qt{1,1} = \fpeval{-\conic@qt{1,1} / \conic@qt{3,3}};
-        \conic@qt{2,2} = \fpeval{-\conic@qt{2,2} / \conic@qt{3,3}};
-        \conic@qt{3,3} = -1.0;
-      } else {
-        % parabola
-        if abs(\conic@qt{1,1}) < \EPSILON then {
-          \conic@qt{1,3} = \fpeval{\conic@qt{1,3} / \conic@qt{2,2}};
-          \conic@qt{3,1} = \conic@qt{1,3};
-          \conic@qt{2,2} = 1.0;
-        } else {
-          \conic@qt{2,3} = \fpeval{\conic@qt{2,3} / \conic@qt{1,1}};
-          \conic@qt{3,2} = \conic@qt{2,3};
-          \conic@qt{1,1} = 1.0;      
-        };%if
-      };%if
       int \mc@i, \mc@j;
-      for \mc@i in {1,2,3} {
-        for \mc@j in {1,2,3} {
-          #2{\mc@i,\mc@j} = \conic@qt{\mc@i,\mc@j};
+      for \mc@i in {1,...,(#2)} {
+        for \mc@j in {1,...,(#3)} {
+          #4{\mc@i,\mc@j} = \fpeval{(#1{\mc@i,\mc@j})/\mc@max};
         };
       };
-      % restore xshift and yshift in the original coordinate system
-      #4 = \conic@xshift * cos(#3) - \conic@yshift * sin(#3);
-      #5 = \conic@xshift * sin(#3) + \conic@yshift * cos(#3);
     }%tikzmath
   },
 }

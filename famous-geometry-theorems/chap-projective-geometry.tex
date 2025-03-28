@@ -312,51 +312,77 @@ $n$-边形:从 $p_0$ 出发, 画一条与 $C_2$ 相切的直线, 交 $C_1$ 于 $
 由于彭赛列闭合定理涉及圆锥曲线, 作图时通常需要借助计算机辅助软件动态调整参数直到多边形闭合, 例如: Geogebra 或其他类似的软件。
 若 $C_1,C_2$ 为同心圆, 正多边形即能满足内接外切条件。
 
-下图是以 $n = 3$ 为例的两个圆:
+下图是以 $n = 5$ 为例:
 
 \begin{figure}[!htp]
 \begin{center}
 
+  % \begin{tikzpicture}
+  %   \axes(-5:5,-5:5);
+  %   \tikzmath{
+  %     \r = 4;
+  %   }
+  %   \foreach \i/\angle in {1/75,2/-135,3/-30} {
+  %     \coordinate (A\i) at (\angle:\r);
+  %   }
+
+  %   \draw[thick,teal] (A1) -- (A2) -- (A3) -- cycle;
+
+  %   % 外接圆
+  %   \coordinate (O) at (0,0);% 圆心
+  %   \draw[thick,purple] (O) circle (\r);
+
+  %   % A1 A2 A3 的内切圆
+  %   \coordinate[incenter={A1,A2,A3}] (I);
+  %   \coordinate (P) at ($(A1)!(I)!(A2)$);%temp
+  %   \draw[thick,violet,circle={I,P}];
+
+  %   % 求 B1 向内切圆切线的切点
+  %   \coordinate (B1) at (140:\r);
+  %   \tikzset{circle-tangent={I,P,B1}};%tp1,tp2
+  %   % 求切线与外接圆的交点
+  %   \tikzset{circle-line={O,A1,B1,tp1}}
+  %   \coordinate (B2) at (cl1);%cl2 即 B1
+  %   \tikzset{circle-line={O,A1,B1,tp2}}
+  %   \coordinate (B3) at (cl1);%cl2 即 B1
+
+  %   \draw[thick,blue] (B1) -- (B2) -- (B3) -- cycle;
+
+  %   \foreach \p/\placement in {A1/above,A2/below left,A3/below right,
+  %   B1/above,B2/below,B3/right} {
+  %     \fill[red] (\p) circle (2pt);
+  %     \draw (\p) node[\placement] {$\p$};
+  %   }
+
+  % \end{tikzpicture}
   \begin{tikzpicture}
-    \axes(-5:5,-5:5);
-    \tikzmath{
-      \r = 4;
+    \coordinate (A) at (0,5);
+    \coordinate (B) at (-2,-2);
+    \coordinate (C) at (3,3);
+    \coordinate (D) at (-3,3);
+    \coordinate (E) at (4,-2);
+    % five points define a conic
+    \tikzset {
+      conic/five points={A,B,C,D,E},
     }
-    \foreach \i/\angle in {1/75,2/-135,3/-30} {
-      \coordinate (A\i) at (\angle:\r);
+    \draw [thick,violet,conic];
+    % five tangents define a conic
+    \tikzset {
+      conic/five tangents/once={A,B},
+      conic/five tangents/once={B,C},
+      conic/five tangents/once={C,D},
+      conic/five tangents/once={D,E},
+      conic/five tangents/once={E,A},
     }
-
-    \draw[thick,teal] (A1) -- (A2) -- (A3) -- cycle;
-
-    % 外接圆
-    \coordinate (O) at (0,0);% 圆心
-    \draw[thick,purple] (O) circle (\r);
-
-    % A1 A2 A3 的内切圆
-    \coordinate[incenter={A1,A2,A3}] (I);
-    \coordinate (P) at ($(A1)!(I)!(A2)$);%temp
-    \draw[thick,violet,circle={I,P}];
-
-    % 求 B1 向内切圆切线的切点
-    \coordinate (B1) at (140:\r);
-    \tikzset{circle-tangent={I,P,B1}};%tp1,tp2
-    % 求切线与外接圆的交点
-    \tikzset{circle-line={O,A1,B1,tp1}}
-    \coordinate (B2) at (cl1);%cl2 即 B1
-    \tikzset{circle-line={O,A1,B1,tp2}}
-    \coordinate (B3) at (cl1);%cl2 即 B1
-
-    \draw[thick,blue] (B1) -- (B2) -- (B3) -- cycle;
-
-    \foreach \p/\placement in {A1/above,A2/below left,A3/below right,
-    B1/above,B2/below,B3/right} {
+    \draw [thick,purple,conic];
+  
+    \draw [teal,thick] (A) -- (B) -- (C) -- (D) -- (E) -- cycle;
+    \foreach \p in {A,B,C,D,E} {
       \fill[red] (\p) circle (2pt);
-      \draw (\p) node[\placement] {$\p$};
     }
-
   \end{tikzpicture}
 
 \end{center}
-\caption{彭赛列闭合定理($n=3$)}
+\caption{彭赛列闭合定理($n=5$)}
 \end{figure}
 

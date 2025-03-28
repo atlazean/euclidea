@@ -2,8 +2,16 @@
  "cells": [
   {
    "kind": 1,
-   "value": "变换系数矩阵\n\n坐标变换可以是变换坐标轴或变换点的坐标, 两者正好相反\n\n逆时针旋转坐标轴 theta\n令 \nR = {\n  {c, -s, 0}, \n  {s, c, 0}},\n  {0, 0, 1}\n};\n则: X' = R . X\n注意： Inverse[R] = TransRose[R]\nX = TransRose[R] . X'\n代入 TransRose[X] . Q . X  = 0\nTransRose[X'] . TransRose[R] . Q . R . X'  = 0\n即 新的系数矩阵为\nQ' = TransRose[R] . Q . R;\n\n同理, 平移坐标轴 到 (r,s), 变换矩阵为 T:\nT = {\n  {1, 0, r},\n  {0, 1, s},\n  {0, 0, 1}\n};\n新的系数矩阵为\nQ' = TransRose[T] . Q . T;",
+   "value": "变换系数矩阵\n\n坐标变换可以是变换坐标轴或变换点的坐标, 两者正好相反\n\n逆时针旋转坐标轴 theta\n令 \nR = {\n  {c, -s, 0}, \n  {s, c, 0}},\n  {0, 0, 1}\n};\n则: X' = Inverse[R] . X\n注意： Inverse[R] = Transpose[R]\nX = R . X'\n代入 Transpose[X] . Q . X  = 0\nTranspose[X'] . Transpose[R] . Q . R . X'  = 0\n即 新的系数矩阵为\nQ' = Transpose[R] . Q . R;\n\n同理, 平移坐标轴 到 (r,s), 变换矩阵为 T:\nT = {\n  {1, 0, r},\n  {0, 1, s},\n  {0, 0, 1}\n};\n\nX' = Inverse[T] . X\nX = T . X'\n\n新的系数矩阵为\nQ' = Transpose[T] . Q . T;",
    "languageId": "markdown",
+   "outputs": [],
+   "metadata": {},
+   "executionSummary": {}
+  },
+  {
+   "kind": 2,
+   "value": "T = {\n  {1, 0, a},\n  {0, 1, b},\n  {0, 0, 1}\n};\nInverse[T]",
+   "languageId": "wolfram",
    "outputs": [],
    "metadata": {},
    "executionSummary": {}
@@ -12,25 +20,7 @@
    "kind": 2,
    "value": "(* Q = {\n  {a, b/2, d/2},\n  {b/2, c, e/2},\n  {d/2, e/2, f}\n}; *)\n\nQ = {\n  {Subscript[a,1,1], Subscript[a,1,2], Subscript[a,1,3]},\n  {Subscript[a,1,2], Subscript[a,2,2], Subscript[a,2,3]},\n  {Subscript[a,1,3], Subscript[a,2,3], Subscript[a,3,3]}\n};\n\nR = {\n  {Cos[theta], -Sin[theta], 0},\n  {Sin[theta], Cos[theta], 0},\n  {0, 0, 1}\n};\n\nSimplify[Transpose[R] . Q . R] // MatrixForm",
    "languageId": "wolfram",
-   "outputs": [
-    {
-     "items": [
-      {
-       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wrow><w></w><wrow><w></w><wsup><w></w><wrow><w></w><w>Cos</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow><w><w>2</w></w></wsup><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>1</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><wrow><w></w><w>2</w><w></w><w>theta</w></wrow><wb>]</wb></wrow></wrow><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><wsup><w></w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow><w><w>2</w></w></wsup><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>2</w></wrow></w></wsub></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><wrow><w></w><w>-</w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><wrow><w></w><w>2</w><w></w><w>theta</w></wrow><wb>]</wb></wrow></wrow></wrow><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>1</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><w>2</w><w></w><wrow><w></w><w>Cos</w><wrow><w></w><wb>[</wb><wrow><w></w><w>2</w><w></w><w>theta</w></wrow><wb>]</wb></wrow></wrow><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><wrow><w></w><w>2</w><w></w><w>theta</w></wrow><wb>]</wb></wrow></wrow><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>2</w></wrow></w></wsub></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wrow><w></w><wrow><w></w><w>Cos</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>3</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>3</w></wrow></w></wsub></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><wrow><w></w><w>-</w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><wrow><w></w><w>2</w><w></w><w>theta</w></wrow><wb>]</wb></wrow></wrow></wrow><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>1</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><w>2</w><w></w><wrow><w></w><w>Cos</w><wrow><w></w><wb>[</wb><wrow><w></w><w>2</w><w></w><w>theta</w></wrow><wb>]</wb></wrow></wrow><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><wrow><w></w><w>2</w><w></w><w>theta</w></wrow><wb>]</wb></wrow></wrow><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>2</w></wrow></w></wsub></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wrow><w></w><wsup><w></w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow><w><w>2</w></w></wsup><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>1</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><wrow><w></w><w>Cos</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><wrow><w></w><w>-</w><w>2</w></wrow><w></w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><wrow><w></w><w>Cos</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>2</w></wrow></w></wsub></wrow></wrow><wb>)</wb></wrow></wrow></wrow></w><w><wrow><w></w><wrow><w></w><wrow><w></w><w>-</w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow></wrow><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>3</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><wrow><w></w><w>Cos</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>3</w></wrow></w></wsub></wrow></wrow></w><w><wrow><w></w><wrow><w></w><wrow><w></w><w>Cos</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>3</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>3</w></wrow></w></wsub></wrow></wrow></w><w><wrow><w></w><wrow><w></w><wrow><w></w><w>-</w><wrow><w></w><w>Sin</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow></wrow><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>3</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><wrow><w></w><w>Cos</w><wrow><w></w><wb>[</wb><w>theta</w><wb>]</wb></wrow></wrow><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>3</w></wrow></w></wsub></wrow></wrow></w><w><wsub><w></w><w>a</w><w><wrow><w></w><w>3</w><w>,</w><w>3</w></wrow></w></wsub></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
-       "mime": "x-application/wolfram-language-html"
-      },
-      {
-       "data": "MatrixForm[{{Cos[theta]^2*Subscript[a, 1, 1] + Sin[2*theta]*Subscript[a, 1, 2] + Sin[theta]^2*Subscript[a, 2, 2], (-(Sin[2*theta]*Subscript[a, 1, 1]) + 2*Cos[2*theta]*Subscript[a, 1, 2] + Sin[2*theta]*Subscript[a, 2, 2])/2, Cos[theta]*Subscript[a, 1, 3] + Sin[theta]*Subscript[a, 2, 3]}, {(-(Sin[2*theta]*Subscript[a, 1, 1]) + 2*Cos[2*theta]*Subscript[a, 1, 2] + Sin[2*theta]*Subscript[a, 2, 2])/2, Sin[theta]^2*Subscript[a, 1, 1] + Cos[theta]*(-2*Sin[theta]*Subscript[a, 1, 2] + Cos[theta]*Subscript[a, 2, 2]), -(Sin[theta]*Subscript[a, 1, 3]) + Cos[theta]*Subscript[a, 2, 3]}, {Cos[theta]*Subscript[a, 1, 3] + Sin[theta]*Subscript[a, 2, 3], -(Sin[theta]*Subscript[a, 1, 3]) + Cos[theta]*Subscript[a, 2, 3], Subscript[a, 3, 3]}}]",
-       "mime": "text/plain"
-      }
-     ],
-     "id": "e02475fc-b826-4a67-9eda-d5750a1eef8b",
-     "metadata": {
-      "cellLabel": "Out[3]//MatrixForm= ",
-      "isBoxData": false
-     }
-    }
-   ],
+   "outputs": [],
    "metadata": {},
    "executionSummary": {}
   },
@@ -42,17 +32,50 @@
     {
      "items": [
       {
-       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>1</w></wrow></w></wsub></w><w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>2</w></wrow></w></wsub></w><w><wrow><w></w><wrow><w></w><w>r</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>1</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><w>s</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>3</w></wrow></w></wsub></wrow></w><w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>2</w></wrow></w></wsub></w><w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>2</w></wrow></w></wsub></w><w><wrow><w></w><wrow><w></w><w>r</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><w>s</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>3</w></wrow></w></wsub></wrow></w><w><wrow><w></w><wrow><w></w><w>r</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>1</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><w>s</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>3</w></wrow></w></wsub></wrow></w><w><wrow><w></w><wrow><w></w><w>r</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><w>s</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>3</w></wrow></w></wsub></wrow></w><w><wrow><w></w><wrow><w></w><wsup><w></w><w>r</w><w><w>2</w></w></wsup><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>1</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><w>2</w><w></w><w>r</w><w></w><w>s</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><w>2</w><w></w><w>r</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>3</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><wsup><w></w><w>s</w><w><w>2</w></w></wsup><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><w>2</w><w></w><w>s</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>3</w></wrow></w></wsub></wrow><w>+</w><wsub><w></w><w>a</w><w><wrow><w></w><w>3</w><w>,</w><w>3</w></wrow></w></wsub></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wsub><w></w><w>64</w><w><wrow><w></w><w>1</w><w>,</w><w>1</w></wrow></w></wsub></w><w><wsub><w></w><w>64</w><w><wrow><w></w><w>1</w><w>,</w><w>2</w></wrow></w></wsub></w><w><wrow><w></w><wrow><w></w><w>r</w><w></w><wsub><w></w><w>64</w><w><wrow><w></w><w>1</w><w>,</w><w>1</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><w>s</w><w></w><wsub><w></w><w>64</w><w><wrow><w></w><w>1</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wsub><w></w><w>64</w><w><wrow><w></w><w>1</w><w>,</w><w>3</w></wrow></w></wsub></wrow></w><w><wsub><w></w><w>64</w><w><wrow><w></w><w>1</w><w>,</w><w>2</w></wrow></w></wsub></w><w><wsub><w></w><w>64</w><w><wrow><w></w><w>2</w><w>,</w><w>2</w></wrow></w></wsub></w><w><wrow><w></w><wrow><w></w><w>r</w><w></w><wsub><w></w><w>64</w><w><wrow><w></w><w>1</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><w>s</w><w></w><wsub><w></w><w>64</w><w><wrow><w></w><w>2</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wsub><w></w><w>64</w><w><wrow><w></w><w>2</w><w>,</w><w>3</w></wrow></w></wsub></wrow></w><w><wrow><w></w><wrow><w></w><w>r</w><w></w><wsub><w></w><w>64</w><w><wrow><w></w><w>1</w><w>,</w><w>1</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><w>s</w><w></w><wsub><w></w><w>64</w><w><wrow><w></w><w>1</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wsub><w></w><w>64</w><w><wrow><w></w><w>1</w><w>,</w><w>3</w></wrow></w></wsub></wrow></w><w><wrow><w></w><wrow><w></w><w>r</w><w></w><wsub><w></w><w>64</w><w><wrow><w></w><w>1</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><w>s</w><w></w><wsub><w></w><w>64</w><w><wrow><w></w><w>2</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wsub><w></w><w>64</w><w><wrow><w></w><w>2</w><w>,</w><w>3</w></wrow></w></wsub></wrow></w><w><wrow><w></w><wrow><w></w><wsup><w></w><w>r</w><w><w>2</w></w></wsup><w></w><wsub><w></w><w>64</w><w><wrow><w></w><w>1</w><w>,</w><w>1</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><w>2</w><w></w><w>r</w><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>s</w><w></w><wsub><w></w><w>64</w><w><wrow><w></w><w>1</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wsub><w></w><w>64</w><w><wrow><w></w><w>1</w><w>,</w><w>3</w></wrow></w></wsub></wrow><wb>)</wb></wrow></wrow><w>+</w><wrow><w></w><wsup><w></w><w>s</w><w><w>2</w></w></wsup><w></w><wsub><w></w><w>64</w><w><wrow><w></w><w>2</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><w>2</w><w></w><w>s</w><w></w><wsub><w></w><w>64</w><w><wrow><w></w><w>2</w><w>,</w><w>3</w></wrow></w></wsub></wrow><w>+</w><wsub><w></w><w>64</w><w><wrow><w></w><w>3</w><w>,</w><w>3</w></wrow></w></wsub></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
        "mime": "x-application/wolfram-language-html"
       },
       {
-       "data": "MatrixForm[{{Subscript[a, 1, 1], Subscript[a, 1, 2], r*Subscript[a, 1, 1] + s*Subscript[a, 1, 2] + Subscript[a, 1, 3]}, {Subscript[a, 1, 2], Subscript[a, 2, 2], r*Subscript[a, 1, 2] + s*Subscript[a, 2, 2] + Subscript[a, 2, 3]}, {r*Subscript[a, 1, 1] + s*Subscript[a, 1, 2] + Subscript[a, 1, 3], r*Subscript[a, 1, 2] + s*Subscript[a, 2, 2] + Subscript[a, 2, 3], r^2*Subscript[a, 1, 1] + 2*r*s*Subscript[a, 1, 2] + 2*r*Subscript[a, 1, 3] + s^2*Subscript[a, 2, 2] + 2*s*Subscript[a, 2, 3] + Subscript[a, 3, 3]}}]",
+       "data": "MatrixForm[{{Subscript[64, 1, 1], Subscript[64, 1, 2], r*Subscript[64, 1, 1] + s*Subscript[64, 1, 2] + Subscript[64, 1, 3]}, {Subscript[64, 1, 2], Subscript[64, 2, 2], r*Subscript[64, 1, 2] + s*Subscript[64, 2, 2] + Subscript[64, 2, 3]}, {r*Subscript[64, 1, 1] + s*Subscript[64, 1, 2] + Subscript[64, 1, 3], r*Subscript[64, 1, 2] + s*Subscript[64, 2, 2] + Subscript[64, 2, 3], r^2*Subscript[64, 1, 1] + 2*r*(s*Subscript[64, 1, 2] + Subscript[64, 1, 3]) + s^2*Subscript[64, 2, 2] + 2*s*Subscript[64, 2, 3] + Subscript[64, 3, 3]}}]",
        "mime": "text/plain"
       }
      ],
-     "id": "8b2ffd97-5b84-4179-ac56-df8b1d5fd3e3",
+     "id": "3ca89c10-2f2a-495a-93b2-51b236f4d458",
      "metadata": {
-      "cellLabel": "Out[9]//MatrixForm= ",
+      "cellLabel": "Out[1047]//MatrixForm= ",
+      "isBoxData": false
+     }
+    }
+   ],
+   "metadata": {},
+   "executionSummary": {
+    "timing": {
+     "startTime": 1743198624763,
+     "endTime": 1743198625074
+    },
+    "executionOrder": 1045,
+    "success": true
+   }
+  },
+  {
+   "kind": 2,
+   "value": "Q = {\n  {Subscript[a,1,1], Subscript[a,1,2], Subscript[a,1,3]},\n  {Subscript[a,1,2], Subscript[a,2,2], Subscript[a,2,3]},\n  {Subscript[a,1,3], Subscript[a,2,3], Subscript[a,3,3]}\n};\n\nS = {\n  {p, 0, 0},\n  {0, q, 0},\n  {0, 0, 1}\n};\n\nSimplify[Transpose[S] . Q . S] // MatrixForm",
+   "languageId": "wolfram",
+   "outputs": [
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wrow><w></w><wsup><w></w><w>p</w><w><w>2</w></w></wsup><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>1</w></wrow></w></wsub></wrow></w><w><wrow><w></w><w>p</w><w></w><w>q</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>2</w></wrow></w></wsub></wrow></w><w><wrow><w></w><w>p</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>3</w></wrow></w></wsub></wrow></w><w><wrow><w></w><w>p</w><w></w><w>q</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>2</w></wrow></w></wsub></wrow></w><w><wrow><w></w><wsup><w></w><w>q</w><w><w>2</w></w></wsup><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>2</w></wrow></w></wsub></wrow></w><w><wrow><w></w><w>q</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>3</w></wrow></w></wsub></wrow></w><w><wrow><w></w><w>p</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>3</w></wrow></w></wsub></wrow></w><w><wrow><w></w><w>q</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>3</w></wrow></w></wsub></wrow></w><w><wsub><w></w><w>a</w><w><wrow><w></w><w>3</w><w>,</w><w>3</w></wrow></w></wsub></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{p^2*Subscript[a, 1, 1], p*q*Subscript[a, 1, 2], p*Subscript[a, 1, 3]}, {p*q*Subscript[a, 1, 2], q^2*Subscript[a, 2, 2], q*Subscript[a, 2, 3]}, {p*Subscript[a, 1, 3], q*Subscript[a, 2, 3], Subscript[a, 3, 3]}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "7d08a821-5524-416f-8d83-a644c4fc8c9f",
+     "metadata": {
+      "cellLabel": "Out[3]//MatrixForm= ",
       "isBoxData": false
      }
     }
@@ -64,42 +87,7 @@
    "kind": 2,
    "value": "Q = {\n  {Subscript[a,1,1], 0, Subscript[a,1,3]},\n  {0, 0, Subscript[a,2,3]},\n  {Subscript[a,1,3], Subscript[a,2,3], Subscript[a,3,3]}\n};\n\nX = {x,y,1};\n\nSimplify[Transpose[X] . Q . X]\n\nT = {\n  {1, 0, r},\n  {0, 1, s},\n  {0, 0, 1}\n};\n\nSimplify[Transpose[T] . Q . T] // MatrixForm",
    "languageId": "wolfram",
-   "outputs": [
-    {
-     "items": [
-      {
-       "data": "<div class=\"wexpr\"><wrow><w></w><wrow><w></w><wsup><w></w><w>x</w><w><w>2</w></w></wsup><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>1</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><w>2</w><w></w><w>x</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>3</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><w>2</w><w></w><w>y</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>3</w></wrow></w></wsub></wrow><w>+</w><wsub><w></w><w>a</w><w><wrow><w></w><w>3</w><w>,</w><w>3</w></wrow></w></wsub></wrow></div>",
-       "mime": "x-application/wolfram-language-html"
-      },
-      {
-       "data": "x^2*Subscript[a, 1, 1] + 2*x*Subscript[a, 1, 3] + 2*y*Subscript[a, 2, 3] + Subscript[a, 3, 3]",
-       "mime": "text/plain"
-      }
-     ],
-     "id": "5ac2a879-4fa6-4453-a655-2a11bde36a77",
-     "metadata": {
-      "cellLabel": "Out[22]= ",
-      "isBoxData": false
-     }
-    },
-    {
-     "items": [
-      {
-       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>1</w></wrow></w></wsub></w><w><w>0</w></w><w><wrow><w></w><wrow><w></w><w>r</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>1</w></wrow></w></wsub></wrow><w>+</w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>3</w></wrow></w></wsub></wrow></w><w><w>0</w></w><w><w>0</w></w><w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>3</w></wrow></w></wsub></w><w><wrow><w></w><wrow><w></w><w>r</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>1</w></wrow></w></wsub></wrow><w>+</w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>3</w></wrow></w></wsub></wrow></w><w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>3</w></wrow></w></wsub></w><w><wrow><w></w><wrow><w></w><wsup><w></w><w>r</w><w><w>2</w></w></wsup><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>1</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><w>2</w><w></w><w>r</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>3</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><w>2</w><w></w><w>s</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>3</w></wrow></w></wsub></wrow><w>+</w><wsub><w></w><w>a</w><w><wrow><w></w><w>3</w><w>,</w><w>3</w></wrow></w></wsub></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
-       "mime": "x-application/wolfram-language-html"
-      },
-      {
-       "data": "MatrixForm[{{Subscript[a, 1, 1], 0, r*Subscript[a, 1, 1] + Subscript[a, 1, 3]}, {0, 0, Subscript[a, 2, 3]}, {r*Subscript[a, 1, 1] + Subscript[a, 1, 3], Subscript[a, 2, 3], r^2*Subscript[a, 1, 1] + 2*r*Subscript[a, 1, 3] + 2*s*Subscript[a, 2, 3] + Subscript[a, 3, 3]}}]",
-       "mime": "text/plain"
-      }
-     ],
-     "id": "3c40609c-83cb-4c12-9414-b42d4afdc2ff",
-     "metadata": {
-      "cellLabel": "Out[24]//MatrixForm= ",
-      "isBoxData": false
-     }
-    }
-   ],
+   "outputs": [],
    "metadata": {},
    "executionSummary": {}
   },
@@ -107,38 +95,61 @@
    "kind": 2,
    "value": "Q = {\n  {0, 0, Subscript[a,1,3]},\n  {0, Subscript[a,2,2], Subscript[a,2,3]},\n  {Subscript[a,1,3], Subscript[a,2,3], Subscript[a,3,3]}\n};\n\nX = {x,y,1};\n\nSimplify[Transpose[X] . Q . X]\n\nT = {\n  {1, 0, r},\n  {0, 1, s},\n  {0, 0, 1}\n};\n\nSimplify[Transpose[T] . Q . T] // MatrixForm",
    "languageId": "wolfram",
+   "outputs": [],
+   "metadata": {},
+   "executionSummary": {}
+  },
+  {
+   "kind": 2,
+   "value": "(* \n  先逆时针旋转图形, 再平移图形 \n  与前面平移坐标轴不同\n*)\ntheta = Pi/6; (* 逆时针旋转角度 *)\nr = 1; s = 2; (* 点在水平和垂直方向的平移量*)\nQ = {{1/16, 0, 0},{0,1/9,0},{0,0,-1}};\nR = {\n  {Cos[-theta], -Sin[-theta], 0},\n  {Sin[-theta], Cos[-theta], 0},\n  {0, 0, 1}\n};\nT = {\n  {1, 0, -r},\n  {0, 1, -s},\n  {0, 0, 1}\n};\nQ = Simplify[Transpose[T] . Transpose[R] . Q . R . T];\n144*Q // MatrixForm",
+   "languageId": "wolfram",
+   "outputs": [],
+   "metadata": {},
+   "executionSummary": {}
+  },
+  {
+   "kind": 2,
+   "value": "(* \n  先逆时针旋转图形, 再平移图形 \n  与前面平移坐标轴不同\n*)\ntheta = Pi/3; (* 逆时针旋转角度 *)\nr = 1; s = 2; (* 点在水平和垂直方向的平移量*)\nQ = {{-1/16, 0, 0},{0,1/9,0},{0,0,-1}};\nR = {\n  {Cos[-theta], -Sin[-theta], 0},\n  {Sin[-theta], Cos[-theta], 0},\n  {0, 0, 1}\n};\nT = {\n  {1, 0, -r},\n  {0, 1, -s},\n  {0, 0, 1}\n};\nQ = Simplify[Transpose[T] . Transpose[R] . Q . R . T];\n144*Q // MatrixForm",
+   "languageId": "wolfram",
+   "outputs": [],
+   "metadata": {},
+   "executionSummary": {}
+  },
+  {
+   "kind": 2,
+   "value": "(* \n  先逆时针旋转图形, 再平移图形 \n  与前面平移坐标轴不同\n*)\ntheta = Pi/3; (* 逆时针旋转角度 *)\nr = 1; s = 2; (* 点在水平和垂直方向的平移量*)\nQ = {{1, 0, 0},{0,0,-2},{0,-2,0}};\nR = {\n  {Cos[-theta], -Sin[-theta], 0},\n  {Sin[-theta], Cos[-theta], 0},\n  {0, 0, 1}\n};\nT = {\n  {1, 0, -r},\n  {0, 1, -s},\n  {0, 0, 1}\n};\nQ = Simplify[Transpose[T] . Transpose[R] . Q . R . T];\nQ // MatrixForm",
+   "languageId": "wolfram",
+   "outputs": [],
+   "metadata": {},
+   "executionSummary": {}
+  },
+  {
+   "kind": 2,
+   "value": "(* \n  先逆时针旋转图形, 再平移图形 \n  与前面平移坐标轴不同\n*)\ntheta = Pi/3; (* 逆时针旋转角度 *)\nr = 1; s = 2; (* 点在水平和垂直方向的平移量*)\nQ = {{0, 0, -2},{0,1,0},{-2,0,0}};\nR = {\n  {Cos[-theta], -Sin[-theta], 0},\n  {Sin[-theta], Cos[-theta], 0},\n  {0, 0, 1}\n};\nT = {\n  {1, 0, -r},\n  {0, 1, -s},\n  {0, 0, 1}\n};\nQ = Simplify[Transpose[T] . Transpose[R] . Q . R . T];\nQ // MatrixForm",
+   "languageId": "wolfram",
+   "outputs": [],
+   "metadata": {},
+   "executionSummary": {}
+  },
+  {
+   "kind": 2,
+   "value": "(* \n  先逆时针旋转图形, 再平移图形 \n  与前面平移坐标轴不同\n*)\ntheta = Pi/6; (* 逆时针旋转角度 *)\nr = 1; s = 2; (* 点在水平和垂直方向的平移量*)\nQ = {{1/9, 0, 0},{0,1/3,0},{0,0,-1}};\nR = {\n  {Cos[-theta], -Sin[-theta], 0},\n  {Sin[-theta], Cos[-theta], 0},\n  {0, 0, 1}\n};\nT = {\n  {1, 0, -r},\n  {0, 1, -s},\n  {0, 0, 1}\n};\nQ = Simplify[Transpose[T] . Transpose[R] . Q . R . T];\nQ = 18*Q;\nQ// MatrixForm",
+   "languageId": "wolfram",
    "outputs": [
     {
      "items": [
       {
-       "data": "<div class=\"wexpr\"><wrow><w></w><wrow><w></w><w>2</w><w></w><w>x</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>3</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><wsup><w></w><w>y</w><w><w>2</w></w></wsup><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><w>2</w><w></w><w>y</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>3</w></wrow></w></wsub></wrow><w>+</w><wsub><w></w><w>a</w><w><wrow><w></w><w>3</w><w>,</w><w>3</w></wrow></w></wsub></wrow></div>",
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><w>3</w></w><w><wrow><w></w><w>-</w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></w><w><wrow><w></w><wrow><w></w><w>-</w><w>3</w></wrow><w>+</w><wrow><w></w><w>2</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow></w><w><wrow><w></w><w>-</w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></w><w><w>5</w></w><w><wrow><w></w><wrow><w></w><w>-</w><w>10</w></wrow><w>+</w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></w><w><wrow><w></w><wrow><w></w><w>-</w><w>3</w></wrow><w>+</w><wrow><w></w><w>2</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow></w><w><wrow><w></w><wrow><w></w><w>-</w><w>10</w></wrow><w>+</w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></w><w><wrow><w></w><w>5</w><w>-</w><wrow><w></w><w>4</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
        "mime": "x-application/wolfram-language-html"
       },
       {
-       "data": "2*x*Subscript[a, 1, 3] + y^2*Subscript[a, 2, 2] + 2*y*Subscript[a, 2, 3] + Subscript[a, 3, 3]",
+       "data": "MatrixForm[{{3, -Sqrt[3], -3 + 2*Sqrt[3]}, {-Sqrt[3], 5, -10 + Sqrt[3]}, {-3 + 2*Sqrt[3], -10 + Sqrt[3], 5 - 4*Sqrt[3]}}]",
        "mime": "text/plain"
       }
      ],
-     "id": "1c6c2faa-52d6-4072-827e-153c4022e24d",
+     "id": "d31e2dba-2cb9-42d4-8fba-1202920a5a4f",
      "metadata": {
-      "cellLabel": "Out[27]= ",
-      "isBoxData": false
-     }
-    },
-    {
-     "items": [
-      {
-       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><w>0</w></w><w><w>0</w></w><w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>3</w></wrow></w></wsub></w><w><w>0</w></w><w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>2</w></wrow></w></wsub></w><w><wrow><w></w><wrow><w></w><w>s</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>3</w></wrow></w></wsub></wrow></w><w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>3</w></wrow></w></wsub></w><w><wrow><w></w><wrow><w></w><w>s</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>3</w></wrow></w></wsub></wrow></w><w><wrow><w></w><wrow><w></w><w>2</w><w></w><w>r</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>1</w><w>,</w><w>3</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><wsup><w></w><w>s</w><w><w>2</w></w></wsup><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>2</w></wrow></w></wsub></wrow><w>+</w><wrow><w></w><w>2</w><w></w><w>s</w><w></w><wsub><w></w><w>a</w><w><wrow><w></w><w>2</w><w>,</w><w>3</w></wrow></w></wsub></wrow><w>+</w><wsub><w></w><w>a</w><w><wrow><w></w><w>3</w><w>,</w><w>3</w></wrow></w></wsub></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
-       "mime": "x-application/wolfram-language-html"
-      },
-      {
-       "data": "MatrixForm[{{0, 0, Subscript[a, 1, 3]}, {0, Subscript[a, 2, 2], s*Subscript[a, 2, 2] + Subscript[a, 2, 3]}, {Subscript[a, 1, 3], s*Subscript[a, 2, 2] + Subscript[a, 2, 3], 2*r*Subscript[a, 1, 3] + s^2*Subscript[a, 2, 2] + 2*s*Subscript[a, 2, 3] + Subscript[a, 3, 3]}}]",
-       "mime": "text/plain"
-      }
-     ],
-     "id": "6e5474f7-69d6-4032-9d07-c20a0e8dbfc0",
-     "metadata": {
-      "cellLabel": "Out[29]//MatrixForm= ",
+      "cellLabel": "Out[10]//MatrixForm= ",
       "isBoxData": false
      }
     }
@@ -148,168 +159,190 @@
   },
   {
    "kind": 2,
-   "value": "(* \n  先逆时针旋转图形, 再平移图形 \n  与前面平移坐标轴不同\n*)\ntheta = Pi/3; (* 逆时针旋转角度 *)\nr = 1; s = 2; (* 点在水平和垂直方向的平移量*)\nQ = {{1/16, 0, 0},{0,1/9,0},{0,0,-1}};\nR = {\n  {Cos[-theta], -Sin[-theta], 0},\n  {Sin[-theta], Cos[-theta], 0},\n  {0, 0, 1}\n};\nT = {\n  {1, 0, -r},\n  {0, 1, -s},\n  {0, 0, 1}\n};\nQ = Simplify[Transpose[T] . Transpose[R] . Q . R . T];\n144*Q // MatrixForm",
+   "value": "(* 加载应用模块, 注意文件路径需要根据实际情况修改 *)\nSetDirectory[\"~/Repos/euclidea/transformations-of-conics/wolfram-notebooks\"];\n<< Utils.m",
    "languageId": "wolfram",
-   "outputs": [
-    {
-     "items": [
-      {
-       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wfrac><w><w>57</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><wfrac><w><wrow><w></w><w>7</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>57</w></wrow><w>+</w><wrow><w></w><w>14</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><w>-</w><wfrac><w><wrow><w></w><w>7</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wfrac><w><w>43</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>86</w></wrow><w>+</w><wrow><w></w><w>7</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>57</w></wrow><w>+</w><wrow><w></w><w>14</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>86</w></wrow><w>+</w><wrow><w></w><w>7</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>347</w></wrow><w>-</w><wrow><w></w><w>28</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
-       "mime": "x-application/wolfram-language-html"
-      },
-      {
-       "data": "MatrixForm[{{57/4, (-7*Sqrt[3])/4, (-57 + 14*Sqrt[3])/4}, {(-7*Sqrt[3])/4, 43/4, (-86 + 7*Sqrt[3])/4}, {(-57 + 14*Sqrt[3])/4, (-86 + 7*Sqrt[3])/4, (-347 - 28*Sqrt[3])/4}}]",
-       "mime": "text/plain"
-      }
-     ],
-     "id": "8394a203-e99c-466a-8f1e-b6e9a2e4e9b9",
-     "metadata": {
-      "cellLabel": "Out[167]//MatrixForm= ",
-      "isBoxData": false
-     }
-    }
-   ],
+   "outputs": [],
    "metadata": {},
-   "executionSummary": {
-    "timing": {
-     "startTime": 1742412848616,
-     "endTime": 1742412849206
-    },
-    "executionOrder": 161,
-    "success": true
-   }
+   "executionSummary": {}
   },
   {
    "kind": 2,
-   "value": "(* \n  先逆时针旋转图形, 再平移图形 \n  与前面平移坐标轴不同\n*)\ntheta = Pi/3; (* 逆时针旋转角度 *)\nr = 1; s = 2; (* 点在水平和垂直方向的平移量*)\nQ = {{-1/16, 0, 0},{0,1/9,0},{0,0,-1}};\nR = {\n  {Cos[-theta], -Sin[-theta], 0},\n  {Sin[-theta], Cos[-theta], 0},\n  {0, 0, 1}\n};\nT = {\n  {1, 0, -r},\n  {0, 1, -s},\n  {0, 0, 1}\n};\nQ = Simplify[Transpose[T] . Transpose[R] . Q . R . T];\n144*Q // MatrixForm",
+   "value": "Q = QuadraticMatrix[{3,-2*Sqrt[3],5,-6+4*Sqrt[3],-20+2*Sqrt[3],5-4*Sqrt[3]}]\nQ//N//MatrixForm\n(* \n将圆锥曲线方程从一般形式化简为标准形式:\n第 1 步: 旋转变换\n通过旋转系数矩阵, 消除交叉项\n*)\nR = Simplify[ConicRotationMatrix[Q]];\nQ = Simplify[Transpose[R] . Q . R];\nPrint[\"the rotation matrix:\"]\nMatrixForm[R]\nPrint[\"the coefficents matrix after rotation:\"]\nMatrixForm[Q]\n\n(* \n第 2 步: 平移变换\n平移坐标轴到圆锥曲线的中心或抛物线的顶点, \n注意: 抛物线没有中心(中心在无穷远) \n*)\nT = ConicTranslationMatrix[Q];\nQ = Simplify[Transpose[T] . Q . T];\nPrint[\"the translation matrix:\"]\nMatrixForm[T]\nPrint[\"the coefficents matrix after translation:\"]\nMatrixForm[Q]",
    "languageId": "wolfram",
    "outputs": [
     {
      "items": [
       {
-       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wfrac><w><w>39</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><wfrac><w><wrow><w></w><w>25</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>39</w></wrow><w>+</w><wrow><w></w><w>50</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><w>-</w><wfrac><w><wrow><w></w><w>25</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wrow><w></w><w>-</w><wfrac><w><w>11</w></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>22</w><w>+</w><wrow><w></w><w>25</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>39</w></wrow><w>+</w><wrow><w></w><w>50</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>22</w><w>+</w><wrow><w></w><w>25</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>581</w></wrow><w>-</w><wrow><w></w><w>100</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>3</w><w>,</w><wrow><w></w><w>-</w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow><w>,</w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>6</w></wrow><w>+</w><wrow><w></w><w>4</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>-</w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow><w>,</w><w>5</w><w>,</w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>20</w></wrow><w>+</w><wrow><w></w><w>2</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>6</w></wrow><w>+</w><wrow><w></w><w>4</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow><w>,</w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>20</w></wrow><w>+</w><wrow><w></w><w>2</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow><w>,</w><wrow><w></w><w>5</w><w>-</w><wrow><w></w><w>4</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow></wrow><wb>}</wb></wrow></wrow><wb>}</wb></wrow></div>",
        "mime": "x-application/wolfram-language-html"
       },
       {
-       "data": "MatrixForm[{{39/4, (-25*Sqrt[3])/4, (-39 + 50*Sqrt[3])/4}, {(-25*Sqrt[3])/4, -11/4, (22 + 25*Sqrt[3])/4}, {(-39 + 50*Sqrt[3])/4, (22 + 25*Sqrt[3])/4, (-581 - 100*Sqrt[3])/4}}]",
+       "data": "{{3, -Sqrt[3], (-6 + 4*Sqrt[3])/2}, {-Sqrt[3], 5, (-20 + 2*Sqrt[3])/2}, {(-6 + 4*Sqrt[3])/2, (-20 + 2*Sqrt[3])/2, 5 - 4*Sqrt[3]}}",
        "mime": "text/plain"
       }
      ],
-     "id": "f8ebbbe0-567b-4d25-a378-53b60be0cabb",
+     "id": "4f14cbb6-81b0-43d5-9272-d6a7b90ff96a",
      "metadata": {
-      "cellLabel": "Out[218]//MatrixForm= ",
+      "cellLabel": "Out[63]= ",
       "isBoxData": false
      }
-    }
-   ],
-   "metadata": {},
-   "executionSummary": {
-    "timing": {
-     "startTime": 1742422571493,
-     "endTime": 1742422572069
     },
-    "executionOrder": 212,
-    "success": true
-   }
-  },
-  {
-   "kind": 2,
-   "value": "(* \n  先逆时针旋转图形, 再平移图形 \n  与前面平移坐标轴不同\n*)\ntheta = Pi/3; (* 逆时针旋转角度 *)\nr = 1; s = 2; (* 点在水平和垂直方向的平移量*)\nQ = {{1, 0, 0},{0,0,-2},{0,-2,0}};\nR = {\n  {Cos[-theta], -Sin[-theta], 0},\n  {Sin[-theta], Cos[-theta], 0},\n  {0, 0, 1}\n};\nT = {\n  {1, 0, -r},\n  {0, 1, -s},\n  {0, 0, 1}\n};\nQ = Simplify[Transpose[T] . Transpose[R] . Q . R . T];\nQ // MatrixForm",
-   "languageId": "wolfram",
-   "outputs": [
     {
      "items": [
       {
-       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wfrac><w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>1</w></wrow><w>+</w><wrow><w></w><w>2</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wfrac><w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wfrac><w><w>3</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wrow><w></w><wrow><w></w><w>-</w><wfrac><w><w>5</w></w><w><w></w><w><w>2</w></w></w></wfrac></wrow><w>-</w><wfrac><w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>1</w></wrow><w>+</w><wrow><w></w><w>2</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wrow><w></w><w>-</w><wfrac><w><w>5</w></w><w><w></w><w><w>2</w></w></w></wfrac></wrow><w>-</w><wfrac><w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wrow><w></w><wfrac><w><w>29</w></w><w><w></w><w><w>4</w></w></w></wfrac><w>-</w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><w>3.</w></w><w><wrow><w></w><w>-</w><w>1.73205</w></wrow></w><w><w>0.464102</w></w><w><wrow><w></w><w>-</w><w>1.73205</w></wrow></w><w><w>5.</w></w><w><wrow><w></w><w>-</w><w>8.26795</w></wrow></w><w><w>0.464102</w></w><w><wrow><w></w><w>-</w><w>8.26795</w></wrow></w><w><wrow><w></w><w>-</w><w>1.9282</w></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
        "mime": "x-application/wolfram-language-html"
       },
       {
-       "data": "MatrixForm[{{1/4, Sqrt[3]/4, (-1 + 2*Sqrt[3])/4}, {Sqrt[3]/4, 3/4, -5/2 - Sqrt[3]/4}, {(-1 + 2*Sqrt[3])/4, -5/2 - Sqrt[3]/4, 29/4 - Sqrt[3]}}]",
+       "data": "MatrixForm[{{3., -1.7320508075688772, 0.4641016151377544}, {-1.7320508075688772, 5., -8.267949192431123}, {0.4641016151377544, -8.267949192431123, -1.9282032302755088}}]",
        "mime": "text/plain"
       }
      ],
-     "id": "2d5de6bb-e022-4905-904f-787dae7f173a",
+     "id": "ec83e232-ed44-440a-9f2a-f1dcfb9fb8c1",
      "metadata": {
-      "cellLabel": "Out[253]//MatrixForm= ",
+      "cellLabel": "Out[64]//MatrixForm= ",
       "isBoxData": false
      }
-    }
-   ],
-   "metadata": {},
-   "executionSummary": {
-    "timing": {
-     "startTime": 1742423253817,
-     "endTime": 1742423254405
     },
-    "executionOrder": 247,
-    "success": true
-   }
-  },
-  {
-   "kind": 2,
-   "value": "(* \n  先逆时针旋转图形, 再平移图形 \n  与前面平移坐标轴不同\n*)\ntheta = Pi/3; (* 逆时针旋转角度 *)\nr = 1; s = 2; (* 点在水平和垂直方向的平移量*)\nQ = {{0, 0, -2},{0,1,0},{-2,0,0}};\nR = {\n  {Cos[-theta], -Sin[-theta], 0},\n  {Sin[-theta], Cos[-theta], 0},\n  {0, 0, 1}\n};\nT = {\n  {1, 0, -r},\n  {0, 1, -s},\n  {0, 0, 1}\n};\nQ = Simplify[Transpose[T] . Transpose[R] . Q . R . T];\nQ // MatrixForm",
-   "languageId": "wolfram",
-   "outputs": [
     {
      "items": [
       {
-       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wfrac><w><w>3</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><wfrac><w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>7</w></wrow><w>+</w><wrow><w></w><w>2</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><w>-</w><wfrac><w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>2</w></wrow><w>-</w><wrow><w></w><w>3</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>7</w></wrow><w>+</w><wrow><w></w><w>2</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>2</w></wrow><w>-</w><wrow><w></w><w>3</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><wrow><w></w><wfrac><w><w>15</w></w><w><w></w><w><w>4</w></w></w></wfrac><w>+</w><wrow><w></w><w>3</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "data": "<pre>the rotation matrix:\n</pre>",
        "mime": "x-application/wolfram-language-html"
       },
       {
-       "data": "MatrixForm[{{3/4, -1/4*Sqrt[3], (-7 + 2*Sqrt[3])/4}, {-1/4*Sqrt[3], 1/4, (-2 - 3*Sqrt[3])/4}, {(-7 + 2*Sqrt[3])/4, (-2 - 3*Sqrt[3])/4, 15/4 + 3*Sqrt[3]}}]",
+       "data": "\"the rotation matrix:\\n\"",
        "mime": "text/plain"
       }
      ],
-     "id": "ef3910ed-e754-4ea0-b76a-40e0f0189394",
+     "id": "b74c9a3b-3500-4abb-bcf8-777b210c4619",
      "metadata": {
-      "cellLabel": "Out[274]//MatrixForm= ",
+      "cellLabel": "",
       "isBoxData": false
      }
-    }
-   ],
-   "metadata": {},
-   "executionSummary": {
-    "timing": {
-     "startTime": 1742423588178,
-     "endTime": 1742423588769
     },
-    "executionOrder": 268,
-    "success": true
-   }
-  },
-  {
-   "kind": 2,
-   "value": "T = {\n  {1, 0, a},\n  {0, 1, b},\n  {0, 0, 1}\n};\nInverse[T]",
-   "languageId": "wolfram",
-   "outputs": [
     {
      "items": [
       {
-       "data": "<div class=\"wexpr\"><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>1</w><w>,</w><w>0</w><w>,</w><wrow><w></w><w>-</w><w>a</w></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><w>0</w><w>,</w><w>1</w><w>,</w><wrow><w></w><w>-</w><w>b</w></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><w>0</w><w>,</w><w>0</w><w>,</w><w>1</w></wrow><wb>}</wb></wrow></wrow><wb>}</wb></wrow></div>",
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wfrac><w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></w><w><w></w><w><w>2</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac></wrow></w><w><w>0</w></w><w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac></w><w><wfrac><w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></w><w><w></w><w><w>2</w></w></w></wfrac></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><w>1</w></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
        "mime": "x-application/wolfram-language-html"
       },
       {
-       "data": "{{1, 0, -a}, {0, 1, -b}, {0, 0, 1}}",
+       "data": "MatrixForm[{{Sqrt[3]/2, -1/2, 0}, {1/2, Sqrt[3]/2, 0}, {0, 0, 1}}]",
        "mime": "text/plain"
       }
      ],
-     "id": "1e5a9722-5a2f-40f5-be30-c51a2bf41377",
+     "id": "38683bf4-78ab-4125-b1a2-d82664e57115",
      "metadata": {
-      "cellLabel": "Out[169]= ",
+      "cellLabel": "Out[68]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<pre>the coefficents matrix after rotation:\n</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "\"the coefficents matrix after rotation:\\n\"",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "edf901cc-ef45-4d7a-8d55-a7d16d379ca0",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><w>2</w></w><w><w>0</w></w><w><wrow><w></w><wrow><w></w><w>-</w><w>2</w></wrow><w>-</w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></w><w><w>0</w></w><w><w>6</w></w><w><wrow><w></w><w>3</w><w>-</w><wrow><w></w><w>6</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow></w><w><wrow><w></w><wrow><w></w><w>-</w><w>2</w></wrow><w>-</w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></w><w><wrow><w></w><w>3</w><w>-</w><wrow><w></w><w>6</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow></w><w><wrow><w></w><w>5</w><w>-</w><wrow><w></w><w>4</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{2, 0, -2 - Sqrt[3]}, {0, 6, 3 - 6*Sqrt[3]}, {-2 - Sqrt[3], 3 - 6*Sqrt[3], 5 - 4*Sqrt[3]}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "859a05c5-8916-4e79-8731-9aad38040265",
+     "metadata": {
+      "cellLabel": "Out[70]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<pre>the translation matrix:\n</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "\"the translation matrix:\\n\"",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "39e102ba-66b7-4c19-b0aa-86c0abb149e4",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><w>1</w></w><w><w>0</w></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>12</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><w>12</w><w>+</w><wrow><w></w><w>6</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><w>0</w></w><w><w>1</w></w><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>12</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>6</w></wrow><w>+</w><wrow><w></w><w>12</w><w></w><wsqrt><w><w>\\</w></w><w></w><w><w>3</w></w></wsqrt></wrow></wrow><wb>)</wb></wrow></wrow></w><w><w>0</w></w><w><w>0</w></w><w><w>1</w></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{1, 0, (12 + 6*Sqrt[3])/12}, {0, 1, (-6 + 12*Sqrt[3])/12}, {0, 0, 1}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "95bbdbf6-1da6-4cc8-8aab-aa57f5908cd5",
+     "metadata": {
+      "cellLabel": "Out[74]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<pre>the coefficents matrix after translation:\n</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "\"the coefficents matrix after translation:\\n\"",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "40ca7934-2257-4191-bee0-cf3a83305160",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><w>2</w></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><w>6</w></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><wrow><w></w><w>-</w><w>18</w></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{2, 0, 0}, {0, 6, 0}, {0, 0, -18}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "d7803cb4-ee31-4fb7-a517-63e886331b0b",
+     "metadata": {
+      "cellLabel": "Out[76]//MatrixForm= ",
       "isBoxData": false
      }
     }
    ],
    "metadata": {},
-   "executionSummary": {
-    "timing": {
-     "startTime": 1742413514763,
-     "endTime": 1742413514966
-    },
-    "executionOrder": 168,
-    "success": true
-   }
+   "executionSummary": {}
   }
  ]
 }

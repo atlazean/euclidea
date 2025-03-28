@@ -10,74 +10,369 @@
   },
   {
    "kind": 2,
+   "value": "Remove[\"Utils`*\"]\n(* 加载应用模块, 注意文件路径需要根据实际情况修改 *)\nSetDirectory[\"~/Repos/euclidea/transformations-of-conics/wolfram-notebooks\"];\n<< Utils.m",
+   "languageId": "wolfram",
+   "outputs": [],
+   "metadata": {},
+   "executionSummary": {
+    "timing": {
+     "startTime": 1743158916990,
+     "endTime": 1743158917190
+    },
+    "executionOrder": 602,
+    "success": true
+   }
+  },
+  {
+   "kind": 2,
    "value": "(* ux+vy+w=0 *)\nU = {u, 1, 1,  0, 0, 1};\nV = {v, 0, 0,  1, 1, 1};\nW = {w, 0, -2, 0, -2,-2-Sqrt[2]};\nM = Table[{U[[i]]^2, U[[i]]*V[[i]], V[[i]]^2, U[[i]]*W[[i]], V[[i]]*W[[i]], W[[i]]^2}, {i,1,6}];\nMatrixForm[M]\npoly = Det[M]\n\ncofactors = Cofactors[M];\n\nQ1 = QuadraticMatrix[cofactors[[1]]]\nQ = Inverse[Q1];\nMatrixForm[Q]",
+   "languageId": "wolfram",
+   "outputs": [],
+   "metadata": {},
+   "executionSummary": {}
+  },
+  {
+   "kind": 2,
+   "value": "(* a = 64;\nPA = {-a,-a};\nPB = {a,-a};\nPC = {a,a*Sqrt[2]-a};\nPD = {a*Sqrt[2]-a,a};\nPE = {-a,a};\nPF = {-a,-a}; *)\n\n(* PA = {-2,20};\nPB = {-15,10};\nPC = {-10,-10};\nPD = {10,-10};\nPE = {15,15};\nPF = {-3,20}; *)\n\n(* PA = {-3,8};\nPB = {-3/2,2};\nPC = {-1/2,0};\nPD = {1/2,0};\nPE = {3/2,2};\nPF = {3,8}; *)\n\nPA = {0,5};\nPB = {-2,-2};\nPC = {3,3};\nPD = {-3,3};\nPE = {4,-2};\nPF = {0,5};\n\nTangents = {\n  {PA, PB}, \n  {PB, PC},\n  {PC, PD},\n  {PD, PE},\n  {PE, PF}\n  };\n\nmaxcoord = Sqrt[Max[Abs[Flatten[Tangents]]]]\nTangents = Tangents/maxcoord //N\n\nLineEquation[P1_, P2_] := Module[\n  {a,b,c},\n  a = P2[[2]]-P1[[2]];\n  b = -(P2[[1]]-P1[[1]]);\n  c = -(P2[[2]]-P1[[2]])*P1[[1]]+(P2[[1]]-P1[[1]])*P1[[2]];\n  t = Sqrt[a^2+b^2];\n  a = a/t;\n  b = b/t;\n  c = c/t;\n  {a,b,c}\n];\n\nL = {\n  LineEquation[Tangents[[1,1]],Tangents[[1,2]]],\n  LineEquation[Tangents[[2,1]],Tangents[[2,2]]],\n  LineEquation[Tangents[[3,1]],Tangents[[3,2]]],\n  LineEquation[Tangents[[4,1]],Tangents[[4,2]]],\n  LineEquation[Tangents[[5,1]],Tangents[[5,2]]],\n  {0, 0, 0}\n};\n\nL // MatrixForm\n\nM = Table[{L[[i,1]]^2, L[[i,1]]*L[[i,2]], L[[i,2]]^2, L[[i,1]]*L[[i,3]], L[[i,2]]*L[[i,3]], L[[i,3]]^2}, {i,1,6}];\n\nM // MatrixForm//N\n\ncofactors = Cofactors[M];\n\ncofactors[[6]] // MatrixForm //N\n\ncofactors = cofactors/ Max[Abs[cofactors]]\n\nQ1 = QuadraticMatrix[{\n  cofactors[[6,1]],\n  cofactors[[6,2]],\n  cofactors[[6,3]],\n  cofactors[[6,4]],\n  cofactors[[6,5]],\n  cofactors[[6,6]]\n  }];\nPrint[\"dual conic:\"];\nQ1//MatrixForm//N\n\n(* Q = Cofactors[Q1]; *)\nQ = Inverse[Q1];\nPrint[\"inverse matrix:\"];\nMatrixForm[Q] //N\n\nQ = QuadraticMatrix[{\n  Q[[1,1]]/maxcoord,\n  2*Q[[1,2]]/maxcoord,\n  Q[[2,2]]/maxcoord,\n  2*Q[[1,3]],\n  2*Q[[2,3]],\n  Q[[3,3]]*maxcoord,\n}];\nQ // MatrixForm\n\n(* \n将圆锥曲线方程从一般形式化简为标准形式:\n*)\n(* ReduceConicMatrix[Q] // MatrixForm // N *)\n\ncofactors = Cofactors[Q] // MatrixForm\n\n(* \n第 1 步: 旋转变换\n通过旋转系数矩阵, 消除交叉项\n*)\nR = Simplify[ConicRotationMatrix[Q]];\nQ = Simplify[Transpose[R] . Q . R];\nPrint[\"the rotation matrix:\"]\nMatrixForm[R]\nPrint[\"the coefficents matrix after rotation:\"]\nMatrixForm[Q]\n\n(* \n第 2 步: 平移变换\n平移坐标轴到圆锥曲线的中心或抛物线的顶点, \n注意: 抛物线没有中心(中心在无穷远) \n*)\nT = ConicTranslationMatrix[Q];\nQ = Simplify[Transpose[T] . Q . T];\nPrint[\"the translation matrix:\"]\nMatrixForm[T]\nPrint[\"the coefficents matrix after translation:\"]\nMatrixForm[Q]\n",
    "languageId": "wolfram",
    "outputs": [
     {
      "items": [
       {
-       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(6,max-content);\"><w><wsup><w></w><w>u</w><w><w>2</w></w></wsup></w><w><wrow><w></w><w>u</w><w></w><w>v</w></wrow></w><w><wsup><w></w><w>v</w><w><w>2</w></w></wsup></w><w><wrow><w></w><w>u</w><w></w><w>w</w></wrow></w><w><wrow><w></w><w>v</w><w></w><w>w</w></wrow></w><w><wsup><w></w><w>w</w><w><w>2</w></w></wsup></w><w><w>1</w></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><w>1</w></w><w><w>0</w></w><w><w>0</w></w><w><wrow><w></w><w>-</w><w>2</w></wrow></w><w><w>0</w></w><w><w>4</w></w><w><w>0</w></w><w><w>0</w></w><w><w>1</w></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><w>1</w></w><w><w>0</w></w><w><wrow><w></w><w>-</w><w>2</w></wrow></w><w><w>4</w></w><w><w>1</w></w><w><w>1</w></w><w><w>1</w></w><w><wrow><w></w><wrow><w></w><w>-</w><w>2</w></wrow><w>-</w><wsqrt><w><w>\\</w></w><w></w><w><w>2</w></w></wsqrt></wrow></w><w><wrow><w></w><wrow><w></w><w>-</w><w>2</w></wrow><w>-</w><wsqrt><w><w>\\</w></w><w></w><w><w>2</w></w></wsqrt></wrow></w><w><wsup><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><w>-</w><w>2</w></wrow><w>-</w><wsqrt><w><w>\\</w></w><w></w><w><w>2</w></w></wsqrt></wrow><wb>)</wb></wrow><w><w>2</w></w></wsup></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "data": "<div class=\"wexpr\"><wsqrt><w><w>\\</w></w><w></w><w><w>5</w></w></wsqrt></div>",
        "mime": "x-application/wolfram-language-html"
       },
       {
-       "data": "MatrixForm[{{u^2, u*v, v^2, u*w, v*w, w^2}, {1, 0, 0, 0, 0, 0}, {1, 0, 0, -2, 0, 4}, {0, 0, 1, 0, 0, 0}, {0, 0, 1, 0, -2, 4}, {1, 1, 1, -2 - Sqrt[2], -2 - Sqrt[2], (-2 - Sqrt[2])^2}}]",
+       "data": "Sqrt[5]",
        "mime": "text/plain"
       }
      ],
-     "id": "30f3ad1d-a7a0-4691-8ca6-4f4a438a0e6b",
+     "id": "f99fe846-9be9-4799-8c19-aef5d282fd1c",
      "metadata": {
-      "cellLabel": "Out[368]//MatrixForm= ",
+      "cellLabel": "Out[1014]= ",
       "isBoxData": false
      }
     },
     {
      "items": [
       {
-       "data": "<div class=\"wexpr\"><wrow><w></w><wrow><w></w><wrow><w></w><w>-</w><w>8</w></wrow><w></w><w>u</w><w></w><w>v</w></wrow><w>-</w><wrow><w></w><w>8</w><w></w><w>u</w><w></w><w>w</w></wrow><w>-</w><wrow><w></w><w>8</w><w></w><w>v</w><w></w><w>w</w></wrow><w>-</w><wrow><w></w><w>4</w><w></w><wsup><w></w><w>w</w><w><w>2</w></w></wsup></wrow></wrow></div>",
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>2.23607</w></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>-</w><w>0.894427</w></wrow><w>,</w><wrow><w></w><w>-</w><w>0.894427</w></wrow></wrow><wb>}</wb></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>-</w><w>0.894427</w></wrow><w>,</w><wrow><w></w><w>-</w><w>0.894427</w></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><w>1.34164</w><w>,</w><w>1.34164</w></wrow><wb>}</wb></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>1.34164</w><w>,</w><w>1.34164</w></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>-</w><w>1.34164</w></wrow><w>,</w><w>1.34164</w></wrow><wb>}</wb></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>-</w><w>1.34164</w></wrow><w>,</w><w>1.34164</w></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><w>1.78885</w><w>,</w><wrow><w></w><w>-</w><w>0.894427</w></wrow></wrow><wb>}</wb></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>1.78885</w><w>,</w><wrow><w></w><w>-</w><w>0.894427</w></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>2.23607</w></wrow><wb>}</wb></wrow></wrow><wb>}</wb></wrow></wrow><wb>}</wb></wrow></div>",
        "mime": "x-application/wolfram-language-html"
       },
       {
-       "data": "-8*u*v - 8*u*w - 8*v*w - 4*w^2",
+       "data": "{{{0., 2.23606797749979}, {-0.8944271909999159, -0.8944271909999159}}, {{-0.8944271909999159, -0.8944271909999159}, {1.3416407864998738, 1.3416407864998738}}, {{1.3416407864998738, 1.3416407864998738}, {-1.3416407864998738, 1.3416407864998738}}, {{-1.3416407864998738, 1.3416407864998738}, {1.7888543819998317, -0.8944271909999159}}, {{1.7888543819998317, -0.8944271909999159}, {0., 2.23606797749979}}}",
        "mime": "text/plain"
       }
      ],
-     "id": "64332f6b-a638-42c1-938a-1dc4888ee4c7",
+     "id": "da2f4f5a-22af-4ee8-889a-0398e85f87d3",
      "metadata": {
-      "cellLabel": "Out[369]= ",
+      "cellLabel": "Out[1015]= ",
       "isBoxData": false
      }
     },
     {
      "items": [
       {
-       "data": "<div class=\"wexpr\"><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0</w><w>,</w><wrow><w></w><w>-</w><w>4</w></wrow><w>,</w><wrow><w></w><w>-</w><w>4</w></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>-</w><w>4</w></wrow><w>,</w><w>0</w><w>,</w><wrow><w></w><w>-</w><w>4</w></wrow></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>-</w><w>4</w></wrow><w>,</w><wrow><w></w><w>-</w><w>4</w></wrow><w>,</w><wrow><w></w><w>-</w><w>4</w></wrow></wrow><wb>}</wb></wrow></wrow><wb>}</wb></wrow></div>",
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wrow><w></w><w>-</w><w>0.961524</w></wrow></w><w><w>0.274721</w></w><w><wrow><w></w><w>-</w><w>0.614295</w></wrow></w><w><w>0.707107</w></w><w><wrow><w></w><w>-</w><w>0.707107</w></wrow></w><w><w>0.</w></w><w><w>0.</w></w><w><w>1.</w></w><w><wrow><w></w><w>-</w><w>1.34164</w></wrow></w><w><wrow><w></w><w>-</w><w>0.581238</w></wrow></w><w><wrow><w></w><w>-</w><w>0.813733</w></wrow></w><w><w>0.311925</w></w><w><w>0.868243</w></w><w><w>0.496139</w></w><w><wrow><w></w><w>-</w><w>1.1094</w></wrow></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
        "mime": "x-application/wolfram-language-html"
       },
       {
-       "data": "{{0, -4, -4}, {-4, 0, -4}, {-4, -4, -4}}",
+       "data": "MatrixForm[{{-0.961523947640823, 0.274721127897378, -0.6142951168339511}, {0.7071067811865476, -0.7071067811865476, 0.}, {0., 1., -1.3416407864998738}, {-0.5812381937190965, -0.8137334712067349, 0.31192514694602186}, {0.8682431421244592, 0.4961389383568338, -1.1094003924504583}, {0, 0, 0}}]",
        "mime": "text/plain"
       }
      ],
-     "id": "4061a3d9-d751-46da-8b09-b6432822cc88",
+     "id": "c4b85b3b-4c05-442b-bba6-5f8677cdd2c9",
      "metadata": {
-      "cellLabel": "Out[371]= ",
+      "cellLabel": "Out[1018]//MatrixForm= ",
       "isBoxData": false
      }
     },
     {
      "items": [
       {
-       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><w>0</w></w><w><wrow><w></w><w>-</w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><w>0</w></w><w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wrow><w></w><w>-</w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wrow><w></w><w>-</w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></wrow></w><w><wfrac><w><w>1</w></w><w><w></w><w><w>4</w></w></w></wfrac></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(6,max-content);\"><w><w>0.924528</w></w><w><wrow><w></w><w>-</w><w>0.264151</w></wrow></w><w><w>0.0754717</w></w><w><w>0.590659</w></w><w><wrow><w></w><w>-</w><w>0.16876</w></wrow></w><w><w>0.377358</w></w><w><w>0.5</w></w><w><wrow><w></w><w>-</w><w>0.5</w></wrow></w><w><w>0.5</w></w><w><w>0.</w></w><w><w>0.</w></w><w><w>0.</w></w><w><w>0.</w></w><w><w>0.</w></w><w><w>1.</w></w><w><w>0.</w></w><w><wrow><w></w><w>-</w><w>1.34164</w></wrow></w><w><w>1.8</w></w><w><w>0.337838</w></w><w><w>0.472973</w></w><w><w>0.662162</w></w><w><wrow><w></w><w>-</w><w>0.181303</w></wrow></w><w><wrow><w></w><w>-</w><w>0.253824</w></wrow></w><w><w>0.0972973</w></w><w><w>0.753846</w></w><w><w>0.430769</w></w><w><w>0.246154</w></w><w><wrow><w></w><w>-</w><w>0.963229</w></wrow></w><w><wrow><w></w><w>-</w><w>0.550417</w></wrow></w><w><w>1.23077</w></w><w><w>0.</w></w><w><w>0.</w></w><w><w>0.</w></w><w><w>0.</w></w><w><w>0.</w></w><w><w>0.</w></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
        "mime": "x-application/wolfram-language-html"
       },
       {
-       "data": "MatrixForm[{{1/4, 0, -1/4}, {0, 1/4, -1/4}, {-1/4, -1/4, 1/4}}]",
+       "data": "MatrixForm[{{0.9245283018867922, -0.26415094339622636, 0.07547169811320753, 0.5906594657546613, -0.16875984735847466, 0.37735849056603765}, {0.5000000000000001, -0.5000000000000001, 0.5000000000000001, 0., 0., 0.}, {0., 0., 1., 0., -1.3416407864998738, 1.8}, {0.3378378378378379, 0.47297297297297297, 0.6621621621621621, -0.18130280898646947, -0.25382393258105723, 0.09729729729729733}, {0.7538461538461538, 0.43076923076923074, 0.24615384615384614, -0.9632292826152941, -0.5504167329230252, 1.2307692307692308}, {0., 0., 0., 0., 0., 0.}}]",
        "mime": "text/plain"
       }
      ],
-     "id": "daf1effd-a83b-4092-b273-5c4c27e81348",
+     "id": "6a83aa65-8e25-4f38-9663-d7d99e6a26c2",
      "metadata": {
-      "cellLabel": "Out[373]//MatrixForm= ",
+      "cellLabel": "Out[1020]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(1,max-content);\"><w><w>0.229334</w></w><w><wrow><w></w><w>-</w><w>0.243667</w></wrow></w><w><wrow><w></w><w>-</w><w>0.473</w></wrow></w><w><wrow><w></w><w>-</w><w>0.288453</w></wrow></w><w><wrow><w></w><w>-</w><w>1.50637</w></wrow></w><w><wrow><w></w><w>-</w><w>0.860001</w></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{0.22933354254108967, -0.2436668889499079, -0.4730004314909976, -0.2884530322365279, -1.5063658350129794, -0.8600007845290863}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "33637550-3ee1-4948-83df-d3e232ecc9de",
+     "metadata": {
+      "cellLabel": "Out[1022]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.152243</w><w>,</w><wrow><w></w><w>-</w><w>0.161758</w></wrow><w>,</w><wrow><w></w><w>-</w><w>0.314001</w></wrow><w>,</w><wrow><w></w><w>-</w><w>0.191489</w></wrow><w>,</w><wrow><w></w><w>-</w><w>1.</w></wrow><w>,</w><wrow><w></w><w>-</w><w>0.570911</w></wrow></wrow><wb>}</wb></wrow></wrow><wb>}</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "{{0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.}, {0.15224292612764526, -0.16175810901062318, -0.31400103513826844, -0.19148936170212763, -1., -0.5709109729786698}}",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "379745be-6a3a-4f14-accd-e17310d1ecf7",
+     "metadata": {
+      "cellLabel": "Out[1023]= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<pre>dual conic:\n</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "\"dual conic:\\n\"",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "748912b6-794b-4c15-b676-39f51c63f24f",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><w>0.152243</w></w><w><wrow><w></w><w>-</w><w>0.0808791</w></wrow></w><w><wrow><w></w><w>-</w><w>0.0957447</w></wrow></w><w><wrow><w></w><w>-</w><w>0.0808791</w></wrow></w><w><wrow><w></w><w>-</w><w>0.314001</w></wrow></w><w><wrow><w></w><w>-</w><w>0.5</w></wrow></w><w><wrow><w></w><w>-</w><w>0.0957447</w></wrow></w><w><wrow><w></w><w>-</w><w>0.5</w></wrow></w><w><wrow><w></w><w>-</w><w>0.570911</w></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{0.15224292612764526, -0.08087905450531159, -0.09574468085106382}, {-0.08087905450531159, -0.31400103513826844, -0.5}, {-0.09574468085106382, -0.5, -0.5709109729786698}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "43e94d1f-76a8-47ac-962a-673118183451",
+     "metadata": {
+      "cellLabel": "Out[1026]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<pre>inverse matrix:\n</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "\"inverse matrix:\\n\"",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "7e411694-9f93-48e6-b702-6115704255b3",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><w>5.9443</w></w><w><wrow><w></w><w>-</w><w>0.142663</w></wrow></w><w><wrow><w></w><w>-</w><w>0.871946</w></wrow></w><w><wrow><w></w><w>-</w><w>0.142663</w></wrow></w><w><w>8.07473</w></w><w><wrow><w></w><w>-</w><w>7.04787</w></wrow></w><w><wrow><w></w><w>-</w><w>0.871946</w></wrow></w><w><wrow><w></w><w>-</w><w>7.04787</w></wrow></w><w><w>4.56712</w></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{5.944298356475684, -0.1426631605554133, -0.8719457013574685}, {-0.1426631605554136, 8.074734887436577, -7.047873303167426}, {-0.8719457013574686, -7.047873303167426, 4.567123313247404}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "767c40e1-83ae-4fb0-9d85-b9bfd566bb3b",
+     "metadata": {
+      "cellLabel": "Out[1029]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><w>2.65837</w></w><w><wrow><w></w><w>-</w><w>0.0638009</w></wrow></w><w><wrow><w></w><w>-</w><w>0.871946</w></wrow></w><w><wrow><w></w><w>-</w><w>0.0638009</w></wrow></w><w><w>3.61113</w></w><w><wrow><w></w><w>-</w><w>7.04787</w></wrow></w><w><wrow><w></w><w>-</w><w>0.871946</w></wrow></w><w><wrow><w></w><w>-</w><w>7.04787</w></wrow></w><w><w>10.2124</w></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{2.6583710407239813, -0.06380090497737416, -0.8719457013574685}, {-0.06380090497737416, 3.6111312217194595, -7.047873303167426}, {-0.8719457013574685, -7.047873303167426, 10.212398190045262}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "ce57f1a5-fb3f-4182-97b2-07406d966ed3",
+     "metadata": {
+      "cellLabel": "Out[1031]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><wrow><w></w><w>-</w><w>12.7942</w></wrow></w><w><w>6.79692</w></w><w><w>3.59837</w></w><w><w>6.79692</w></w><w><w>26.3881</w></w><w><w>18.7915</w></w><w><w>3.59837</w></w><w><w>18.7915</w></w><w><w>9.59566</w></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{-12.794208144796386, 6.796923076923085, 3.5983710407239835}, {6.796923076923086, 26.388054298642558, 18.791493212669693}, {3.5983710407239835, 18.791493212669693, 9.59565610859729}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "1d511e34-8383-4963-99be-923091a9585c",
+     "metadata": {
+      "cellLabel": "Out[1032]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<pre>the rotation matrix:\n</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "\"the rotation matrix:\\n\"",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "1b67d6d6-040f-4511-9e37-5ef20382c525",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><w>0.997785</w></w><w><wrow><w></w><w>-</w><w>0.066519</w></wrow></w><w><w>0</w></w><w><w>0.066519</w></w><w><w>0.997785</w></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><w>1</w></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{0.997785157856609, -0.06651901052377227, 0}, {0.06651901052377227, 0.997785157856609, 0}, {0, 0, 1}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "0b9f44e5-a674-4645-b5d6-699cd7423e98",
+     "metadata": {
+      "cellLabel": "Out[1036]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<pre>the coefficents matrix after rotation:\n</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "\"the coefficents matrix after rotation:\\n\"",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "8ccdc7cf-6b9f-4674-beae-c568aef65766",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><w>2.65412</w></w><w><w>0.</w></w><w><wrow><w></w><w>-</w><w>1.33883</w></wrow></w><w><w>0.</w></w><w><w>3.61538</w></w><w><wrow><w></w><w>-</w><w>6.97426</w></wrow></w><w><wrow><w></w><w>-</w><w>1.33883</w></wrow></w><w><wrow><w></w><w>-</w><w>6.97426</w></wrow></w><w><w>10.2124</w></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{2.654117647058823, 0., -1.338832037694961}, {0., 3.6153846153846176, -6.974262411069536}, {-1.338832037694961, -6.974262411069536, 10.212398190045262}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "dc2cf758-77fc-410a-b0f9-b36d568d99aa",
+     "metadata": {
+      "cellLabel": "Out[1038]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<pre>the translation matrix:\n</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "\"the translation matrix:\\n\"",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "5c6e2517-5016-4ba0-8a35-3914f2da46d4",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><w>1</w></w><w><w>0</w></w><w><w>0.504436</w></w><w><w>0</w></w><w><w>1</w></w><w><w>1.92905</w></w><w><w>0</w></w><w><w>0</w></w><w><w>1</w></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{1, 0, 0.5044358298052825}, {0, 1, 1.9290513051894451}, {0, 0, 1}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "68161976-e1c1-48dd-b027-b85e17581676",
+     "metadata": {
+      "cellLabel": "Out[1042]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<pre>the coefficents matrix after translation:\n</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "\"the coefficents matrix after translation:\\n\"",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "0c10c16c-6936-4648-b50e-7a167331baaf",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(3,max-content);\"><w><w>2.65412</w></w><w><w>0.</w></w><w><wsup><w></w><w>2.22045&#215;10</w><w><w>-16</w></w></wsup></w><w><w>0.</w></w><w><w>3.61538</w></w><w><wsup><w></w><w>8.88178&#215;10</w><w><w>-16</w></w></wsup></w><w><wsup><w></w><w>2.22045&#215;10</w><w><w>-16</w></w></wsup></w><w><wsup><w></w><w>8.88178&#215;10</w><w><w>-16</w></w></wsup></w><w><wrow><w></w><w>-</w><w>3.91667</w></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[{{2.654117647058823, 0., 2.220446049250313*^-16}, {0., 3.6153846153846176, 8.881784197001252*^-16}, {2.220446049250313*^-16, 8.881784197001252*^-16, -3.916666666666666}}]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "22f1591a-074e-43cf-ab25-5b240a93c2dd",
+     "metadata": {
+      "cellLabel": "Out[1044]//MatrixForm= ",
       "isBoxData": false
      }
     }
@@ -85,12 +380,20 @@
    "metadata": {},
    "executionSummary": {
     "timing": {
-     "startTime": 1742289468286,
-     "endTime": 1742289469146
+     "startTime": 1743161787425,
+     "endTime": 1743161790671
     },
-    "executionOrder": 364,
+    "executionOrder": 1007,
     "success": true
    }
+  },
+  {
+   "kind": 2,
+   "value": "Names[\"Utils`*\"]",
+   "languageId": "wolfram",
+   "outputs": [],
+   "metadata": {},
+   "executionSummary": {}
   }
  ]
 }

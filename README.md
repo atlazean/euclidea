@@ -54,7 +54,8 @@ Euclidea is a tikz library designed for enchancing tikz in Euclidean geometry dr
 - `circle-line={O,A,P,Q}`: creates circle-line instersections (named: cl1, cl2) of circle (O, A) and line (P, Q).
 - `circle-circle={O1,A1,O2,A2}`: creates circle-circle instersections (named: cc1, cc2) of circle O1(O1, A1) and circle O2(O2, A2).
 - `circle-tagent = {O,A,P}`: creates tangent points (named: tp1, tp2, tp1 is on the left side of OP )
-- `transform = {angle:(xshift,yshift)}`: rotates around the origin by `angle` and then shifts by (`xshift`,`yshift`).
+- `rotate-translate = {angle:(xshift,yshift)}`: rotates around the origin by `angle` and then shifts by (`xshift`,`yshift`).
+- `translate-rotate = {angle:(xshift,yshift)}`: shifts by (`xshift`,`yshift`) and then rotates around the origin by `angle`.
 
 ### Conics
 
@@ -94,10 +95,12 @@ Euclidea is a tikz library designed for enchancing tikz in Euclidean geometry dr
 
   - `conic/define = {a,b,c,d,e,f}`: defines a conic with equation coefficients, i.e. ax^2 + bxy + cy^2 + dx + ey + f = 0.
   - `conic`: creates the conic path.
+  - `conic/five points = {A,B,C,D,E}`: defines a conic through five points.
+  - `conci/five tangents/once = {P1,P2}`: defines a conic tangent to five lines.
 
 ## Example
 
-Here is TikZ code for drawing Simson line.
+- TikZ code for drawing Simson line
 
 ```
 \documentclass{standalone}
@@ -146,6 +149,49 @@ Here is TikZ code for drawing Simson line.
 The result:
 
 ![Simson Line](examples/simson-line.svg)
+
+- TikZ code for drawing Poncelet's porism for n = 5
+
+```
+\documentclass{standalone}
+\usepackage{tikz}
+\usetikzlibrary{euclidea}
+
+\begin{document}
+
+\begin{tikzpicture}
+  \coordinate (A) at (0,5);
+  \coordinate (B) at (-2,-2);
+  \coordinate (C) at (3,3);
+  \coordinate (D) at (-3,3);
+  \coordinate (E) at (4,-2);
+  % five points define a conic
+  \tikzset {
+    conic/five points={A,B,C,D,E},
+  }
+  \draw [thick,violet,conic];
+  % five tangents define a conic
+  \tikzset {
+    conic/five tangents/once={A,B},
+    conic/five tangents/once={B,C},
+    conic/five tangents/once={C,D},
+    conic/five tangents/once={D,E},
+    conic/five tangents/once={E,A},
+  }
+  \draw [thick,purple,conic];
+
+  \draw [teal,thick] (A) -- (B) -- (C) -- (D) -- (E) -- cycle;
+  \foreach \p in {A,B,C,D,E} {
+    \fill[red] (\p) circle (2pt);
+  }
+\end{tikzpicture}
+
+\end{document}
+```
+
+The result:
+
+![Poncelet Porism](examples/poncelet-closure-theorem.svg)
 
 ## License
 

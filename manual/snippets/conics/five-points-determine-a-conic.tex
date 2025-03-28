@@ -40,6 +40,11 @@
     }
   }
 
+  \tikzset {
+    conic/five points={A1,A2,A3,A4,A5},
+  }
+  \draw [purple,thick,conic];
+
   \foreach \i/\placement in {1/above,2/below,3/below right,4/left,5/above right}{
     \fill[red] (A\i) circle (2pt);
     \draw (A\i) node[\placement] {$A\i$};

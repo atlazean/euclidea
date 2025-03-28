@@ -32,7 +32,7 @@
 }
 
 \tikzset{
-  cofactors={\a,\b,6},
+  cofactors={\a,6,\b},
   show={\a,6,6},
 }
 
@@ -62,18 +62,18 @@
 % transpose(Y) * D * Y + transpose(P) * inv(V) * Y + F = 0
 % inv(V) = transpose(V)
 \tikzset {
-  jacobi={\q,\d,\v,2},
+  jacobi={\q,2,\d,\v},
   show={\q,2,2},
   show={\d,2,2},
   show={\v,2,2},
-  transpose={\v,\vt,2,2},
-  product={\v,\vt,\vvt,2,2,2},
+  transpose={\v,2,2,\vt},
+  product={\v,\vt,2,2,2,\vvt},
   show={\vt,2,2},
   show={\vvt,2,2},
-  inverse={\d,\invd,2},
+  inverse={\d,2,\invd},
   show={\invd,2,2},
-  product={\vt,\p,\temp,2,2,1},
-  product={\invd,\temp,\tx,2,2,1},
+  product={\vt,\p,2,2,1,\temp},
+  product={\invd,\temp,2,2,1,\tx},
   show={\tx,2,1},
   scalar={\tx,2,1,-0.5,\ty},
   show={\ty,2,1},

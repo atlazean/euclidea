@@ -9,13 +9,31 @@
 
 % -----------------------------------------------
 \tikzmath{
+  print{\ \\===== Normlization =====};
+  \a{1,1} = 1; \a{1,2} = 2; \a{1,3} = 1;
+  \a{2,1} = -1; \a{2,2} = -2; \a{2,3} = -1;
+}
+
+\tikzset{
+  maxabs={\a,2,3,\max},
+  normalize={\a,2,3,\b},
+  show={\a,2,3},
+  show={\b,2,3},
+}
+
+\tikzmath{
+  print{max abs: \max};
+}
+
+% -----------------------------------------------
+\tikzmath{
   print{\ \\===== Transpose =====};
   \a{1,1} = 1; \a{1,2} = 2; \a{1,3} = 1;
   \a{2,1} = -1; \a{2,2} = -2; \a{2,3} = -1;
 }
 
 \tikzset{
-  transpose={\a,\b,2,3},
+  transpose={\a,2,3,\b},
   show={\a,2,3},
   show={\b,3,2},
 }
@@ -30,7 +48,7 @@
 }
 
 \tikzset{
-  product={\a,\b,\c,1,3,2},
+  product={\a,\b,1,3,2,\c},
   show={\a,1,3},
   show={\b,3,2},
   show={\c,1,2},
@@ -63,7 +81,7 @@
 
 \tikzset{
   show={\a,3,3},
-  minors={\a,\minors,3},
+  minors={\a,3,\minors},
   show={\minors,3,3},
 }
 
@@ -77,7 +95,7 @@
 
 \tikzset{
   show={\a,3,3},
-  cofactors={\a,\cofactors,3},
+  cofactors={\a,3,\cofactors},
   show={\cofactors,3,3},
 }
 
@@ -95,7 +113,7 @@
 }
 
 \tikzset{
-  solve={\a,\b,\c,4,2},
+  solve={\a,\b,4,2,\c},
   show={\a,4,4},
   show={\b,4,2},
   show={\c,4,2},% 1,2,-1,3
@@ -119,7 +137,7 @@
 }
 
 \tikzset{
-  solve={\a,\b,\c,4,2},
+  solve={\a,\b,4,2,\c},
   show={\a,4,4},
   show={\b,4,2},
   show={\c,4,2},% 
@@ -139,7 +157,7 @@
 }
 
 \tikzset{
-  inverse={\a,\b,4},
+  inverse={\a,4,\b},
   show={\a,4,4},
   show={\b,4,4},
 }
@@ -158,7 +176,7 @@
 }
 
 \tikzset{
-  inverse={\a,\b,4},
+  inverse={\a,4,\b},
   show={\a,4,4},
   show={\b,4,4},
 }
@@ -176,7 +194,7 @@
 }
 
 \tikzset{
-  jacobi={\a,\d,\v,3},
+  jacobi={\a,3,\d,\v},
   show={\a,3,3},
   show={\d,3,3},
   show={\v,3,3},
@@ -197,7 +215,7 @@
 }
 
 \tikzset{
-  jacobi={\a,\d,\v,3},
+  jacobi={\a,3,\d,\v},
   show={\a,3,3},
   show={\d,3,3},
   show={\v,3,3},
@@ -205,10 +223,9 @@
 
 \tikzmath{
   print{\ \\status:\status};
+  % use default 3*(n-1)^2
+  \JacobiMaxIter = -1;
 }
-
-% use default 3*(n-1)^2
-\JacobiMaxIter = -1;
 
 % -----------------------------------------------
 \tikzmath{
@@ -226,7 +243,7 @@
 }
 
 \tikzset{
-  cofactors={\a,\b,4},
+  cofactors={\a,4,\b},
   show={\a,4,4},
   show={\b,4,4},
 }
@@ -256,7 +273,7 @@
 }
 
 \tikzset{
-  cofactors={\a,\b,6},
+  cofactors={\a,6,\b},
   show={\a,6,6},
   show={\b,6,6},
 }
@@ -289,7 +306,7 @@
 }
 
 \tikzset{
-  cofactors={\a,\b,6},
+  cofactors={\a,6,\b},
   show={\a,6,6},
   show={\b,6,6},
 }
@@ -302,7 +319,7 @@
 }
 
 \tikzset{
-  inverse={\c,\d,3},
+  inverse={\c,3,\d},
   show={\c,3,3},
   show={\d,3,3},
 }

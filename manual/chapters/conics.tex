@@ -268,9 +268,9 @@ $t$ 是射线,双曲线和 $x$ 轴围成的面积的二倍. 对于双曲线上�
 
 类似椭圆的切线作法, 对于双曲线同样有下面的方法:
 
-\showcode{snippets/conics/tangents-of-Hyperbola-1.tex}
+\showcode{snippets/conics/tangents-of-hyperbola-1.tex}
 
-\showcode{snippets/conics/tangents-of-Hyperbola-2.tex}
+\showcode{snippets/conics/tangents-of-hyperbola-2.tex}
 
 % ---------------------------------
 \section{过抛物线外一点作抛物线的切线 Tangents to a Parabola}
@@ -282,8 +282,16 @@ $t$ 是射线,双曲线和 $x$ 轴围成的面积的二倍. 对于双曲线上�
   \item $FQ,FR$ 的中垂线即为所求.
 \end{enumerate}
 
+\showcode{snippets/conics/tangents-of-parabola.tex}
+
 % ---------------------------------
 \section{过五点作圆锥曲线 Five Points Determine a Conic}
+
+\emph{调用方式}
+
+\begin{minted}{latex}
+  `conic/five points = {A,B,C,D,E}`: defines a conic through five points.
+\end{minted}
 
 Braikenridge-Maclaurin 定理指出，如果通过六边形的相对侧的三对线的三个交点位于一条直线上，则六边形的六个顶点位于圆锥上. 这实际上是 Pascal 定理的逆定理.
 
@@ -294,12 +302,20 @@ Braikenridge-Maclaurin 定理指出，如果通过六边形的相对侧的三对
 % ---------------------------------
 \section{与五条直线相切的圆锥曲线 Five Tangents Determine a Conic}
 
+\emph{调用方式}
+
+\begin{minted}{latex}
+  `conci/five tangents/once = {P1,P2}`: defines a conic tangent to five lines.
+\end{minted}
+
 下面的作图采用 Brianchon 定理中退化的外切六边形, 求出各边的切点, 然后根据 5 点确定一个
 圆锥曲线 (略).
 
 \emph{示例}
 
 \showcode{snippets/conics/five-tangents-determine-a-conic.tex}
+
+\showcode{snippets/conics/poncelet-closure-theorem.tex}
 
 
 

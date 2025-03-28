@@ -14,17 +14,19 @@
   \a{2,1} = 0; \a{2,2} = 1; \a{2,3} = -1;
   \a{3,1} = -1; \a{3,2} = -1; \a{3,3} = 1;
   % \JacobiMaxIter = 7;
+  \EPSILON =  0.00004; % solve 'Dimension too large' error.
 }
 
 \tikzset{
-  jacobi={\a,\d,\v,3},
+  % Dimension too large.
+  jacobi={\a,3,\d,\v},
   show={\a,3,3},
   show={\d,3,3},
   show={\v,3,3},
   % verify
-  transpose={\v,\vt,3,3},
-  product={\vt,\a,\temp,3,3,3},
-  product={\temp,\v,\diag,3,3,3},
+  transpose={\v,3,3,\vt},
+  product={\vt,\a,3,3,3,\temp},
+  product={\temp,\v,3,3,3,\diag},
   show={\diag,3,3},
 }
 
@@ -41,14 +43,14 @@
 }
 
 \tikzset{
-  jacobi={\a,\d,\v,3},
+  jacobi={\a,3,\d,\v},
   show={\a,3,3},
   show={\d,3,3},
   show={\v,3,3},
   % verify
-  transpose={\v,\vt,3,3},
-  product={\vt,\a,\temp,3,3,3},
-  product={\temp,\v,\diag,3,3,3},
+  transpose={\v,3,3,\vt},
+  product={\vt,\a,3,3,3,\temp},
+  product={\temp,\v,3,3,3,\diag},
   show={\diag,3,3},
 }
 

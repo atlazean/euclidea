@@ -16,10 +16,10 @@
 \begin{tikzpicture}
   \axes (-1 : 4, -1:4);
 
-  \hyperbola [draw,thick,teal,transform={0:(2,1)}] (1,1);
-  \asymptote [draw,dashed,teal,transform={0:(2,1)}] (1,1);
+  \hyperbola [draw,thick,teal,rotate-translate={0:(2,1)}] (1,1);
+  \asymptote [draw,dashed,teal,rotate-translate={0:(2,1)}] (1,1);
 
-  \hyperbola [draw,thick,red,transform={60:(2,1)}] (1,1);
-  \asymptote [draw,dashed,red,transform={60:(2,1)}] (1,1);
+  \hyperbola [draw,thick,red,rotate-translate={60:(2,1)}] (1,1);
+  \asymptote [draw,dashed,red,rotate-translate={60:(2,1)}] (1,1);
 \end{tikzpicture}
 \end{document}

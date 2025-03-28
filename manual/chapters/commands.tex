@@ -28,16 +28,62 @@
 \emph{调用方式}
 
 \begin{tcolorbox}{}
-\mint{latex}{transform={angle:(xshift,yshift)}}
+\mint{latex}{rotate-translate={angle:(xshift,yshift)}}
+\mint{latex}{translate-rotate={angle:(xshift,yshift)}}
 \end{tcolorbox}
 
 \emph{参数说明}
 
-绕原点旋转 angle, 然后水平方向和竖直方向分别平移 xshift和 yshift
+\begin{description}
+  \item[rotate-translate] 先绕原点旋转 angle, 然后水平方向和竖直方向分别平移 xshift和 yshift, 变换过程中坐标系不变;
+  \[
+    \begin{pmatrix}
+      x'\\
+      y'
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+      \cos\theta & -\sin\theta\\
+      \sin\theta & \cos\theta
+    \end{pmatrix}
+    \begin{pmatrix}
+      x\\
+      y
+    \end{pmatrix}
+    +
+    \begin{pmatrix}
+      d_x\\
+      d_y
+    \end{pmatrix}
+  \]
+  \item[translate-rotate] 先水平方向和竖直方向分别平移 xshift和 yshift, 然后绕原点旋转 angle, 变换过程中坐标系不变.
+  \[
+    \begin{pmatrix}
+      x'\\
+      y'
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+      \cos\theta & -\sin\theta\\
+      \sin\theta & \cos\theta
+    \end{pmatrix}
+    \begin{pmatrix}
+      x+d_x\\
+      y+d_y
+    \end{pmatrix}
+  \]
+\end{description}
+
+\begin{remark*}
+  与\mintinline{latex}{rotate=angle,shift={(xshift,yshift)}} 和 \mintinline{latex}{shift={(xshift,yshift)},rotate=angle}
+的效果不同.
+\end{remark*}
 
 \emph{示例}
 
-\showcode{snippets/commands/transform.tex}
+\showcode{snippets/commands/transform-1.tex}
+
+\showcode{snippets/commands/transform-2.tex}
 
 % ---------------------------------
 \section{仿射组合 Affine Combination}
